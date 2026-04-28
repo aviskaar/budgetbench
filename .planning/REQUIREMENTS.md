@@ -20,9 +20,9 @@
 - [ ] **BASE-06**: System provides LLMLingua-2 prompt-compression baseline with sweeps.
 
 ### Task Integration
-- [ ] **TASK-01**: System executes SWE-bench Verified (100-instance stratified subset) via mini-SWE-agent harness.
+- [x] **TASK-01**: System executes SWE-bench Verified (100-instance stratified subset) via mini-SWE-agent harness.
 - [ ] **TASK-02**: System executes τ²-bench retail + airline full sets (~200 tasks) with deterministic user-simulator.
-- [ ] **TASK-03**: System executes LongBench v2 multi-doc QA (8K–32K range) and MuSiQue-Ans (1K dev items).
+- [x] **TASK-03**: System executes LongBench v2 multi-doc QA (8K–32K range) and MuSiQue-Ans (1K dev items).
 
 ### Publication
 - [ ] **DOCS-01**: System outputs a comprehensive summary of tradeoff curves for arXiv preprint.
@@ -56,9 +56,9 @@
 | BASE-04 | Phase 2 | Pending |
 | BASE-05 | Phase 2 | Complete |
 | BASE-06 | Phase 2 | Pending |
-| TASK-01 | Phase 3 | Pending |
+| TASK-01 | Phase 3 | Complete |
 | TASK-02 | Phase 3 | Pending |
-| TASK-03 | Phase 3 | Pending |
+| TASK-03 | Phase 3 | Complete |
 | DOCS-01 | Phase 4 | Pending |
 
 **Coverage:**

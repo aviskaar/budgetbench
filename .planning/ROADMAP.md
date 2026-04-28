@@ -37,7 +37,7 @@
 **Requirements:** TASK-01, TASK-02, TASK-03, EVAL-01
 
 **Plans:** 3 plans
-- [ ] 03-01-PLAN.md — Integrate LongBench v2 and SWE-bench Verified task wrappers
+- [x] 03-01-PLAN.md — Integrate LongBench v2 and SWE-bench Verified task wrappers
 - [ ] 03-02-PLAN.md — Integrate τ²-bench and implement unified task interface
 - [ ] 03-03-PLAN.md — Execute pilot study (20 SWE + 50 LongBench) and generate initial tradeoff curves
 
