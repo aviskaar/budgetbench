@@ -25,7 +25,7 @@
 **Plans:** 3 plans
 - [x] 02-01-PLAN.md — Initialize strategy infrastructure and implement Simple baselines (Truncation, Summary-buffer)
 - [x] 02-02-PLAN.md — Implement Retrieval and Persistent baselines (RAG, Mem0)
-- [ ] 02-03-PLAN.md — Implement Advanced baselines (Letta/MemGPT, LLMLingua-2)
+- [x] 02-03-PLAN.md — Implement Advanced baselines (Letta/MemGPT, LLMLingua-2)
 
 **Success Criteria:**
 1. Truncation and summary-buffer baselines implemented and pass unit tests.
@@ -33,8 +33,13 @@
 3. LLMLingua-2 baseline implemented with compression ratio sweeps.
 
 ### Phase 3: Task Integration & Pilot Execution
-**Goal:** Integrate the 3 target benchmark tasks and execute the cheap pilot to validate the hypothesis.
-**Requirements:** TASK-01, TASK-02, TASK-03
+**Goal:** Integrate the 3 target benchmark tasks and execute the cheap pilot study to validate the memory strategy tradeoff hypothesis.
+**Requirements:** TASK-01, TASK-02, TASK-03, EVAL-01
+
+**Plans:** 3 plans
+- [ ] 03-01-PLAN.md — Integrate LongBench v2 and SWE-bench Verified task wrappers
+- [ ] 03-02-PLAN.md — Integrate τ²-bench and implement unified task interface
+- [ ] 03-03-PLAN.md — Execute pilot study (20 SWE + 50 LongBench) and generate initial tradeoff curves
 
 **Success Criteria:**
 1. SWE-bench Verified subset integrated via mini-SWE-agent harness.
@@ -43,7 +48,7 @@
 
 ### Phase 4: Full Execution & Publication
 **Goal:** Execute the full benchmark suite across all target models and budget tiers, and publish the arXiv preprint.
-**Requirements:** DOCS-01
+**Requirements:** DOCS-01, EVAL-02, EVAL-03
 
 **Success Criteria:**
 1. Full parameter sweeps executed on Qwen2.5-14B, Qwen2.5-32B, and Qwen3-Coder-30B-A3B.
