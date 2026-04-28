@@ -14,9 +14,9 @@
 ### Baseline Strategies
 - [ ] **BASE-01**: System provides Truncation + sliding-window baseline.
 - [ ] **BASE-02**: System provides Summary-buffer baseline.
-- [ ] **BASE-03**: System provides Vanilla RAG over an episodic FAISS store.
+- [x] **BASE-03**: System provides Vanilla RAG over an episodic FAISS store.
 - [ ] **BASE-04**: System provides MemGPT/Letta hierarchical OS-style memory baseline.
-- [ ] **BASE-05**: System provides Mem0 (or A-Mem) hierarchical memory baseline.
+- [x] **BASE-05**: System provides Mem0 (or A-Mem) hierarchical memory baseline.
 - [ ] **BASE-06**: System provides LLMLingua-2 prompt-compression baseline with sweeps.
 
 ### Task Integration
@@ -52,9 +52,9 @@
 | HARN-04 | Phase 1 | Complete |
 | BASE-01 | Phase 2 | Pending |
 | BASE-02 | Phase 2 | Pending |
-| BASE-03 | Phase 2 | Pending |
+| BASE-03 | Phase 2 | Complete |
 | BASE-04 | Phase 2 | Pending |
-| BASE-05 | Phase 2 | Pending |
+| BASE-05 | Phase 2 | Complete |
 | BASE-06 | Phase 2 | Pending |
 | TASK-01 | Phase 3 | Pending |
 | TASK-02 | Phase 3 | Pending |

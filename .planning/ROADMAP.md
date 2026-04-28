@@ -23,8 +23,8 @@
 **Requirements:** BASE-01, BASE-02, BASE-03, BASE-04, BASE-05, BASE-06
 
 **Plans:** 3 plans
-- [ ] 02-01-PLAN.md — Initialize strategy infrastructure and implement Simple baselines (Truncation, Summary-Buffer)
-- [ ] 02-02-PLAN.md — Implement Retrieval and Persistent baselines (RAG, Mem0)
+- [x] 02-01-PLAN.md — Initialize strategy infrastructure and implement Simple baselines (Truncation, Summary-buffer)
+- [x] 02-02-PLAN.md — Implement Retrieval and Persistent baselines (RAG, Mem0)
 - [ ] 02-03-PLAN.md — Implement Advanced baselines (Letta/MemGPT, LLMLingua-2)
 
 **Success Criteria:**
