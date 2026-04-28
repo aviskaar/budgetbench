@@ -11,7 +11,7 @@
 **Plans:** 3 plans
 - [x] 01-00-PLAN.md — Set up initial project infrastructure and shared test fixtures
 - [x] 01-01-PLAN.md — Implement foundational types, budget tiers, MemoryStrategy interface, and metrics logger
-- [ ] 01-02-PLAN.md — Implement budget enforcement logic and evaluation harness with metrics integration
+- [x] 01-02-PLAN.md — Implement budget enforcement logic and evaluation harness with metrics integration
 
 **Success Criteria:**
 1. A dummy memory strategy can be registered via `MemoryStrategy` ABC.
@@ -21,6 +21,11 @@
 ### Phase 2: Baseline Implementations
 **Goal:** Implement all 6 core memory baseline strategies to be tested in the benchmark.
 **Requirements:** BASE-01, BASE-02, BASE-03, BASE-04, BASE-05, BASE-06
+
+**Plans:** 3 plans
+- [ ] 02-01-PLAN.md — Initialize strategy infrastructure and implement Simple baselines (Truncation, Summary-Buffer)
+- [ ] 02-02-PLAN.md — Implement Retrieval and Persistent baselines (RAG, Mem0)
+- [ ] 02-03-PLAN.md — Implement Advanced baselines (Letta/MemGPT, LLMLingua-2)
 
 **Success Criteria:**
 1. Truncation and summary-buffer baselines implemented and pass unit tests.
