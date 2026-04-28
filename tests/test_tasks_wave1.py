@@ -27,7 +27,7 @@ def test_longbench_wrapper(mock_datasets):
     mock_datasets.return_value = mock_ds
     
     task = LongBenchV2Task()
-    items = task.get_task_items()
+    items = task.get_dataset()
     assert len(items) == 1
     assert items[0]["answer"] == "B"
     
@@ -65,7 +65,7 @@ def test_swe_wrapper(mock_datasets):
     mock_datasets.return_value = mock_ds
     
     task = SWEBenchTask()
-    items = task.get_task_items()
+    items = task.get_dataset()
     
     # Mock LLM: 1st turn 'ls', 2nd turn 'submit'
     llm_responses = [

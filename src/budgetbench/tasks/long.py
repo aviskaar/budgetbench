@@ -5,8 +5,9 @@ from budgetbench.utils.types import OpenAIMessage
 from budgetbench.evaluation.harness import run_evaluation_task
 from budgetbench.core.strategy import MemoryStrategy
 from budgetbench.evaluation.metrics import MetricsLogger
+from budgetbench.tasks.base import BaseTask
 
-class LongBenchV2Task:
+class LongBenchV2Task(BaseTask):
     def __init__(self, dataset_name: str = "THUDM/LongBench-v2", split: str = "train"):
         self.dataset_name = dataset_name
         self.split = split
@@ -18,7 +19,7 @@ class LongBenchV2Task:
             self._dataset = datasets.load_dataset(self.dataset_name, split=self.split)
         return self._dataset
     
-    def get_task_items(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    def get_dataset(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         ds = self.dataset
         if limit:
             ds = ds.select(range(min(limit, len(ds))))
