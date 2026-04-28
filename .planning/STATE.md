@@ -11,8 +11,8 @@ See: `.planning/PROJECT.md` (updated 2026-04-28)
 Implement the core evaluation harness, active budget protocol, and the foundational MemoryStrategy ABC.
 
 ### Current Status
-- [ ] Initialize phase
-- [ ] Plan phase
+- [x] Initialize phase
+- [x] Plan phase
 - [ ] Execute phase
 - [ ] Verify phase
 
