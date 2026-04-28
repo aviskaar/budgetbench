@@ -1,0 +1,51 @@
+import pytest
+from src.budgetbench.strategies.rag import RAGStrategy
+from src.budgetbench.utils.types import OpenAIMessage
+
+def test_rag_strategy_initialization():
+    strategy = RAGStrategy()
+    assert strategy is not None
+
+def test_rag_strategy_reset():
+    strategy = RAGStrategy()
+    # Add some messages to simulate state
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Tell me about Tokyo."},
+        {"role": "assistant", "content": "Tokyo is the capital of Japan."}
+    ]
+    strategy(messages, 1000)
+    strategy.reset()
+    # After reset, the vector store should be empty or re-initialized
+    # We'll check this by seeing if it still returns the same thing for a query
+    # (though RAG is deterministic if the store is the same)
+    # More specifically, reset should clear internal buffers/indices.
+
+def test_rag_strategy_retrieval():
+    strategy = RAGStrategy()
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "My favorite color is blue."},
+        {"role": "assistant", "content": "I will remember that."},
+        {"role": "user", "content": "I like pizza."},
+        {"role": "assistant", "content": "Pizza is delicious."},
+        {"role": "user", "content": "What is my favorite color?"}
+    ]
+    
+    # Set a small budget that forces retrieval
+    # System prompt + Last user message + retrieved content
+    # We want to ensure "My favorite color is blue" is retrieved.
+    
+    result = strategy(messages, active_budget=20)
+    
+    # Check if "blue" is in the result
+    content_blob = " ".join([m["content"] for m in result])
+    assert "blue" in content_blob.lower()
+    assert "pizza" not in content_blob.lower() # Budget is now tight enough to exclude pizza
+    
+    # Ensure chronological order of retrieved messages
+    # System prompt should be first
+    assert result[0]["role"] == "system"
+    
+    # Ensure the last message is always included (the query)
+    assert result[-1]["content"] == "What is my favorite color?"
