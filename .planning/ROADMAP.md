@@ -8,6 +8,11 @@
 **Goal:** Implement the core evaluation harness, active budget protocol, and the foundational MemoryStrategy ABC.
 **Requirements:** HARN-01, HARN-02, HARN-03, HARN-04
 
+**Plans:** 3 plans
+- [ ] 01-00-PLAN.md — Set up initial project infrastructure and shared test fixtures
+- [ ] 01-01-PLAN.md — Implement foundational types, budget tiers, MemoryStrategy interface, and metrics logger
+- [ ] 01-02-PLAN.md — Implement budget enforcement logic and evaluation harness with metrics integration
+
 **Success Criteria:**
 1. A dummy memory strategy can be registered via `MemoryStrategy` ABC.
 2. The active budget protocol successfully raises an error when a dummy LLM call exceeds the 2K tier.
