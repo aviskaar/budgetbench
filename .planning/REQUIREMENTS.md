@@ -6,10 +6,10 @@
 ## v1 Requirements
 
 ### Evaluation Harness
-- [ ] **HARN-01**: User can plug in custom memory strategies via a standardized `MemoryStrategy` Python ABC.
-- [ ] **HARN-02**: System enforces active context budget tiers (2K, 4K, 8K, 16K, 32K) during LLM calls.
+- [x] **HARN-01**: User can plug in custom memory strategies via a standardized `MemoryStrategy` Python ABC.
+- [x] **HARN-02**: System enforces active context budget tiers (2K, 4K, 8K, 16K, 32K) during LLM calls.
 - [ ] **HARN-03**: System raises violations if a memory strategy exceeds its active context tier.
-- [ ] **HARN-04**: System logs metrics: quality, mean used budget, peak budget, violation rate, and tokens-per-task-resolved.
+- [x] **HARN-04**: System logs metrics: quality, mean used budget, peak budget, violation rate, and tokens-per-task-resolved.
 
 ### Baseline Strategies
 - [ ] **BASE-01**: System provides Truncation + sliding-window baseline.
@@ -46,10 +46,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HARN-01 | Phase 1 | Pending |
-| HARN-02 | Phase 1 | Pending |
+| HARN-01 | Phase 1 | Complete |
+| HARN-02 | Phase 1 | Complete |
 | HARN-03 | Phase 1 | Pending |
-| HARN-04 | Phase 1 | Pending |
+| HARN-04 | Phase 1 | Complete |
 | BASE-01 | Phase 2 | Pending |
 | BASE-02 | Phase 2 | Pending |
 | BASE-03 | Phase 2 | Pending |
