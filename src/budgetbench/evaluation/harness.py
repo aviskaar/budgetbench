@@ -18,6 +18,7 @@ def run_evaluation_task(
     """
     Orchestrates a single evaluation task with budget enforcement and retries.
     """
+    strategy.reset()
     violations = 0
     start_time = time.time()
     last_error = None

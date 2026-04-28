@@ -13,3 +13,9 @@ class MemoryStrategy(ABC):
         Process messages to fit within the active_budget.
         """
         pass
+
+    def reset(self) -> None:
+        """
+        Reset strategy state. Useful for stateful strategies between evaluation tasks.
+        """
+        pass
