@@ -72,10 +72,11 @@ class LongBenchV2Task(BaseTask):
             
         return content.strip()
 
-    def grade(self, prediction: str, ground_truth: str) -> bool:
+    def grade(self, prediction: str, item: Dict[str, Any]) -> bool:
         """
         Performs deterministic MCQ matching (ignoring case/whitespace).
         """
+        ground_truth = item.get("answer", "")
         pred = prediction.strip().upper()
         if len(pred) > 1:
             match = re.search(r'\b[A-D]\b', pred)
