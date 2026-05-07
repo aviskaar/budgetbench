@@ -9,28 +9,25 @@ from budgetbench.evaluation.metrics import MetricsLogger
 def test_tau_wrapper(tokenizer_fn, llm_client):
     task = get_task("tau")
     assert isinstance(task, TauBenchTask)
-    
+
     # Mocking strategy and logger
     strategy = MagicMock(spec=MemoryStrategy)
-    strategy.side_effect = lambda msgs, budget: msgs # Identity strategy
+    strategy.side_effect = lambda msgs, budget: msgs  # Identity strategy
     logger = MagicMock(spec=MetricsLogger)
-    
+
     # Mock item
     item = {"goal": "Test goal", "id": "test-1"}
-    
-    # Run
-    # Since we mocked env to be None or if it's missing, it returns a mock success
-    result = task.run(
-        item=item,
-        strategy=strategy,
-        llm_client=llm_client,
-        tokenizer_fn=tokenizer_fn,
-        max_tokens=100,
-        logger=logger
-    )
-    
-    assert "success" in result
-    assert task.grade(result, item) is True
+
+    # tau2-bench is not installed, so run() must raise ImportError (not return mock success)
+    with pytest.raises(ImportError, match="tau2-bench"):
+        task.run(
+            item=item,
+            strategy=strategy,
+            llm_client=llm_client,
+            tokenizer_fn=tokenizer_fn,
+            max_tokens=100,
+            logger=logger,
+        )
 
 def test_task_registry():
     long_task = get_task("long")
@@ -53,15 +50,15 @@ def test_runner(tokenizer_fn, llm_client):
     strategy = MagicMock(spec=MemoryStrategy)
     strategy.side_effect = lambda msgs, budget: msgs
     logger = MagicMock(spec=MetricsLogger)
-    
+
     runner = TaskRunner(
         task=task,
         strategy=strategy,
         llm_client=llm_client,
         tokenizer_fn=tokenizer_fn,
-        logger=logger
+        logger=logger,
     )
-    
-    results = runner.run_evaluation(max_tokens=100, limit=1)
-    assert len(results) == 1
-    assert results[0]["is_correct"] is True
+
+    # tau2-bench is not installed, so get_dataset() raises ImportError
+    with pytest.raises(ImportError, match="tau2-bench"):
+        runner.run_evaluation(max_tokens=100, limit=1)
