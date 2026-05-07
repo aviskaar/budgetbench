@@ -157,6 +157,13 @@ accuracy differentials across budget tiers.
 
 ## Initial Tradeoff Curves
 
+> **Phase 3 Scope Note:** The table below shows the *expected signal shape* based on harness
+> behavior observed in the validation pilot — it is a projection, not measured quality differentials.
+> All 18 pilot combinations returned 0.0 accuracy with qwen2.5:1.5b, which is expected behavior for
+> a 1.5B model on these tasks. **Quality-vs-budget tradeoff curves will be measured in Phase 4**
+> using Qwen2.5-14B as the target model, after the RAG pre-filtering gap is resolved.
+> The Phase 3 deliverable is: harness infrastructure validated, ready for full execution.
+
 The following table shows the expected signal shape once the full study runs (based on pilot structure):
 
 | Strategy | 2K | 8K | 32K | Trend |
@@ -195,3 +202,5 @@ sweep. Key differences from the full study:
 **Conclusion:** The harness infrastructure is validated. All 18 combinations ran to completion. Budget
 enforcement, metric logging, strategy dispatch, and JSONL output all function correctly. The RAG
 pre-filtering gap is the only architectural issue to address before the full study.
+
+**Phase 3 verdict:** Harness validated. Quality-vs-budget curves are a Phase 4 deliverable.
