@@ -4,15 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 04
 current_plan: 1
-status: Ready to execute
-last_updated: "2026-04-29T01:00:00.000Z"
+status: unknown
+last_updated: "2026-05-07T01:55:14.923Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
-  percent: 100
-  bar: "[██████████] 100%"
+  total_plans: 10
+  completed_plans: 10
 ---
 
 # Project State
@@ -59,6 +57,7 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 - [x] 03-01: Task Wrappers (LongBench, SWE-bench)
 - [x] 03-02: Task Wrappers (τ²-bench) and Unified TaskRunner
 - [x] 03-03: Pilot Execution and Verification
+- [x] 03-04: Gap Closure — τ²-bench stub fix and pilot scope documentation
 
 ### Phase 04: Full Execution & Publication
 
@@ -73,9 +72,12 @@ None.
 - Used qwen2.5:1.5b for validation pilot; accuracy=0 is expected and validates harness, not model quality.
 - RAG strategy requires post-retrieval token-aware truncation for LongBench; deferred to Phase 4 action item.
 - Pilot scope reduced to 3 items per task for pipeline validation speed.
+- tau.py raises ImportError when tau2-bench absent; root conftest.py added for src/ layout importability (03-04).
+- TASK-02 marked Partial: integration wired, full sweep deferred to Phase 4 (03-04).
 
 ## Recent Log
 
+- **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite, updated REQUIREMENTS.md and PILOT_RESULTS.md scope docs. Phase 3 fully closed.
 - **2026-04-29**: Completed Phase 3. All 3 plans executed. Validation pilot ran 18 combinations, budget enforcement confirmed working. RAG pre-filtering gap identified for Phase 4.
 - **2026-04-28**: Planned Phase 3. Defined integration strategy for SWE-bench Verified, τ²-bench, and LongBench v2.
 - **2026-04-28**: Completed Phase 2. All 6 memory strategies are implemented and verified.

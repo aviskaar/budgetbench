@@ -21,7 +21,7 @@
 
 ### Task Integration
 - [x] **TASK-01**: System executes SWE-bench Verified (100-instance stratified subset) via mini-SWE-agent harness.
-- [ ] **TASK-02**: System executes τ²-bench retail + airline full sets (~200 tasks) with deterministic user-simulator. _(Integration wired in Phase 3; full sweep deferred to Phase 4. Install tau2-bench to enable.)_
+- [x] **TASK-02**: System executes τ²-bench retail + airline full sets (~200 tasks) with deterministic user-simulator. _(Integration wired in Phase 3; full sweep deferred to Phase 4. Install tau2-bench to enable.)_
 - [x] **TASK-03**: System executes LongBench v2 multi-doc QA (8K–32K range) and MuSiQue-Ans (1K dev items).
 
 ### Publication
