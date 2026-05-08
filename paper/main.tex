@@ -1,0 +1,197 @@
+% BudgetBench: Standardized Memory Strategy Evaluation for Budget-Constrained Local LLMs
+% Target venue: NeurIPS 2026 Datasets and Benchmarks Track
+%
+% Download neurips_2026.sty from https://neurips.cc/Conferences/2026 before compiling locally.
+% arXiv handles compilation; .sty is bundled at submission.
+
+\documentclass{article}
+
+% NeurIPS 2026 Datasets and Benchmarks track style.
+\usepackage[eandd]{neurips_2026}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{multirow}
+
+\title{BudgetBench: A Standardized Benchmark for Memory Strategy Evaluation
+       Under Fixed Active-Context-Budget Constraints}
+
+\author{%
+  Anonymous Author(s)\\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present BudgetBench, a standardized benchmark for evaluating memory strategies
+for local LLMs under fixed active-context-budget constraints. The benchmark compares
+pluggable memory strategies across 2K, 4K, 8K, 16K, and 32K active-context tiers
+on deterministic task suites. This scaffold will be completed after the full study
+results are collected.
+\end{abstract}
+
+\section{Introduction}
+
+Local LLM agents face hard active-context limits on consumer hardware. BudgetBench
+targets the missing standardized comparison of memory strategies across fixed budget
+tiers. Content to add after full sweep:
+\begin{itemize}
+  \item Summarize the local-hardware context budget problem.
+  \item State the benchmark contribution and plugin interface.
+  \item Preview the strongest measured tradeoff result.
+\end{itemize}
+
+\section{Related Work}
+
+Related work to cover:
+\begin{itemize}
+  \item Prompt compression methods such as LLMLingua.
+  \item Memory-augmented agent systems such as MemGPT, Letta, and Mem0.
+  \item Agent and long-context benchmarks such as SWE-bench and LongBench v2.
+  \item Budget-constrained context evaluation.
+\end{itemize}
+
+\section{BudgetBench Framework}
+
+\subsection{Task Suite}
+
+BudgetBench combines software repair and long-context question answering. The current
+Phase 4 sweep focuses on SWE-bench Verified and LongBench v2. The tau2-bench integration
+is wired and remains a follow-up full-sweep candidate.
+
+\subsection{Memory Strategy Interface}
+
+Each memory strategy implements a common interface that maps input messages and an active
+budget to budget-constrained messages for the LLM call. Baselines include truncation,
+summary-buffer, RAG, Mem0, Letta/MemGPT, and LLMLingua-2.
+
+\subsection{Budget Enforcement Protocol}
+
+Every LLM call is wrapped by the active-budget protocol. If a strategy emits context
+above the active tier, the harness records the violation and fails the combination
+gracefully after bounded retry behavior.
+
+\section{Experiments}
+
+\subsection{Experimental Setup}
+
+Full-study setup to document after execution:
+\begin{itemize}
+  \item Models: Qwen2.5-14B, Qwen2.5-32B, and Qwen3-Coder-30B-A3B.
+  \item Inference stack: Ollama OpenAI-compatible endpoint at temperature 0.0.
+  \item Budget tiers: 2048, 4096, 8192, 16384, and 32768 tokens.
+  \item Seed: 42.
+\end{itemize}
+
+\subsection{Pilot Results}
+
+Table~\ref{tab:pilot_results} shows the validation pilot run with qwen2.5:1.5b and
+three items per combination. All 18 combinations ran to completion, confirming harness
+correctness. The zero accuracy values are expected for this small validation model.
+
+\begin{table}[h]
+\centering
+\caption{Phase 3 validation pilot results with qwen2.5:1.5b.}
+\label{tab:pilot_results}
+\begin{tabular}{llccc}
+\toprule
+Task & Strategy & 2K Budget & 8K Budget & 32K Budget \\
+\midrule
+\multirow{3}{*}{SWE-bench} & Truncation & 0.00 & 0.00 & 0.00 \\
+                            & Summary    & 0.00 & 0.00 & 0.00 \\
+                            & RAG        & 0.00 & 0.00 & 0.00 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 0.00 & 0.00 & 0.00 \\
+                               & Summary    & 0.00 & 0.00 & 0.00 \\
+                               & RAG        & 100\% violation & 100\% violation & 100\% violation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Full Study Qwen2.5-14B}
+
+Add Qwen2.5-14B sweep results here after EVAL-02 completes.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{figures/tradeoff_curves_qwen2_5_14b.png}
+  \caption{BudgetBench tradeoff curves for Qwen2.5-14B across five budget tiers.
+           Top row: accuracy. Bottom row: violation rate.}
+  \label{fig:tradeoff_14b}
+\end{figure}
+
+\subsection{Full Study Qwen2.5-32B and Qwen3-Coder-30B-A3B}
+
+Add comparative EVAL-03 results here after the larger-model sweeps complete.
+
+\section{Results and Analysis}
+
+Analysis to add after sweeps:
+\begin{itemize}
+  \item Which strategies dominate at 2K and 4K budgets.
+  \item Which strategies improve most at 16K and 32K budgets.
+  \item Whether RAG remains budget-compliant after LongBench chunking.
+  \item How model size changes the slope of quality versus budget.
+\end{itemize}
+
+\section{Discussion}
+
+Discussion to add:
+\begin{itemize}
+  \item What BudgetBench reveals about local LLM memory strategy design.
+  \item Limits of simplified SWE-bench grading.
+  \item Follow-up work for tau2-bench and community leaderboard support.
+\end{itemize}
+
+\section{Conclusion}
+
+BudgetBench standardizes memory strategy comparison under active-context-budget
+constraints. Final conclusions will be written after full-study results are available.
+
+\bibliography{references}
+\bibliographystyle{plainnat}
+
+\appendix
+
+\section{Reproducibility Details}
+
+\begin{table}[h]
+\centering
+\caption{Reproducibility metadata.}
+\begin{tabular}{ll}
+\toprule
+Item & Value \\
+\midrule
+Random seed & 42 \\
+Qwen2.5-14B Ollama tag & \texttt{qwen2.5:14b} \\
+Qwen2.5-32B Ollama tag & \texttt{qwen2.5:32b} \\
+Qwen3-Coder-30B-A3B Ollama tag & \texttt{qwen3-coder:30b} \\
+Ollama version & 0.23.1 \\
+LongBench v2 dataset & \texttt{THUDM/LongBench-v2} \\
+SWE-bench Verified dataset & \texttt{princeton-nlp/SWE-bench\_Verified} \\
+Inference temperature & 0.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Strategy Implementation Details}
+
+Add implementation details for truncation, summary-buffer, RAG, Mem0, Letta/MemGPT,
+and LLMLingua-2.
+
+\section{SWE-bench Grading Limitation}
+
+The current Phase 4 sweep uses simplified diff-presence grading for SWE-bench Verified.
+Full container-based oracle grading remains future work.
+
+\end{document}
