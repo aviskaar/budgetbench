@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 current_phase: 4
-current_plan: Verification gaps found
-status: gaps_found
-last_updated: "2026-05-08T00:55:00.000Z"
+current_plan: Gap closure plans ready
+status: planned
+last_updated: "2026-05-08T01:10:00.000Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 13
+  total_plans: 15
   completed_plans: 13
 ---
 
@@ -32,13 +32,13 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 - [x] Initialize phase
 - [x] Plan phase
 - [x] Execute phase
-- [ ] Verify phase — gaps found; full live sweeps still required
+- [ ] Verify phase — gap closure plans 04-04 and 04-05 created
 
 ## Execution Progress
 
 - **Current Phase:** 4
-- **Current Plan:** Verification gaps found
-- **Total Plans in Phase:** 3
+- **Current Plan:** Gap closure plans ready
+- **Total Plans in Phase:** 5
 
 ### Phase 01: Core Evaluation Harness (Complete)
 
@@ -64,11 +64,12 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 - [x] 04-01: RAG + LongBench chunking fix
 - [x] 04-02: Full-study runner and resume support
 - [x] 04-03: Analysis pipeline, plotting, and paper scaffold
-- [ ] 04-gap: Execute live full sweeps and fill publication results
+- [ ] 04-04: Execute live full-study sweeps and generate CSV/PNG results
+- [ ] 04-05: Finalize result-backed paper and reconcile verification
 
 ### Blockers
 
-Full live benchmark sweeps have not been run. Phase verification found that the implementation enables EVAL-02/EVAL-03/DOCS-01 but does not yet satisfy the roadmap's full execution and arXiv-ready publication goal.
+Full live benchmark sweeps have not been run. Gap closure plans 04-04 and 04-05 now define the execution path to satisfy EVAL-02, EVAL-03, and DOCS-01.
 
 ## Key Decisions (Phase 03)
 
@@ -86,6 +87,7 @@ Full live benchmark sweeps have not been run. Phase verification found that the 
 
 ## Recent Log
 
+- **2026-05-08**: Planned Phase 4 gap closure. Added 04-04 for live sweeps/result generation and 04-05 for final paper/verification reconciliation.
 - **2026-05-08**: Completed Phase 4 planned implementation (04-01 through 04-03). Full test suite passed (51 tests). Verification found gaps: live Qwen2.5/Qwen3 full sweeps and final paper content remain.
 - **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite, updated REQUIREMENTS.md and PILOT_RESULTS.md scope docs. Phase 3 fully closed.
 - **2026-04-29**: Completed Phase 3. All 3 plans executed. Validation pilot ran 18 combinations, budget enforcement confirmed working. RAG pre-filtering gap identified for Phase 4.

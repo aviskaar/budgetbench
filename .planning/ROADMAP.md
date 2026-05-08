@@ -51,10 +51,12 @@
 **Goal:** Execute the full benchmark suite across all target models and budget tiers, and publish the arXiv preprint.
 **Requirements:** DOCS-01, EVAL-02, EVAL-03
 
-**Plans:** 3/3 plans complete (verification gaps remain)
+**Plans:** 3/5 plans complete (gap closure planned)
 - [x] 04-01-PLAN.md — Fix RAG + LongBench budget violation with chunked context
 - [x] 04-02-PLAN.md — Extend runner for full-study execution and resume support
 - [x] 04-03-PLAN.md — Create analysis pipeline, tradeoff plotting, and paper scaffold
+- [ ] 04-04-PLAN.md — Gap closure: execute live full-study sweeps and generate CSV/PNG results
+- [ ] 04-05-PLAN.md — Gap closure: finalize result-backed paper and reconcile verification
 
 **Success Criteria:**
 1. Full parameter sweeps executed on Qwen2.5-14B, Qwen2.5-32B, and Qwen3-Coder-30B-A3B.
