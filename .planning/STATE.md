@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 current_phase: 4
-current_plan: Not started
-status: unknown
-last_updated: "2026-05-07T22:35:09.291Z"
+current_plan: Verification gaps found
+status: gaps_found
+last_updated: "2026-05-08T00:55:00.000Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 13
 ---
 
 # Project State
@@ -29,16 +29,16 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 
 ### Current Status
 
-- [ ] Initialize phase
-- [ ] Plan phase
-- [ ] Execute phase
-- [ ] Verify phase
+- [x] Initialize phase
+- [x] Plan phase
+- [x] Execute phase
+- [ ] Verify phase — gaps found; full live sweeps still required
 
 ## Execution Progress
 
 - **Current Phase:** 4
-- **Current Plan:** Not started
-- **Total Plans in Phase:** TBD
+- **Current Plan:** Verification gaps found
+- **Total Plans in Phase:** 3
 
 ### Phase 01: Core Evaluation Harness (Complete)
 
@@ -61,11 +61,14 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 
 ### Phase 04: Full Execution & Publication
 
-- [ ] TBD
+- [x] 04-01: RAG + LongBench chunking fix
+- [x] 04-02: Full-study runner and resume support
+- [x] 04-03: Analysis pipeline, plotting, and paper scaffold
+- [ ] 04-gap: Execute live full sweeps and fill publication results
 
 ### Blockers
 
-None.
+Full live benchmark sweeps have not been run. Phase verification found that the implementation enables EVAL-02/EVAL-03/DOCS-01 but does not yet satisfy the roadmap's full execution and arXiv-ready publication goal.
 
 ## Key Decisions (Phase 03)
 
@@ -75,8 +78,15 @@ None.
 - tau.py raises ImportError when tau2-bench absent; root conftest.py added for src/ layout importability (03-04).
 - TASK-02 marked Partial: integration wired, full sweep deferred to Phase 4 (03-04).
 
+## Key Decisions (Phase 04)
+
+- LongBench context is chunked into intermediate user messages so RAG indexes messages[1:-1] instead of receiving an empty corpus.
+- Full-study runs use five budget tiers and resumable `summary.jsonl` skip logic keyed by task, strategy, and budget.
+- Publication artifacts are scaffolded, but final tradeoff curves require live full-sweep logs.
+
 ## Recent Log
 
+- **2026-05-08**: Completed Phase 4 planned implementation (04-01 through 04-03). Full test suite passed (51 tests). Verification found gaps: live Qwen2.5/Qwen3 full sweeps and final paper content remain.
 - **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite, updated REQUIREMENTS.md and PILOT_RESULTS.md scope docs. Phase 3 fully closed.
 - **2026-04-29**: Completed Phase 3. All 3 plans executed. Validation pilot ran 18 combinations, budget enforcement confirmed working. RAG pre-filtering gap identified for Phase 4.
 - **2026-04-28**: Planned Phase 3. Defined integration strategy for SWE-bench Verified, τ²-bench, and LongBench v2.
