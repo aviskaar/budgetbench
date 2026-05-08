@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from src.budgetbench.strategies.mem0 import Mem0Strategy
+from budgetbench.strategies.mem0 import Mem0Strategy
 
 def test_mem0_strategy_initialization():
-    with patch("src.budgetbench.strategies.mem0.Memory") as mock_memory:
+    with patch("budgetbench.strategies.mem0.Memory") as mock_memory:
         mock_instance = MagicMock()
         mock_memory.from_config.return_value = mock_instance
         strategy = Mem0Strategy()
@@ -11,7 +11,7 @@ def test_mem0_strategy_initialization():
         mock_memory.from_config.assert_called_once()
 
 def test_mem0_strategy_reset():
-    with patch("src.budgetbench.strategies.mem0.Memory") as mock_memory:
+    with patch("budgetbench.strategies.mem0.Memory") as mock_memory:
         mock_instance = MagicMock()
         mock_memory.from_config.return_value = mock_instance
         strategy = Mem0Strategy()
@@ -19,7 +19,7 @@ def test_mem0_strategy_reset():
         mock_instance.reset.assert_called_once()
 
 def test_mem0_strategy_call():
-    with patch("src.budgetbench.strategies.mem0.Memory") as mock_memory:
+    with patch("budgetbench.strategies.mem0.Memory") as mock_memory:
         mock_instance = MagicMock()
         mock_memory.from_config.return_value = mock_instance
         # Mock search results

@@ -2,7 +2,7 @@
 phase: 01
 slug: core-evaluation-harness
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-04-28
 ---
@@ -17,20 +17,20 @@ created: 2026-04-28
 
 | Property | Value |
 |----------|-------|
-| **Framework** | {pytest 7.x / jest 29.x / vitest / go test / other} |
-| **Config file** | {path or "none — Wave 0 installs"} |
-| **Quick run command** | `{quick command}` |
-| **Full suite command** | `{full command}` |
-| **Estimated runtime** | ~{N} seconds |
+| **Framework** | pytest 9.0.3 |
+| **Config file** | none — Wave 0 installs |
+| **Quick run command** | `pytest -x tests/` |
+| **Full suite command** | `pytest` |
+| **Estimated runtime** | ~5 seconds |
 
 ---
 
 ## Sampling Rate
 
-- **After every task commit:** Run `{quick run command}`
-- **After every plan wave:** Run `{full suite command}`
+- **After every task commit:** Run `pytest -x tests/`
+- **After every plan wave:** Run `pytest`
 - **Before `/gsd-verify-work`:** Full suite must be green
-- **Max feedback latency:** {N} seconds
+- **Max feedback latency:** 5 seconds
 
 ---
 
@@ -38,7 +38,10 @@ created: 2026-04-28
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| {N}-01-01 | 01 | 1 | REQ-{XX} | T-{N}-01 / — | {expected secure behavior or "N/A"} | unit | `{command}` | ✅ / ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | HARN-01 | — | N/A | unit | `pytest tests/test_strategy.py::test_strategy_registration -x` | ❌ W0 | ⬜ pending |
+| 01-02-01 | 02 | 2 | HARN-02 | — | N/A | unit | `pytest tests/test_budget.py::test_budget_enforcement -x` | ❌ W0 | ⬜ pending |
+| 01-02-02 | 02 | 2 | HARN-03 | — | N/A | unit | `pytest tests/test_budget.py::test_budget_violation_exception -x` | ❌ W0 | ⬜ pending |
+| 01-01-02 | 01 | 1 | HARN-04 | — | N/A | unit | `pytest tests/test_metrics.py::test_jsonl_logging -x` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -46,21 +49,16 @@ created: 2026-04-28
 
 ## Wave 0 Requirements
 
-- [ ] `{tests/test_file.py}` — stubs for REQ-{XX}
-- [ ] `{tests/conftest.py}` — shared fixtures
-- [ ] `{framework install}` — if no framework detected
-
-*If none: "Existing infrastructure covers all phase requirements."*
+- [ ] `tests/test_strategy.py` — stubs for HARN-01
+- [ ] `tests/test_budget.py` — stubs for HARN-02, HARN-03
+- [ ] `tests/test_metrics.py` — stubs for HARN-04
+- [ ] `tests/conftest.py` — shared fixtures
 
 ---
 
 ## Manual-Only Verifications
 
-| Behavior | Requirement | Why Manual | Test Instructions |
-|----------|-------------|------------|-------------------|
-| {behavior} | REQ-{XX} | {reason} | {steps} |
-
-*If none: "All phase behaviors have automated verification."*
+*All phase behaviors have automated verification.*
 
 ---
 
@@ -70,7 +68,7 @@ created: 2026-04-28
 - [ ] Sampling continuity: no 3 consecutive tasks without automated verify
 - [ ] Wave 0 covers all MISSING references
 - [ ] No watch-mode flags
-- [ ] Feedback latency < {N}s
+- [ ] Feedback latency < 5s
 - [ ] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** {pending / approved YYYY-MM-DD}
+**Approval:** pending

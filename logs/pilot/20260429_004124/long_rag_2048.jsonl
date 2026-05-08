@@ -1,0 +1,6 @@
+{"quality": 0.0, "used_budget": 0, "peak_budget": 275460, "violation_rate": 1.0, "tokens_per_task": 0, "duration": 0.6800968647003174, "retries": 3, "status": "failed", "log_time": "2026-04-29T00:51:43.476270"}
+{"error": "Evaluation error on item: Budget exceeded: 275460 > 2048", "log_time": "2026-04-29T00:51:43.476507"}
+{"quality": 0.0, "used_budget": 0, "peak_budget": 36188, "violation_rate": 1.0, "tokens_per_task": 0, "duration": 0.07933592796325684, "retries": 3, "status": "failed", "log_time": "2026-04-29T00:51:43.557088"}
+{"error": "Evaluation error on item: Budget exceeded: 36188 > 2048", "log_time": "2026-04-29T00:51:43.557219"}
+{"quality": 0.0, "used_budget": 0, "peak_budget": 464148, "violation_rate": 1.0, "tokens_per_task": 0, "duration": 1.0870399475097656, "retries": 3, "status": "failed", "log_time": "2026-04-29T00:51:44.645410"}
+{"error": "Evaluation error on item: Budget exceeded: 464148 > 2048", "log_time": "2026-04-29T00:51:44.645608"}

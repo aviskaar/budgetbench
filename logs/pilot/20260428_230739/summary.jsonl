@@ -1,0 +1,2 @@
+{"timestamp": "20260428_230739", "task": "swe", "strategy": "truncation", "budget": 2048, "accuracy": 0.0, "total": 1, "success": 0, "duration_sec": 23.019384145736694}
+{"timestamp": "20260428_230739", "task": "long", "strategy": "truncation", "budget": 2048, "accuracy": 0.0, "total": 1, "success": 0, "duration_sec": 9.593322038650513}

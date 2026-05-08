@@ -1,0 +1,6 @@
+{"quality": 1.0, "used_budget": 252, "peak_budget": 252, "violation_rate": 0.0, "tokens_per_task": 252, "duration": 34.04243206977844, "retries": 0, "log_time": "2026-04-29T00:48:58.027591"}
+{"task_success": 0.0, "log_time": "2026-04-29T00:48:58.028799"}
+{"quality": 1.0, "used_budget": 111, "peak_budget": 111, "violation_rate": 0.0, "tokens_per_task": 111, "duration": 31.604124069213867, "retries": 0, "log_time": "2026-04-29T00:49:29.633609"}
+{"task_success": 0.0, "log_time": "2026-04-29T00:49:29.634175"}
+{"quality": 1.0, "used_budget": 113, "peak_budget": 113, "violation_rate": 0.0, "tokens_per_task": 113, "duration": 33.83146786689758, "retries": 0, "log_time": "2026-04-29T00:50:03.467489"}
+{"task_success": 0.0, "log_time": "2026-04-29T00:50:03.467915"}

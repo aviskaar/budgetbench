@@ -1,0 +1,33 @@
+{"quality": 1.0, "used_budget": 447, "peak_budget": 447, "violation_rate": 0.0, "tokens_per_task": 447, "duration": 0.44412922859191895, "retries": 0, "log_time": "2026-04-29T00:46:02.869706"}
+{"quality": 1.0, "used_budget": 493, "peak_budget": 493, "violation_rate": 0.0, "tokens_per_task": 493, "duration": 3.341768980026245, "retries": 0, "log_time": "2026-04-29T00:46:06.213951"}
+{"quality": 1.0, "used_budget": 1024, "peak_budget": 1024, "violation_rate": 0.0, "tokens_per_task": 1024, "duration": 0.33965516090393066, "retries": 0, "log_time": "2026-04-29T00:46:06.555382"}
+{"quality": 1.0, "used_budget": 1073, "peak_budget": 1073, "violation_rate": 0.0, "tokens_per_task": 1073, "duration": 3.418365001678467, "retries": 0, "log_time": "2026-04-29T00:46:09.976964"}
+{"quality": 1.0, "used_budget": 1604, "peak_budget": 1604, "violation_rate": 0.0, "tokens_per_task": 1604, "duration": 0.3426849842071533, "retries": 0, "log_time": "2026-04-29T00:46:10.321560"}
+{"quality": 1.0, "used_budget": 1653, "peak_budget": 1653, "violation_rate": 0.0, "tokens_per_task": 1653, "duration": 3.461528778076172, "retries": 0, "log_time": "2026-04-29T00:46:13.784440"}
+{"quality": 1.0, "used_budget": 2184, "peak_budget": 2184, "violation_rate": 0.0, "tokens_per_task": 2184, "duration": 0.3552670478820801, "retries": 0, "log_time": "2026-04-29T00:46:14.143029"}
+{"quality": 1.0, "used_budget": 2233, "peak_budget": 2233, "violation_rate": 0.0, "tokens_per_task": 2233, "duration": 3.5241267681121826, "retries": 0, "log_time": "2026-04-29T00:46:17.670310"}
+{"quality": 1.0, "used_budget": 2764, "peak_budget": 2764, "violation_rate": 0.0, "tokens_per_task": 2764, "duration": 0.3615109920501709, "retries": 0, "log_time": "2026-04-29T00:46:18.035013"}
+{"quality": 1.0, "used_budget": 2813, "peak_budget": 2813, "violation_rate": 0.0, "tokens_per_task": 2813, "duration": 3.5812699794769287, "retries": 0, "log_time": "2026-04-29T00:46:21.619271"}
+{"task_success": 0.0, "log_time": "2026-04-29T00:46:21.619750"}
+{"quality": 1.0, "used_budget": 809, "peak_budget": 809, "violation_rate": 0.0, "tokens_per_task": 809, "duration": 0.45337700843811035, "retries": 0, "log_time": "2026-04-29T00:46:22.076824"}
+{"quality": 1.0, "used_budget": 835, "peak_budget": 835, "violation_rate": 0.0, "tokens_per_task": 835, "duration": 0.40012288093566895, "retries": 0, "log_time": "2026-04-29T00:46:22.479643"}
+{"quality": 1.0, "used_budget": 910, "peak_budget": 910, "violation_rate": 0.0, "tokens_per_task": 910, "duration": 0.39794182777404785, "retries": 0, "log_time": "2026-04-29T00:46:22.881251"}
+{"quality": 1.0, "used_budget": 983, "peak_budget": 983, "violation_rate": 0.0, "tokens_per_task": 983, "duration": 0.4011967182159424, "retries": 0, "log_time": "2026-04-29T00:46:23.285004"}
+{"quality": 1.0, "used_budget": 1056, "peak_budget": 1056, "violation_rate": 0.0, "tokens_per_task": 1056, "duration": 0.40417909622192383, "retries": 0, "log_time": "2026-04-29T00:46:23.691648"}
+{"quality": 1.0, "used_budget": 1129, "peak_budget": 1129, "violation_rate": 0.0, "tokens_per_task": 1129, "duration": 0.4024059772491455, "retries": 0, "log_time": "2026-04-29T00:46:24.097000"}
+{"quality": 1.0, "used_budget": 1202, "peak_budget": 1202, "violation_rate": 0.0, "tokens_per_task": 1202, "duration": 0.4038059711456299, "retries": 0, "log_time": "2026-04-29T00:46:24.503349"}
+{"quality": 1.0, "used_budget": 1275, "peak_budget": 1275, "violation_rate": 0.0, "tokens_per_task": 1275, "duration": 0.40080785751342773, "retries": 0, "log_time": "2026-04-29T00:46:24.906902"}
+{"quality": 1.0, "used_budget": 1348, "peak_budget": 1348, "violation_rate": 0.0, "tokens_per_task": 1348, "duration": 0.4101378917694092, "retries": 0, "log_time": "2026-04-29T00:46:25.319950"}
+{"quality": 1.0, "used_budget": 1421, "peak_budget": 1421, "violation_rate": 0.0, "tokens_per_task": 1421, "duration": 0.40768885612487793, "retries": 0, "log_time": "2026-04-29T00:46:25.730477"}
+{"task_success": 0.0, "log_time": "2026-04-29T00:46:25.731051"}
+{"quality": 1.0, "used_budget": 594, "peak_budget": 594, "violation_rate": 0.0, "tokens_per_task": 594, "duration": 0.557823896408081, "retries": 0, "log_time": "2026-04-29T00:46:26.292119"}
+{"quality": 1.0, "used_budget": 650, "peak_budget": 650, "violation_rate": 0.0, "tokens_per_task": 650, "duration": 0.9791889190673828, "retries": 0, "log_time": "2026-04-29T00:46:27.274064"}
+{"quality": 1.0, "used_budget": 809, "peak_budget": 809, "violation_rate": 0.0, "tokens_per_task": 809, "duration": 0.41217708587646484, "retries": 0, "log_time": "2026-04-29T00:46:27.689576"}
+{"quality": 1.0, "used_budget": 883, "peak_budget": 883, "violation_rate": 0.0, "tokens_per_task": 883, "duration": 1.262423038482666, "retries": 0, "log_time": "2026-04-29T00:46:28.954452"}
+{"quality": 1.0, "used_budget": 1083, "peak_budget": 1083, "violation_rate": 0.0, "tokens_per_task": 1083, "duration": 0.41655993461608887, "retries": 0, "log_time": "2026-04-29T00:46:29.373624"}
+{"quality": 1.0, "used_budget": 1157, "peak_budget": 1157, "violation_rate": 0.0, "tokens_per_task": 1157, "duration": 1.2759819030761719, "retries": 0, "log_time": "2026-04-29T00:46:30.650859"}
+{"quality": 1.0, "used_budget": 1357, "peak_budget": 1357, "violation_rate": 0.0, "tokens_per_task": 1357, "duration": 0.42122602462768555, "retries": 0, "log_time": "2026-04-29T00:46:31.073480"}
+{"quality": 1.0, "used_budget": 1431, "peak_budget": 1431, "violation_rate": 0.0, "tokens_per_task": 1431, "duration": 1.2839958667755127, "retries": 0, "log_time": "2026-04-29T00:46:32.361080"}
+{"quality": 1.0, "used_budget": 1631, "peak_budget": 1631, "violation_rate": 0.0, "tokens_per_task": 1631, "duration": 0.42450475692749023, "retries": 0, "log_time": "2026-04-29T00:46:32.786910"}
+{"quality": 1.0, "used_budget": 1705, "peak_budget": 1705, "violation_rate": 0.0, "tokens_per_task": 1705, "duration": 1.2874348163604736, "retries": 0, "log_time": "2026-04-29T00:46:34.075831"}
+{"task_success": 0.0, "log_time": "2026-04-29T00:46:34.076500"}

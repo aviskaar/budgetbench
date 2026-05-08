@@ -1,6 +1,6 @@
 import pytest
-from src.budgetbench.strategies.rag import RAGStrategy
-from src.budgetbench.utils.types import OpenAIMessage
+from budgetbench.strategies.rag import RAGStrategy
+from budgetbench.utils.types import OpenAIMessage
 
 def test_rag_strategy_initialization():
     strategy = RAGStrategy()
