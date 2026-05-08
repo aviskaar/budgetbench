@@ -40,7 +40,7 @@
 - [x] 03-01-PLAN.md — Integrate LongBench v2 and SWE-bench Verified wrappers
 - [x] 03-02-PLAN.md — Integrate τ²-bench and implement unified task interface
 - [x] 03-03-PLAN.md — Execute pilot study (20 SWE + 50 LongBench) and generate initial tradeoff curves
-- [ ] 03-04-PLAN.md — Gap closure: fix τ²-bench stub (TASK-02) and re-frame tradeoff curve scope (EVAL-01)
+- [x] 03-04-PLAN.md — Gap closure: fix τ²-bench stub (TASK-02) and re-frame tradeoff curve scope (EVAL-01)
 
 **Success Criteria:**
 1. SWE-bench Verified subset integrated via mini-SWE-agent harness.
