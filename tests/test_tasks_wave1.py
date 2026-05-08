@@ -51,6 +51,32 @@ def test_longbench_wrapper(mock_datasets):
     assert task.grade("B.", "B") is True
     assert task.grade("Selected answer: C", "C") is True
 
+def test_longbench_chunking():
+    task = LongBenchV2Task()
+    item = {
+        "context": "a" * 5000,
+        "question": "Which letter is repeated?",
+        "choice_A": "a",
+        "choice_B": "b",
+        "choice_C": "c",
+        "choice_D": "d",
+        "answer": "A",
+    }
+
+    messages = task.format_message(item, budget=1024)
+
+    assert messages[0]["role"] == "system"
+    assert messages[-1]["content"].startswith("Question: Which letter is repeated?")
+    assert "A: a" in messages[-1]["content"]
+    assert len(messages[1:-1]) == 5
+    assert all(msg["content"].startswith("Context part ") for msg in messages[1:-1])
+    assert all(len(msg["content"].split("\n", 1)[1]) <= 1024 for msg in messages[1:-1])
+
+    short_messages = task.format_message({**item, "context": "short"}, budget=1024)
+
+    assert len(short_messages) == 3
+    assert short_messages[1]["content"] == "Context:\nshort"
+
 def test_swe_wrapper(mock_datasets):
     # Mock dataset
     mock_item = {

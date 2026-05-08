@@ -1,5 +1,6 @@
 import pytest
 from budgetbench.strategies.rag import RAGStrategy
+from budgetbench.tasks.long import LongBenchV2Task
 from budgetbench.utils.types import OpenAIMessage
 
 def test_rag_strategy_initialization():
@@ -49,3 +50,25 @@ def test_rag_strategy_retrieval():
     
     # Ensure the last message is always included (the query)
     assert result[-1]["content"] == "What is my favorite color?"
+
+def test_rag_longbench_chunked():
+    task = LongBenchV2Task()
+    item = {
+        "context": ("irrelevant " * 400) + "Paris is the capital of France. " + ("filler " * 400),
+        "question": "What is the capital of France?",
+        "choice_A": "London",
+        "choice_B": "Paris",
+        "choice_C": "Berlin",
+        "choice_D": "Rome",
+        "answer": "B",
+    }
+    messages = task.format_message(item, budget=1024)
+
+    strategy = RAGStrategy(tokenizer_fn=lambda text: max(1, len(text) // 4))
+    result = strategy(messages, active_budget=1400)
+
+    assert len(messages[1:-1]) >= 1
+    assert len(strategy._indexed_ids) >= 1
+    assert result[0]["role"] == "system"
+    assert result[-1]["content"].startswith("Question: What is the capital of France?")
+    assert any("Paris is the capital of France" in msg["content"] for msg in result[1:-1])
