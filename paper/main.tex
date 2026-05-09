@@ -1,0 +1,214 @@
+% BudgetBench: Standardized Memory Strategy Evaluation for Budget-Constrained Local LLMs
+% Target venue: NeurIPS 2026 Datasets and Benchmarks Track
+%
+% Download neurips_2026.sty from https://neurips.cc/Conferences/2026 before compiling locally.
+% arXiv handles compilation; .sty is bundled at submission.
+
+\documentclass{article}
+
+% NeurIPS 2026 D&B track style - eandd option for Datasets and Benchmarks.
+\usepackage[eandd]{neurips_2026}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{multirow}
+
+\title{BudgetBench: A Standardized Benchmark for Memory Strategy Evaluation
+       Under Fixed Active-Context-Budget Constraints}
+
+\author{%
+  Anonymous Author(s)\\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+% TODO: Fill with 150-200 words after full study results are available.
+% Key points to cover:
+% - Local LLMs face hard context budget constraints on consumer hardware.
+% - BudgetBench compares memory strategies across 2K/4K/8K/16K/32K active context tiers.
+% - The benchmark covers SWE-bench Verified and LongBench v2 with deterministic grading.
+% - Insert the primary Qwen2.5-14B quality-vs-budget result once EVAL-02 completes.
+We present BudgetBench, a standardized benchmark for evaluating memory strategies
+for local LLMs under fixed active-context-budget constraints.
+[PLACEHOLDER: Insert full abstract after results are available.]
+\end{abstract}
+
+\section{Introduction}
+% - Problem: local LLMs face hard context budget limits on consumer hardware.
+% - Gap: existing benchmarks evaluate capability but not memory-strategy tradeoff curves.
+% - Contribution: BudgetBench standardizes budget tiers, strategy interface, tasks, and metrics.
+% - Preview the main Qwen2.5-14B finding after the full sweep completes.
+
+[PLACEHOLDER: Introduction to be written after results.]
+
+\section{Related Work}
+% - Context compression: LLMLingua and related prompt compression systems.
+% - Memory-augmented agents: MemGPT/Letta, Mem0, episodic RAG.
+% - Benchmarks: SWE-bench, LongBench v2, tau2-bench.
+% - Budget-constrained evaluation: compare against any direct context-budget work.
+
+[PLACEHOLDER: Related work to be written.]
+
+\section{BudgetBench Framework}
+
+\subsection{Task Suite}
+% - SWE-bench Verified subset: multi-turn coding repair.
+% - LongBench v2: multi-document multiple-choice QA.
+% - tau2-bench: integration wired; full sweep deferred until dependency setup is available.
+
+[PLACEHOLDER: Task suite description.]
+
+\subsection{Memory Strategy Interface}
+% - MemoryStrategy ABC accepts OpenAI-style messages and an active budget.
+% - Six baselines: truncation, summary buffer, RAG, Mem0, Letta/MemGPT, LLMLingua-2.
+% - External submissions can implement the same interface without modifying the harness.
+
+[PLACEHOLDER: Strategy interface description.]
+
+\subsection{Budget Enforcement Protocol}
+% - Every LLM call is wrapped by active-budget enforcement.
+% - Violations are logged and surfaced as benchmark failures.
+% - Budget tiers are active context tokens, not total generated sequence length.
+
+[PLACEHOLDER: Budget enforcement description.]
+
+\section{Experiments}
+
+\subsection{Experimental Setup}
+% - Models: Qwen2.5-14B, Qwen2.5-32B, Qwen3-Coder-30B-A3B via Ollama.
+% - Inference endpoint: localhost:11434/v1/chat/completions, temperature 0.0.
+% - Items: 20 SWE-bench and 50 LongBench per combination.
+% - Seed: 42.
+
+[PLACEHOLDER: Full setup details.]
+
+\subsection{Pilot Results}
+
+Table~\ref{tab:pilot_results} summarizes the Phase 3 validation pilot.
+The pilot used qwen2.5:1.5b with 3 items per task and 18 total combinations.
+Accuracy was 0.0 across completed quality rows, which is expected for the pilot
+model size; the purpose was harness validation rather than quality measurement.
+
+\begin{table}[h]
+\centering
+\caption{Phase 3 validation pilot results (qwen2.5:1.5b, 3 items per combination).}
+\label{tab:pilot_results}
+\begin{tabular}{llccc}
+\toprule
+Task & Strategy & 2K Budget & 8K Budget & 32K Budget \\
+\midrule
+\multirow{3}{*}{SWE-bench} & Truncation & 0.00 & 0.00 & 0.00 \\
+                            & Summary    & 0.00 & 0.00 & 0.00 \\
+                            & RAG        & 0.00 & 0.00 & 0.00 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 0.00 & 0.00 & 0.00 \\
+                               & Summary    & 0.00 & 0.00 & 0.00 \\
+                               & RAG        & 100\% viol. & 100\% viol. & 100\% viol. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The RAG violation on LongBench v2 was diagnosed as a pre-processing gap:
+the raw context was passed as a single message, leaving no indexable corpus
+for RAGStrategy. Phase 4 fixes this by chunking the context into retrievable
+messages before invoking the strategy.
+
+\subsection{Full Study Qwen2.5-14B}
+% - Insert the main EVAL-02 results table.
+% - Include the generated figure once available:
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=\textwidth]{figures/tradeoff_curves_qwen2_5_14b.png}
+%   \caption{BudgetBench tradeoff curves for Qwen2.5-14B across five budget tiers.}
+%   \label{fig:tradeoff_14b}
+% \end{figure}
+
+[PLACEHOLDER: Full study results for Qwen2.5-14B.]
+
+\subsection{Full Study Qwen2.5-32B and Qwen3-Coder-30B-A3B}
+% - Insert comparative EVAL-03 results table.
+% - Discuss how model size changes the slope of quality-vs-budget curves.
+
+[PLACEHOLDER: Full study results for 32B-class models.]
+
+\section{Results and Analysis}
+% - Identify dominant strategies at tight budgets.
+% - Identify which strategies benefit from 16K and 32K budgets.
+% - Report violation rates after the LongBench/RAG chunking fix.
+% - Compare model-size interactions with active context budget.
+
+[PLACEHOLDER: Results and analysis after EVAL-02 and EVAL-03 complete.]
+
+\section{Discussion}
+% - BudgetBench enables standardized memory-strategy comparison for local LLMs.
+% - Limitations: SWE-bench grading remains simplified in the current scaffold.
+% - tau2-bench integration is wired but requires dependency setup before full sweep.
+% - Future work: public leaderboard and Pareto frontier analysis.
+
+[PLACEHOLDER: Discussion.]
+
+\section{Conclusion}
+% - Restate the gap: no standardized benchmark for memory strategy comparison under fixed budgets.
+% - Restate contributions: five budget tiers, six strategies, deterministic grading, plugin interface.
+% - Insert release URL and final headline result before submission.
+
+[PLACEHOLDER: Conclusion.]
+
+\bibliography{references}
+\bibliographystyle{plainnat}
+
+\appendix
+
+\section{Reproducibility Details}
+\label{app:reproducibility}
+
+\begin{table}[h]
+\centering
+\caption{Reproducibility metadata.}
+\begin{tabular}{ll}
+\toprule
+Item & Value \\
+\midrule
+Random seed & 42 \\
+Qwen2.5-14B Ollama tag & \texttt{qwen2.5:14b} \\
+Qwen2.5-32B Ollama tag & \texttt{qwen2.5:32b} \\
+Qwen3-Coder-30B-A3B Ollama tag & \texttt{qwen3-coder:30b} \\
+LongBench v2 dataset & \texttt{THUDM/LongBench-v2} \\
+SWE-bench Verified dataset & \texttt{princeton-nlp/SWE-bench\_Verified} \\
+Inference temperature & 0.0 \\
+Budget tiers & 2K, 4K, 8K, 16K, 32K \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Strategy Implementation Details}
+\label{app:strategies}
+% - Truncation: sliding window over active messages.
+% - SummaryBuffer: LLM-compressed running history.
+% - RAG: indexes context messages and retrieves relevant chunks within budget.
+% - Mem0: hierarchical memory store.
+% - Letta/MemGPT: OS-style memory paging.
+% - LLMLingua-2: token-level prompt compression.
+
+[PLACEHOLDER: Strategy descriptions.]
+
+\section{SWE-bench Grading Limitation}
+\label{app:swe_grading}
+% - Current scaffold uses simplified diff-presence grading.
+% - Full official SWE-bench oracle grading requires containerized evaluation per item.
+% - Future work should wire the official oracle for final leaderboard claims.
+
+[PLACEHOLDER: SWE grading discussion.]
+
+\end{document}
