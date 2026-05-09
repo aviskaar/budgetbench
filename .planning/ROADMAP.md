@@ -51,6 +51,11 @@
 **Goal:** Execute the full benchmark suite across all target models and budget tiers, and publish the arXiv preprint.
 **Requirements:** DOCS-01, EVAL-02, EVAL-03
 
+**Plans:** 3/3 plans complete
+- [x] 04-01-PLAN.md — Fix RAG + LongBench budget violation
+- [x] 04-02-PLAN.md — Extend full-study runner with resume support
+- [x] 04-03-PLAN.md — Add analysis pipeline, plots, and paper scaffold
+
 **Success Criteria:**
 1. Full parameter sweeps executed on Qwen2.5-14B, Qwen2.5-32B, and Qwen3-Coder-30B-A3B.
 2. Data synthesis into tradeoff curves comparing token budget vs task quality.
