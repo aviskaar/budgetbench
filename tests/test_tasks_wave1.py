@@ -90,3 +90,29 @@ def test_swe_wrapper(mock_datasets):
     assert patch_result != ""
     assert task.grade(patch_result, items[0]) is True
     assert llm_client.call_count == 2
+
+
+def test_longbench_chunking():
+    """Verify format_message() chunks large context into multiple user messages."""
+    task = LongBenchV2Task()
+    large_item = {
+        "context": "X" * 10000,
+        "question": "What is X?",
+        "choice_A": "One",
+        "choice_B": "Two",
+        "choice_C": "Three",
+        "choice_D": "Four",
+        "answer": "A",
+    }
+    messages = task.format_message(large_item, budget=2048)
+    assert messages[0]["role"] == "system"
+    assert messages[-1]["content"].startswith("Question:")
+    context_msgs = messages[1:-1]
+    assert len(context_msgs) == 5
+    assert all(m["role"] == "user" for m in context_msgs)
+    assert "Context part 1:" in context_msgs[0]["content"]
+
+    small_item = {**large_item, "context": "Short context."}
+    small_msgs = task.format_message(small_item, budget=8192)
+    assert len(small_msgs) == 3
+    assert "Context:\n" in small_msgs[1]["content"]
