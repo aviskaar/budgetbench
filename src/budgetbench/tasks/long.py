@@ -25,7 +25,7 @@ class LongBenchV2Task(BaseTask):
             ds = ds.select(range(min(limit, len(ds))))
         return list(ds)
 
-    def format_message(self, item: Dict[str, Any]) -> List[OpenAIMessage]:
+    def format_message(self, item: Dict[str, Any], budget: int = 8192) -> List[OpenAIMessage]:
         context = item.get("context", "")
         question = item.get("question", "")
         
@@ -37,12 +37,25 @@ class LongBenchV2Task(BaseTask):
                 choices_text += f"\n{char}: {val}"
         
         system_prompt = "You are a helpful assistant. Answer the following multiple choice question based on the provided context. Respond only with the letter of the correct answer (A, B, C, or D)."
-        
-        messages: List[OpenAIMessage] = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}{choices_text}"}
-        ]
-        return messages
+        question_msg: OpenAIMessage = {"role": "user", "content": f"Question: {question}{choices_text}"}
+
+        chunk_size = min(budget // 4, 512)  # tokens
+        chunk_chars = chunk_size * 4  # chars (4-char/token heuristic)
+
+        if len(context) <= chunk_chars:
+            context_messages: List[OpenAIMessage] = [
+                {"role": "user", "content": f"Context:\n{context}"}
+            ]
+        else:
+            context_messages = []
+            for i in range(0, len(context), chunk_chars):
+                chunk_text = context[i : i + chunk_chars]
+                context_messages.append({
+                    "role": "user",
+                    "content": f"Context part {i // chunk_chars + 1}:\n{chunk_text}"
+                })
+
+        return [{"role": "system", "content": system_prompt}] + context_messages + [question_msg]
 
     def run(
         self,
@@ -53,7 +66,7 @@ class LongBenchV2Task(BaseTask):
         max_tokens: int,
         logger: MetricsLogger
     ) -> str:
-        messages = self.format_message(item)
+        messages = self.format_message(item, budget=max_tokens)
         response = run_evaluation_task(
             messages=messages,
             strategy=strategy,
