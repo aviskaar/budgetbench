@@ -2,9 +2,12 @@ import argparse
 import json
 import os
 import random
+import sys
 import time
 from datetime import datetime
 from typing import List, Dict, Any, Optional
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 import requests
 from budgetbench.tasks import get_task
@@ -19,6 +22,7 @@ from budgetbench.utils.types import OpenAIMessage
 
 # Default Budget Tiers (tokens)
 BUDGET_TIERS = [2048, 8192, 32768]
+FULL_STUDY_BUDGET_TIERS = [2048, 4096, 8192, 16384, 32768]
 
 
 def get_tokenizer_fn():
@@ -31,7 +35,7 @@ def get_tokenizer_fn():
         return lambda x: len(x) // 4
 
 
-def get_llm_client(url: str = "http://localhost:8080/v1/chat/completions", model: Optional[str] = None):
+def get_llm_client(url: str = "http://localhost:11434/v1/chat/completions", model: Optional[str] = None):
     def llm_client(messages: List[OpenAIMessage]) -> str:
         formatted_messages = []
         for m in messages:
@@ -60,6 +64,22 @@ def get_llm_client(url: str = "http://localhost:8080/v1/chat/completions", model
     return llm_client
 
 
+def load_completed_combinations(summary_file: str) -> set:
+    """Return set of (task, strategy, budget) tuples already logged in summary_file."""
+    completed = set()
+    if not os.path.exists(summary_file):
+        return completed
+    with open(summary_file) as f:
+        for line in f:
+            try:
+                row = json.loads(line)
+                key = (row["task"], row["strategy"], row["budget"])
+                completed.add(key)
+            except (json.JSONDecodeError, KeyError):
+                pass
+    return completed
+
+
 def build_strategies(llm_client) -> Dict[str, Any]:
     """
     Build all strategy instances.  Strategies that depend on optional
@@ -69,8 +89,12 @@ def build_strategies(llm_client) -> Dict[str, Any]:
     strategies: Dict[str, Any] = {
         "truncation": TruncationStrategy(),
         "summary": SummaryBufferStrategy(llm_client=llm_client),
-        "rag": RAGStrategy(),
     }
+
+    try:
+        strategies["rag"] = RAGStrategy()
+    except Exception as e:
+        print(f"  [skip] RAGStrategy not available: {e}")
 
     # Optional heavy strategies — skip if deps are missing.
     try:
@@ -108,19 +132,27 @@ class JSONLMetricsLogger(MetricsLogger):
 
 def run_pilot(args):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_dir = os.path.join("logs", "pilot", timestamp)
+    if args.full_study and args.run_id:
+        log_dir = os.path.join("logs", "full_study", args.run_id)
+    elif args.full_study:
+        log_dir = os.path.join("logs", "full_study", timestamp)
+    else:
+        log_dir = os.path.join("logs", "pilot", timestamp)
     os.makedirs(log_dir, exist_ok=True)
 
-    print("--- BudgetBench Pilot Execution ---")
+    print("--- BudgetBench Full Study Execution ---" if args.full_study else "--- BudgetBench Pilot Execution ---")
     print(f"Logs will be saved to: {log_dir}")
 
     tokenizer_fn = get_tokenizer_fn()
     llm_client = get_llm_client(args.llm_url, model=args.model)
 
     # Determine which budget tiers to run
-    budgets = BUDGET_TIERS
-    if args.limit_budgets:
-        budgets = budgets[: args.limit_budgets]
+    if args.full_study:
+        budgets = FULL_STUDY_BUDGET_TIERS
+    elif args.limit_budgets:
+        budgets = BUDGET_TIERS[: args.limit_budgets]
+    else:
+        budgets = BUDGET_TIERS
 
     # Determine which strategies to run
     if args.dry_run:
@@ -149,6 +181,7 @@ def run_pilot(args):
     ]
 
     summary_file = os.path.join(log_dir, "summary.jsonl")
+    completed = load_completed_combinations(summary_file)
 
     for task_cfg in tasks_config:
         task_name = task_cfg["name"]
@@ -171,6 +204,10 @@ def run_pilot(args):
                     end="",
                     flush=True,
                 )
+
+                if (task_name, strategy_name, budget) in completed:
+                    print("SKIP (already done)")
+                    continue
 
                 if args.dry_run:
                     print("DRY RUN")
@@ -202,6 +239,7 @@ def run_pilot(args):
 
                     summary = {
                         "timestamp": timestamp,
+                        "model": args.model or "unknown",
                         "task": task_name,
                         "strategy": strategy_name,
                         "budget": budget,
@@ -221,6 +259,7 @@ def run_pilot(args):
                             json.dumps(
                                 {
                                     "timestamp": timestamp,
+                                    "model": args.model or "unknown",
                                     "task": task_name,
                                     "strategy": strategy_name,
                                     "budget": budget,
@@ -273,6 +312,17 @@ if __name__ == "__main__":
         "--dry-run",
         action="store_true",
         help="Validate the setup without calling the LLM",
+    )
+    parser.add_argument(
+        "--full-study",
+        action="store_true",
+        help="Run full 5-tier study (all 5 budget tiers, logs to logs/full_study/)",
+    )
+    parser.add_argument(
+        "--run-id",
+        type=str,
+        default=None,
+        help="Resume a previous run by its timestamp string (e.g. 20260508_120000)",
     )
 
     args = parser.parse_args()
