@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from budgetbench.tasks import get_task, TauBenchTask, LongBenchV2Task, SWEBenchTask
 from budgetbench.tasks.base import BaseTask
 from budgetbench.evaluation.runner import TaskRunner
@@ -18,8 +18,9 @@ def test_tau_wrapper(tokenizer_fn, llm_client):
     # Mock item
     item = {"goal": "Test goal", "id": "test-1"}
 
-    # tau2-bench is not installed, so run() must raise ImportError (not return mock success)
-    with pytest.raises(ImportError, match="tau2-bench"):
+    # When tau2-bench is absent, run() must raise ImportError (not return mock success)
+    with patch("budgetbench.tasks.tau.TAU2_AVAILABLE", False), \
+         pytest.raises(ImportError, match="tau2-bench"):
         task.run(
             item=item,
             strategy=strategy,
@@ -59,6 +60,7 @@ def test_runner(tokenizer_fn, llm_client):
         logger=logger,
     )
 
-    # tau2-bench is not installed, so get_dataset() raises ImportError
-    with pytest.raises(ImportError, match="tau2-bench"):
+    # When tau2-bench is absent, get_dataset() raises ImportError
+    with patch("budgetbench.tasks.tau.TAU2_AVAILABLE", False), \
+         pytest.raises(ImportError, match="tau2-bench"):
         runner.run_evaluation(max_tokens=100, limit=1)

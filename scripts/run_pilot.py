@@ -23,6 +23,11 @@ from budgetbench.utils.types import OpenAIMessage
 # Default Budget Tiers (tokens)
 BUDGET_TIERS = [2048, 8192, 32768]
 FULL_STUDY_BUDGET_TIERS = [2048, 4096, 8192, 16384, 32768]
+DEFAULT_TASKS_CONFIG = [
+    {"name": "swe", "default_limit": 20},
+    {"name": "long", "default_limit": 50},
+    {"name": "tau", "default_limit": 200},
+]
 
 
 def get_tokenizer_fn():
@@ -80,40 +85,47 @@ def load_completed_combinations(summary_file: str) -> set:
     return completed
 
 
-def build_strategies(llm_client) -> Dict[str, Any]:
+def build_strategies(llm_client, selected_names: Optional[List[str]] = None) -> Dict[str, Any]:
     """
     Build all strategy instances.  Strategies that depend on optional
     third-party packages (mem0, llmlingua, letta) are skipped gracefully
     if their dependencies are not installed.
     """
-    strategies: Dict[str, Any] = {
-        "truncation": TruncationStrategy(),
-        "summary": SummaryBufferStrategy(llm_client=llm_client),
-    }
+    requested = set(selected_names) if selected_names else None
+    strategies: Dict[str, Any] = {}
 
-    try:
-        strategies["rag"] = RAGStrategy()
-    except Exception as e:
-        print(f"  [skip] RAGStrategy not available: {e}")
+    if requested is None or "truncation" in requested:
+        strategies["truncation"] = TruncationStrategy()
+    if requested is None or "summary" in requested:
+        strategies["summary"] = SummaryBufferStrategy(llm_client=llm_client)
+
+    if requested is None or "rag" in requested:
+        try:
+            strategies["rag"] = RAGStrategy()
+        except Exception as e:
+            print(f"  [skip] RAGStrategy not available: {e}")
 
     # Optional heavy strategies — skip if deps are missing.
-    try:
-        from budgetbench.strategies import Mem0Strategy
-        strategies["mem0"] = Mem0Strategy()
-    except (ImportError, Exception) as e:
-        print(f"  [skip] Mem0Strategy not available: {e}")
+    if requested is None or "mem0" in requested:
+        try:
+            from budgetbench.strategies import Mem0Strategy
+            strategies["mem0"] = Mem0Strategy()
+        except (ImportError, Exception) as e:
+            print(f"  [skip] Mem0Strategy not available: {e}")
 
-    try:
-        from budgetbench.strategies import LettaStrategy
-        strategies["letta"] = LettaStrategy()
-    except (ImportError, Exception) as e:
-        print(f"  [skip] LettaStrategy not available: {e}")
+    if requested is None or "letta" in requested:
+        try:
+            from budgetbench.strategies import LettaStrategy
+            strategies["letta"] = LettaStrategy()
+        except (ImportError, Exception) as e:
+            print(f"  [skip] LettaStrategy not available: {e}")
 
-    try:
-        from budgetbench.strategies import LLMLinguaStrategy
-        strategies["llmlingua"] = LLMLinguaStrategy()
-    except (ImportError, Exception) as e:
-        print(f"  [skip] LLMLinguaStrategy not available: {e}")
+    if requested is None or "llmlingua" in requested:
+        try:
+            from budgetbench.strategies import LLMLinguaStrategy
+            strategies["llmlingua"] = LLMLinguaStrategy()
+        except (ImportError, Exception) as e:
+            print(f"  [skip] LLMLinguaStrategy not available: {e}")
 
     return strategies
 
@@ -155,30 +167,29 @@ def run_pilot(args):
         budgets = BUDGET_TIERS
 
     # Determine which strategies to run
-    if args.dry_run:
-        # In dry-run mode, we instantiate strategies to verify no import errors,
-        # then skip actual LLM calls.
-        all_strategies = build_strategies(llm_client)
-        selected_strategies = (
-            {k: all_strategies[k] for k in args.strategies if k in all_strategies}
-            if args.strategies
-            else all_strategies
-        )
-    else:
-        all_strategies = build_strategies(llm_client)
-        selected_strategies = (
-            {k: all_strategies[k] for k in args.strategies if k in all_strategies}
-            if args.strategies
-            else all_strategies
-        )
+    if args.limit_budgets:
+        budgets = budgets[: args.limit_budgets]
+
+    all_strategies = build_strategies(llm_client, selected_names=args.strategies)
+    selected_strategies = (
+        {k: all_strategies[k] for k in args.strategies if k in all_strategies}
+        if args.strategies
+        else all_strategies
+    )
 
     # Fixed seed for reproducibility
     random.seed(42)
 
-    tasks_config = [
-        {"name": "swe", "default_limit": 20},
-        {"name": "long", "default_limit": 50},
-    ]
+    tasks_config = DEFAULT_TASKS_CONFIG
+    if args.tasks:
+        task_names = set(args.tasks)
+        tasks_config = [cfg for cfg in DEFAULT_TASKS_CONFIG if cfg["name"] in task_names]
+        unknown_tasks = task_names - {cfg["name"] for cfg in DEFAULT_TASKS_CONFIG}
+        if unknown_tasks:
+            raise ValueError(
+                f"Unknown task(s): {sorted(unknown_tasks)}. "
+                f"Available tasks: {[cfg['name'] for cfg in DEFAULT_TASKS_CONFIG]}"
+            )
 
     summary_file = os.path.join(log_dir, "summary.jsonl")
     completed = load_completed_combinations(summary_file)
@@ -282,8 +293,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--llm-url",
         type=str,
-        default="http://localhost:8080/v1/chat/completions",
-        help="llama.cpp (or compatible) OpenAI-style API URL",
+        default="http://localhost:11434/v1/chat/completions",
+        help="Ollama, llama.cpp, or compatible OpenAI-style API URL",
     )
     parser.add_argument(
         "--limit-tasks",
@@ -301,6 +312,12 @@ if __name__ == "__main__":
         "--strategies",
         nargs="+",
         help="Specific strategy names to run (default: all available)",
+    )
+    parser.add_argument(
+        "--tasks",
+        nargs="+",
+        choices=[cfg["name"] for cfg in DEFAULT_TASKS_CONFIG],
+        help="Specific task names to run (default: swe long tau)",
     )
     parser.add_argument(
         "--model",

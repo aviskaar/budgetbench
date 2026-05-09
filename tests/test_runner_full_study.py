@@ -5,13 +5,23 @@ import sys
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from scripts.run_pilot import FULL_STUDY_BUDGET_TIERS, load_completed_combinations
+from scripts.run_pilot import (
+    DEFAULT_TASKS_CONFIG,
+    FULL_STUDY_BUDGET_TIERS,
+    load_completed_combinations,
+)
 
 
 def test_full_study_budget_tiers():
     """Full study uses all 5 standard budget tiers."""
     assert FULL_STUDY_BUDGET_TIERS == [2048, 4096, 8192, 16384, 32768]
     assert len(FULL_STUDY_BUDGET_TIERS) == 5
+
+
+def test_full_study_default_tasks_cover_requirements():
+    """Full study includes the three required task families."""
+    task_limits = {cfg["name"]: cfg["default_limit"] for cfg in DEFAULT_TASKS_CONFIG}
+    assert task_limits == {"swe": 20, "long": 50, "tau": 200}
 
 
 def test_resume_skip(tmp_path):

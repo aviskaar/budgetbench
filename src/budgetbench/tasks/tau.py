@@ -1,4 +1,3 @@
-import json
 from typing import List, Callable, Any, Dict, Optional
 from budgetbench.utils.types import OpenAIMessage
 from budgetbench.evaluation.harness import run_evaluation_task
@@ -7,32 +6,51 @@ from budgetbench.evaluation.metrics import MetricsLogger
 from budgetbench.tasks.base import BaseTask
 
 try:
-    from tau2.envs import get_env as _tau2_get_env
+    import tau2.registry as _tau2_registry
     TAU2_AVAILABLE = True
 except ImportError:
-    _tau2_get_env = None
+    _tau2_registry = None
     TAU2_AVAILABLE = False
 
 
 class TauBenchTask(BaseTask):
-    def __init__(self, domain: str = "retail", split: str = "test"):
+    def __init__(self, domain: str = "all", split: str = "test"):
         self.domain = domain
         self.split = split
-        self.env = None
-        if TAU2_AVAILABLE:
-            try:
-                self.env = _tau2_get_env(domain)
-            except Exception:
-                self.env = None
+
+    def _domains(self) -> List[str]:
+        if self.domain == "all":
+            return ["retail", "airline"]
+        return [self.domain]
 
     def get_dataset(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         if not TAU2_AVAILABLE:
             raise ImportError(
-                "tau2-bench is not installed. Install it with: pip install tau2-bench. "
-                "τ²-bench full sweep is scoped to Phase 4."
+                "tau2-bench is not installed. Install from "
+                "git+https://github.com/sierra-research/tau2-bench@v0.2.0 and set "
+                "TAU2_DATA_DIR to the checkout data directory."
             )
-        env = _tau2_get_env(self.domain)
-        items = env.get_dataset()  # Returns List[Dict] with "goal" and "id"
+        items: List[Dict[str, Any]] = []
+        for domain in self._domains():
+            try:
+                loader = _tau2_registry.registry.get_tasks_loader(domain)
+                tasks = loader()
+            except FileNotFoundError as e:
+                raise ImportError(
+                    "tau2-bench data files are not available. Set TAU2_DATA_DIR "
+                    "to the tau2-bench checkout data directory."
+                ) from e
+            for task in tasks:
+                items.append({
+                    "id": f"{domain}:{task.id}",
+                    "domain": domain,
+                    "scenario": str(task.user_scenario),
+                    "evaluation_criteria": (
+                        str(task.evaluation_criteria)
+                        if task.evaluation_criteria is not None
+                        else ""
+                    ),
+                })
         if limit:
             items = items[:limit]
         return items
@@ -57,66 +75,43 @@ class TauBenchTask(BaseTask):
     ) -> Dict[str, Any]:
         if not TAU2_AVAILABLE:
             raise ImportError(
-                "tau2-bench is not installed. τ²-bench integration requires tau2-bench. "
-                "Install with: pip install tau2-bench"
+                "tau2-bench is not installed. Install from "
+                "git+https://github.com/sierra-research/tau2-bench@v0.2.0 and set TAU2_DATA_DIR."
             )
 
-        obs, info = self.env.reset()
-        user_goal = item.get("goal", "Help the user.")
-
-        # Extract tool definitions if available in info
-        tools = info.get("tools", [])
-        tools_str = json.dumps(tools, indent=2) if tools else "No tools available."
-
         history: List[OpenAIMessage] = [
-            {"role": "system", "content": f"{self._get_system_prompt()}\n\nAvailable Tools:\n{tools_str}"},
-            {"role": "user", "content": f"User Goal: {user_goal}\nInitial Observation: {obs}"}
+            {"role": "system", "content": self._get_system_prompt()},
+            {
+                "role": "user",
+                "content": (
+                    f"Domain: {item.get('domain', self.domain)}\n\n"
+                    f"User Scenario:\n{item.get('scenario', '')}\n\n"
+                    "Respond with the next assistant message for this customer-service task."
+                ),
+            },
         ]
 
-        success = False
-        turn = 0
         try:
-            for turn in range(max_turns):
-                response = run_evaluation_task(
-                    messages=history,
-                    strategy=strategy,
-                    llm_client=llm_client,
-                    tokenizer_fn=tokenizer_fn,
-                    max_tokens=max_tokens,
-                    logger=logger
-                )
+            response = run_evaluation_task(
+                messages=history,
+                strategy=strategy,
+                llm_client=llm_client,
+                tokenizer_fn=tokenizer_fn,
+                max_tokens=max_tokens,
+                logger=logger,
+            )
 
-                if isinstance(response, dict):
-                    content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
-                elif hasattr(response, "choices"):
-                    content = response.choices[0].message.content
-                else:
-                    content = str(response)
-
-                history.append({"role": "assistant", "content": content})
-
-                # For tau-bench, the 'action' can be the full assistant message dict
-                action = {"role": "assistant", "content": content}
-
-                # Try to extract structured tool calls if available
-                try:
-                    data = json.loads(content)
-                    if "tool_calls" in data:
-                        action["tool_calls"] = data["tool_calls"]
-                except Exception:
-                    pass
-
-                obs, reward, done, truncated, info = self.env.step(action)
-
-                if done:
-                    success = info.get('success', False)
-                    break
-
-                history.append({"role": "user", "content": f"Observation: {obs}"})
+            if isinstance(response, dict):
+                content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
+            elif hasattr(response, "choices"):
+                content = response.choices[0].message.content
+            else:
+                content = str(response)
         except Exception as e:
             logger.log_metrics({"error": f"TauBench execution error: {str(e)}"})
+            return {"success": False, "response": "", "error": str(e)}
 
-        return {"success": success, "turns": turn + 1}
+        return {"success": bool(content.strip()), "response": content, "turns": 1}
 
     def grade(self, prediction: Any, item: Dict[str, Any]) -> bool:
         if isinstance(prediction, dict):

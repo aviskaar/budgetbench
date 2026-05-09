@@ -12,22 +12,21 @@ Provide the first standardized tradeoff curves of agent task quality versus toke
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] **HARN-01**: Implement the evaluation harness with a `MemoryStrategy` ABC.
+- [x] **HARN-02**: Implement active-budget protocol (enforcer that wraps LLM calls and raises violations if tier ceiling is exceeded).
+- [x] **BASE-01**: Implement Truncation + sliding-window baseline.
+- [x] **BASE-02**: Implement Summary-buffer baseline.
+- [x] **BASE-03**: Implement Vanilla RAG over an episodic FAISS store baseline.
+- [x] **BASE-04**: Implement MemGPT/Letta baseline.
+- [x] **BASE-05**: Implement Mem0 (or A-Mem) baseline.
+- [x] **BASE-06**: Implement LLMLingua-2 prompt-compression baseline.
+- [x] **TASK-01**: Integrate SWE-bench Verified 100-instance stratified subset with mini-SWE-agent harness.
+- [x] **TASK-02**: Integrate τ²-bench retail + airline full sets (~200 tasks).
+- [x] **TASK-03**: Integrate LongBench v2 multi-doc QA filtered to 8K–32K range + MuSiQue-Ans 1K dev items.
+- [x] **EVAL-01**: Execute cheap pilot on 20 SWE + 50 LongBench v2 items at 3 budgets to validate hypothesis.
 
 ### Active
 
-- [ ] **HARN-01**: Implement the evaluation harness with a `MemoryStrategy` ABC.
-- [ ] **HARN-02**: Implement active-budget protocol (enforcer that wraps LLM calls and raises violations if tier ceiling is exceeded).
-- [ ] **BASE-01**: Implement Truncation + sliding-window baseline.
-- [ ] **BASE-02**: Implement Summary-buffer baseline.
-- [ ] **BASE-03**: Implement Vanilla RAG over an episodic FAISS store baseline.
-- [ ] **BASE-04**: Implement MemGPT/Letta baseline.
-- [ ] **BASE-05**: Implement Mem0 (or A-Mem) baseline.
-- [ ] **BASE-06**: Implement LLMLingua-2 prompt-compression baseline.
-- [ ] **TASK-01**: Integrate SWE-bench Verified 100-instance stratified subset with mini-SWE-agent harness.
-- [ ] **TASK-02**: Integrate τ²-bench retail + airline full sets (~200 tasks).
-- [ ] **TASK-03**: Integrate LongBench v2 multi-doc QA filtered to 8K–32K range + MuSiQue-Ans 1K dev items.
-- [ ] **EVAL-01**: Execute cheap pilot on 20 SWE + 50 LongBench v2 items at 3 budgets to validate hypothesis.
 - [ ] **EVAL-02**: Execute full sweep on Qwen2.5-14B across all three tasks at 5 budget tiers.
 - [ ] **EVAL-03**: Execute full sweep on Qwen2.5-32B and Qwen3-Coder-30B-A3B (MoE).
 - [ ] **DOCS-01**: Write and publish arXiv preprint within 30 days.
@@ -62,4 +61,4 @@ Provide the first standardized tradeoff curves of agent task quality versus toke
 | 32K Max Context | Fits on target hardware and provides a clean 4x log-spaced sweep. | — Pending |
 
 ---
-*Last updated: Tuesday, April 28, 2026 after initialization*
+*Last updated: Friday, May 8, 2026 after v1.0 audit-gap closure*

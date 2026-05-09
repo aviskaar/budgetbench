@@ -8,24 +8,29 @@
 ### Evaluation Harness
 - [x] **HARN-01**: User can plug in custom memory strategies via a standardized `MemoryStrategy` Python ABC.
 - [x] **HARN-02**: System enforces active context budget tiers (2K, 4K, 8K, 16K, 32K) during LLM calls.
-- [ ] **HARN-03**: System raises violations if a memory strategy exceeds its active context tier.
+- [x] **HARN-03**: System raises violations if a memory strategy exceeds its active context tier.
 - [x] **HARN-04**: System logs metrics: quality, mean used budget, peak budget, violation rate, and tokens-per-task-resolved.
 
 ### Baseline Strategies
-- [ ] **BASE-01**: System provides Truncation + sliding-window baseline.
-- [ ] **BASE-02**: System provides Summary-buffer baseline.
+- [x] **BASE-01**: System provides Truncation + sliding-window baseline.
+- [x] **BASE-02**: System provides Summary-buffer baseline.
 - [x] **BASE-03**: System provides Vanilla RAG over an episodic FAISS store.
-- [ ] **BASE-04**: System provides MemGPT/Letta hierarchical OS-style memory baseline.
+- [x] **BASE-04**: System provides MemGPT/Letta hierarchical OS-style memory baseline.
 - [x] **BASE-05**: System provides Mem0 (or A-Mem) hierarchical memory baseline.
-- [ ] **BASE-06**: System provides LLMLingua-2 prompt-compression baseline with sweeps.
+- [x] **BASE-06**: System provides LLMLingua-2 prompt-compression baseline with sweeps.
 
 ### Task Integration
 - [x] **TASK-01**: System executes SWE-bench Verified (100-instance stratified subset) via mini-SWE-agent harness.
-- [x] **TASK-02**: System executes τ²-bench retail + airline full sets (~200 tasks) with deterministic user-simulator. _(Integration wired in Phase 3; full sweep deferred to Phase 4. Install tau2-bench to enable.)_
+- [x] **TASK-02**: System executes τ²-bench retail + airline full sets (~200 tasks) with deterministic user-simulator. _(tau2-bench source install and data checkout validated in Phase 4 audit.)_
 - [x] **TASK-03**: System executes LongBench v2 multi-doc QA (8K–32K range) and MuSiQue-Ans (1K dev items).
 
 ### Publication
 - [ ] **DOCS-01**: System outputs a comprehensive summary of tradeoff curves for arXiv preprint.
+
+### Evaluation Execution
+- [x] **EVAL-01**: Execute cheap pilot on 20 SWE + 50 LongBench v2 items at 3 budgets to validate hypothesis.
+- [ ] **EVAL-02**: Execute full sweep on Qwen2.5-14B across all three tasks at 5 budget tiers.
+- [ ] **EVAL-03**: Execute full sweep on Qwen2.5-32B and Qwen3-Coder-30B-A3B (MoE).
 
 ## v2 Requirements
 
@@ -48,22 +53,25 @@
 |-------------|-------|--------|
 | HARN-01 | Phase 1 | Complete |
 | HARN-02 | Phase 1 | Complete |
-| HARN-03 | Phase 1 | Pending |
+| HARN-03 | Phase 1 | Complete |
 | HARN-04 | Phase 1 | Complete |
-| BASE-01 | Phase 2 | Pending |
-| BASE-02 | Phase 2 | Pending |
+| BASE-01 | Phase 2 | Complete |
+| BASE-02 | Phase 2 | Complete |
 | BASE-03 | Phase 2 | Complete |
-| BASE-04 | Phase 2 | Pending |
+| BASE-04 | Phase 2 | Complete |
 | BASE-05 | Phase 2 | Complete |
-| BASE-06 | Phase 2 | Pending |
+| BASE-06 | Phase 2 | Complete |
 | TASK-01 | Phase 3 | Complete |
-| TASK-02 | Phase 3 | Partial — integration wired, full sweep deferred to Phase 4 |
+| TASK-02 | Phase 3 | Complete |
 | TASK-03 | Phase 3 | Complete |
+| EVAL-01 | Phase 3 | Complete |
+| EVAL-02 | Phase 4 | Pending full sweep |
+| EVAL-03 | Phase 4 | Pending full sweep |
 | DOCS-01 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 14 total
-- Mapped to phases: 14
+- v1 requirements: 17 total
+- Mapped to phases: 17
 - Unmapped: 0 ✓
 
 ---

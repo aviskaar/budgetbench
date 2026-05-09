@@ -24,7 +24,7 @@ class Mem0Strategy(MemoryStrategy):
             # Default local-first config
             config = {
                 "vector_store": {
-                    "provider": "chromadb",
+                    "provider": "chroma",
                     "config": {
                         "collection_name": f"bb_mem_{uuid.uuid4().hex[:8]}",
                         "path": os.path.join(os.getcwd(), ".mem0_db"),
@@ -36,8 +36,13 @@ class Mem0Strategy(MemoryStrategy):
                         "model": "all-MiniLM-L6-v2",
                     }
                 },
-                # Note: LLM still defaults to OpenAI. 
-                # Users should set OPENAI_API_KEY or provide a local LLM config.
+                "llm": {
+                    "provider": "ollama",
+                    "config": {
+                        "model": os.environ.get("BUDGETBENCH_MEM0_MODEL", "qwen2.5:14b"),
+                        "ollama_base_url": os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"),
+                    },
+                },
             }
         
         self.memory = Memory.from_config(config)

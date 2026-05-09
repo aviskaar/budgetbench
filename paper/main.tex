@@ -1,13 +1,13 @@
 % BudgetBench: Standardized Memory Strategy Evaluation for Budget-Constrained Local LLMs
 % Target venue: NeurIPS 2026 Datasets and Benchmarks Track
 %
-% Download neurips_2026.sty from https://neurips.cc/Conferences/2026 before compiling locally.
-% arXiv handles compilation; .sty is bundled at submission.
+% Download neurips_2026.sty from https://neurips.cc/Conferences/2026 for final venue formatting.
 
 \documentclass{article}
 
 % NeurIPS 2026 D&B track style - eandd option for Datasets and Benchmarks.
-\usepackage[eandd]{neurips_2026}
+% Fall back to standard article formatting when the venue style is not present.
+\IfFileExists{neurips_2026.sty}{\usepackage[eandd]{neurips_2026}}{}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
