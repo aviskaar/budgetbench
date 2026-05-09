@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 4
-current_plan: Not started
+current_phase: 04
+current_plan: 2
 status: unknown
-last_updated: "2026-05-07T22:35:09.291Z"
+last_updated: "2026-05-09T02:14:25.254Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 13
+  completed_plans: 11
+  percent: 85
 ---
 
 # Project State
@@ -19,7 +20,7 @@ progress:
 
 See: `.planning/PROJECT.md` (updated 2026-04-28)
 **Core value:** Provide the first standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs.
-**Current focus:** Phase 4: Full Execution & Publication
+**Current focus:** Phase 04 — full-execution-publication
 
 ## Current Phase: Phase 4
 
@@ -36,9 +37,9 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 
 ## Execution Progress
 
-- **Current Phase:** 4
-- **Current Plan:** Not started
-- **Total Plans in Phase:** TBD
+- **Current Phase:** 04
+- **Current Plan:** 2
+- **Total Plans in Phase:** 3
 
 ### Phase 01: Core Evaluation Harness (Complete)
 
@@ -61,7 +62,9 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 
 ### Phase 04: Full Execution & Publication
 
-- [ ] TBD
+- [x] 04-01: RAG + LongBench budget fix
+- [ ] 04-02: Full-study runner
+- [ ] 04-03: Analysis pipeline and publication scaffold
 
 ### Blockers
 
