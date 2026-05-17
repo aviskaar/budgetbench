@@ -32,6 +32,15 @@
 - [ ] **EVAL-02**: Execute full sweep on Qwen2.5-14B across all three tasks at 5 budget tiers.
 - [ ] **EVAL-03**: Execute full sweep on Qwen2.5-32B and Qwen3-Coder-30B-A3B (MoE).
 
+## v1.1 Requirements
+
+### Hardware Profiler
+- [ ] **PROF-01**: System detects GPU model name and VRAM size via `torch` / `psutil` / `system_profiler` fallbacks.
+- [ ] **PROF-02**: System detects CPU core count and total system RAM.
+- [ ] **PROF-03**: System recommends an optimal model + budget tier combination based on detected hardware constraints (VRAM vs model weights + KV-cache footprint).
+- [ ] **PROF-04**: CLI entry point `budgetbench profile` prints a human-readable hardware report with recommendation.
+- [ ] **PROF-05**: `budgetbench profile --json` exports the report as structured JSON.
+
 ## v2 Requirements
 
 ### Stretch Goals
