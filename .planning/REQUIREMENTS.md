@@ -77,12 +77,22 @@
 | EVAL-02 | Phase 4 | Pending full sweep |
 | EVAL-03 | Phase 4 | Pending full sweep |
 | DOCS-01 | Phase 4 | Pending |
+| PROF-01 | Phase 5 | Pending |
+| PROF-02 | Phase 5 | Pending |
+| PROF-03 | Phase 6 | Pending |
+| PROF-04 | Phase 7 | Pending |
+| PROF-05 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
 - Mapped to phases: 17
-- Unmapped: 0 ✓
+- Unmapped: 0
+- v1.1 requirements: 5 total
+- Mapped to phases: 5
+- Unmapped: 0
+
+**Total mapped: 22/22**
 
 ---
 *Requirements defined: 2026-04-28*
-*Last updated: 2026-04-28 after initial definition*
+*Last updated: 2026-05-16 v1.1 Hardware Profiler roadmap*
