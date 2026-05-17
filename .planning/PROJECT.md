@@ -60,5 +60,31 @@ Provide the first standardized tradeoff curves of agent task quality versus toke
 | Deterministic graders only | Essential for peer-review credibility on a benchmark paper. | — Pending |
 | 32K Max Context | Fits on target hardware and provides a clean 4x log-spaced sweep. | — Pending |
 
+## Current Milestone: v1.1 Hardware Profiler
+
+**Goal:** Add a `budgetbench profile` CLI command that detects user GPU/CPU/RAM and recommends the best model + budget tier combination for their hardware.
+
+**Target features:**
+- Hardware detection (GPU model, VRAM, CPU cores, system RAM)
+- Model recommendation engine (matches hardware to optimal Qwen model + context budget tier)
+- CLI entry point: `budgetbench profile`
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: Friday, May 8, 2026 after v1.0 audit-gap closure*
+*Last updated: 2026-05-16 — v1.1 Hardware Profiler milestone started*
