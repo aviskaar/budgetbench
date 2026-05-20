@@ -65,18 +65,22 @@
 **Goal:** Detect user's GPU (model + VRAM), CPU cores, and system RAM with cross-platform fallbacks.
 **Requirements:** PROF-01, PROF-02
 
-**Plans:** TBD
+**Plans:** 3/3 plans complete
+- [x] 05-00-PLAN.md — Implement hardware detection module (psutil + CLI fallbacks)
+- [x] 05-01-PLAN.md — Write tests for hardware detection
+- [x] 05-02-PLAN.md — Verify end-to-end on target hardware
 
 **Success Criteria:**
 1. Running hardware detection on any target platform (Linux/NVIDIA, macOS/Apple Silicon, CPU-only) returns GPU model name (or "CPU-only") and VRAM in GB.
-2. Hardware detection returns accurate CPU core count and total system RAM in GB.
+2. Hardware detection returns accurate CPU core count and system RAM in GB.
 3. Fallback detection paths work: `torch`/`psutil` primary, `nvidia-smi` on Linux, `system_profiler` on macOS.
 
 ### Phase 6: Recommendation Engine
 **Goal:** Match detected hardware to optimal Qwen model + context budget tier based on VRAM vs model weights + KV-cache footprint.
 **Requirements:** PROF-03
 
-**Plans:** TBD
+**Plans:** 1/1 plans complete
+- [x] 06-06-PLAN.md — Implement recommendation engine with model registry and greedy largest-first selection
 
 **Success Criteria:**
 1. Given 8 GB VRAM, the recommender selects a model + tier that fits within VRAM constraints (weights + KV-cache).
@@ -88,7 +92,8 @@
 **Goal:** Provide a `budgetbench profile` CLI command that prints a human-readable hardware report with recommendation, plus `--json` export.
 **Requirements:** PROF-04, PROF-05
 
-**Plans:** TBD
+**Plans:** 1/1 plans complete
+- [x] 07-07-PLAN.md — Implement CLI profile command with argparse, profile() function, and package export
 
 **Success Criteria:**
 1. Running `budgetbench profile` prints a formatted hardware report showing GPU, CPU, RAM, and model+tier recommendation.
@@ -183,6 +188,6 @@
 | 2. Baseline Implementations | 3/3 | Complete | - |
 | 3. Task Integration & Pilot | 4/4 | Complete | - |
 | 4. Full Execution & Publication | 3/3 | Complete | - |
-| 5. Hardware Detection | 0/0 | Not started | - |
-| 6. Recommendation Engine | 0/0 | Not started | - |
-| 7. CLI Profile Command | 0/0 | Not started | - |
+| 5. Hardware Detection | 3/3 | Complete | - |
+| 6. Recommendation Engine | 1/1 | Complete | - |
+| 7. CLI Profile Command | 1/1 | Complete | - |

@@ -2,15 +2,17 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Hardware Profiler
-status: planning
-last_updated: "2026-05-17T02:50:50.818Z"
-last_activity: 2026-05-17
+current_phase: 07
+current_plan: Complete
+status: Complete
+last_updated: "2026-05-19T00:00:00.000Z"
+last_activity: 2026-05-19 — Phase 07 (CLI Profile Command) completed
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 7
+  completed_phases: 7
+  total_plans: 15
+  completed_plans: 15
+  percent: 100
 ---
 
 # Project State
@@ -19,26 +21,25 @@ progress:
 
 See: `.planning/PROJECT.md` (updated 2026-04-28)
 **Core value:** Provide the first standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs.
-**Current focus:** Phase 04 — full-execution-publication
+**Current focus:** Phase 05 — hardware detection (complete), next: Phase 06 — recommendation engine
 
-## Current Phase: Phase 4
+## Current Phase: Phase 5
 
 ### Goals
 
-Execute the full benchmark suite across all target models and budget tiers, and publish the arXiv preprint.
+Detect user's GPU (model + VRAM), CPU cores, and system RAM with cross-platform fallbacks.
 
 ### Current Status
 
-- [ ] Initialize phase
-- [ ] Plan phase
+- [x] Initialize phase
+- [x] Plan phase
 - [x] Execute phase
-- [ ] Verify phase
+- [x] Verify phase
 
 ## Execution Progress
 
-- **Current Phase:** 04
-- **Current Plan:** Not started
-- **Total Plans in Phase:** 3
+- **Current Phase:** 05 (Complete)
+- **Next Phase:** 06 — Recommendation Engine
 
 ### Phase 01: Core Evaluation Harness (Complete)
 
@@ -65,28 +66,47 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 - [x] 04-02: Full-study runner
 - [x] 04-03: Analysis pipeline and publication scaffold
 
+### Phase 05: Hardware Detection (Complete)
+
+- [x] 05-00: Implement hardware detection module
+- [x] 05-01: Write tests for hardware detection
+- [x] 05-02: Verify end-to-end
+
+### Phase 06: Recommendation Engine (Complete)
+
+- [x] 06-06: Implement recommendation engine + test suite
+- [x] 06-VERIFICATION: Verify all success criteria
+
+### Phase 07: CLI Profile Command (Complete)
+
+- [x] 07-01: Implement profile() function
+- [x] 07-02: Wire up package export
+- [x] 07-03: Implement CLI entry point
+- [x] 07-04: Write tests
+- [x] 07-VERIFICATION: Verify all success criteria
+
 ### Blockers
 
 None.
 
-## Key Decisions (Phase 03)
+## Key Decisions
 
-- Used qwen2.5:1.5b for validation pilot; accuracy=0 is expected and validates harness, not model quality.
-- RAG strategy requires post-retrieval token-aware truncation for LongBench; deferred to Phase 4 action item.
-- Pilot scope reduced to 3 items per task for pipeline validation speed.
-- tau.py raises ImportError when tau2-bench absent; root conftest.py added for src/ layout importability (03-04).
-- TASK-02 marked Partial: integration wired, full sweep deferred to Phase 4 (03-04).
+- Phase 3: Used qwen2.5:1.5b for validation pilot; accuracy=0 is expected.
+- Phase 5: psutil + CLI fallbacks for hardware detection; Apple Silicon VRAM = total RAM (unified memory).
 
 ## Recent Log
 
-- **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite, updated REQUIREMENTS.md and PILOT_RESULTS.md scope docs. Phase 3 fully closed.
-- **2026-04-29**: Completed Phase 3. All 3 plans executed. Validation pilot ran 18 combinations, budget enforcement confirmed working. RAG pre-filtering gap identified for Phase 4.
-- **2026-04-28**: Planned Phase 3. Defined integration strategy for SWE-bench Verified, τ²-bench, and LongBench v2.
-- **2026-04-28**: Completed Phase 2. All 6 memory strategies are implemented and verified.
+- **2026-05-19**: Completed Phase 07. Implemented CLI profile command with argparse, profile() function, package export. 8/8 profile tests passing.
+- **2026-05-19**: Completed Phase 06. Implemented recommendation engine with model registry, VRAM calculation, and greedy largest-first selection. 12/12 tests passing.
+- **2026-05-17**: Completed Phase 05. Implemented hardware detection with psutil + CLI fallbacks. 17/17 tests passing. detect_hardware() returns correct report on M4 Pro (64 GB unified memory, 14 cores).
+- **2026-05-17**: Milestone v1.1 started. Phase 05 context and discussion gathered.
+- **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite.
+- **2026-04-29**: Completed Phase 3. Validation pilot ran 18 combinations.
+- **2026-04-28**: Completed Phase 2. All 6 memory strategies implemented.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-05-17 — Milestone v1.1 started
+Phase: Complete — all 7 phases done
+Plan: N/A
+Status: Milestone v1.1 complete
+Last activity: 2026-05-19 — Phase 07 complete

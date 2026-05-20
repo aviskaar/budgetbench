@@ -1,0 +1,15 @@
+[project]
+name = "budgetbench"
+version = "0.1.0"
+description = "A standardized community benchmark for local LLM agents to evaluate memory strategies across fixed active-context-budget tiers"
+requires-python = ">=3.10"
+dependencies = [
+    "psutil>=5.9.0",
+]
+
+[project.scripts]
+budgetbench = "budgetbench.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
