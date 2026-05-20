@@ -2,11 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Hardware Profiler
-current_phase: 07
-current_plan: Complete
-status: Complete
-last_updated: "2026-05-19T00:00:00.000Z"
-last_activity: 2026-05-19 — Phase 07 (CLI Profile Command) completed
+current_phase: Complete
+status: Complete — Awaiting next milestone
+last_updated: "2026-05-20T03:45:00.000Z"
+last_activity: 2026-05-20 — Milestone v1.1 completed, archived, and tagged
 progress:
   total_phases: 7
   completed_phases: 7
@@ -19,27 +18,11 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-28)
+See: `.planning/PROJECT.md` (updated 2026-05-20)
 **Core value:** Provide the first standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs.
-**Current focus:** Phase 05 — hardware detection (complete), next: Phase 06 — recommendation engine
-
-## Current Phase: Phase 5
-
-### Goals
-
-Detect user's GPU (model + VRAM), CPU cores, and system RAM with cross-platform fallbacks.
-
-### Current Status
-
-- [x] Initialize phase
-- [x] Plan phase
-- [x] Execute phase
-- [x] Verify phase
+**Current focus:** Planning next milestone — full benchmark execution (EVAL-02, EVAL-03) and arXiv publication (DOCS-01)
 
 ## Execution Progress
-
-- **Current Phase:** 05 (Complete)
-- **Next Phase:** 06 — Recommendation Engine
 
 ### Phase 01: Core Evaluation Harness (Complete)
 
@@ -60,7 +43,7 @@ Detect user's GPU (model + VRAM), CPU cores, and system RAM with cross-platform 
 - [x] 03-03: Pilot Execution and Verification
 - [x] 03-04: Gap Closure — τ²-bench stub fix and pilot scope documentation
 
-### Phase 04: Full Execution & Publication
+### Phase 04: Full Execution & Publication (Complete)
 
 - [x] 04-01: RAG + LongBench budget fix
 - [x] 04-02: Full-study runner
@@ -93,9 +76,11 @@ None.
 
 - Phase 3: Used qwen2.5:1.5b for validation pilot; accuracy=0 is expected.
 - Phase 5: psutil + CLI fallbacks for hardware detection; Apple Silicon VRAM = total RAM (unified memory).
+- v1.1: Milestone completed and archived with all 5 PROF requirements satisfied.
 
 ## Recent Log
 
+- **2026-05-20**: Milestone v1.1 completed, archived, and tagged. Audit passed (5/5 requirements, 3/3 integration flows, 37 tests passing).
 - **2026-05-19**: Completed Phase 07. Implemented CLI profile command with argparse, profile() function, package export. 8/8 profile tests passing.
 - **2026-05-19**: Completed Phase 06. Implemented recommendation engine with model registry, VRAM calculation, and greedy largest-first selection. 12/12 tests passing.
 - **2026-05-17**: Completed Phase 05. Implemented hardware detection with psutil + CLI fallbacks. 17/17 tests passing. detect_hardware() returns correct report on M4 Pro (64 GB unified memory, 14 cores).
@@ -106,7 +91,11 @@ None.
 
 ## Current Position
 
-Phase: Complete — all 7 phases done
-Plan: N/A
-Status: Milestone v1.1 complete
-Last activity: 2026-05-19 — Phase 07 complete
+Milestone: v1.1 Complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-05-20 — Milestone v1.1 completed and archived
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd:new-milestone
