@@ -46,6 +46,7 @@ class TaskRunner:
                 })
                 
                 self.logger.log_metrics({
+                    "quality": float(is_correct),
                     "task_success": float(is_correct)
                 })
                 
