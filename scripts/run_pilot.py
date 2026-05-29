@@ -24,8 +24,8 @@ from budgetbench.utils.types import OpenAIMessage
 BUDGET_TIERS = [2048, 8192, 32768]
 FULL_STUDY_BUDGET_TIERS = [2048, 4096, 8192, 16384, 32768]
 DEFAULT_TASKS_CONFIG = [
-    {"name": "swe", "default_limit": 20},
-    {"name": "long", "default_limit": 50},
+    {"name": "swe", "default_limit": 100},
+    {"name": "long", "default_limit": 100},
     {"name": "tau", "default_limit": 200},
 ]
 

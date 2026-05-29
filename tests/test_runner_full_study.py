@@ -21,7 +21,7 @@ def test_full_study_budget_tiers():
 def test_full_study_default_tasks_cover_requirements():
     """Full study includes the three required task families."""
     task_limits = {cfg["name"]: cfg["default_limit"] for cfg in DEFAULT_TASKS_CONFIG}
-    assert task_limits == {"swe": 20, "long": 50, "tau": 200}
+    assert task_limits == {"swe": 100, "long": 100, "tau": 200}
 
 
 def test_resume_skip(tmp_path):
