@@ -105,14 +105,6 @@ def build_strategies(llm_client, selected_names: Optional[List[str]] = None) -> 
         except Exception as e:
             print(f"  [skip] RAGStrategy not available: {e}")
 
-    # Optional heavy strategies — skip if deps are missing.
-    if requested is None or "mem0" in requested:
-        try:
-            from budgetbench.strategies import Mem0Strategy
-            strategies["mem0"] = Mem0Strategy()
-        except (ImportError, Exception) as e:
-            print(f"  [skip] Mem0Strategy not available: {e}")
-
     if requested is None or "letta" in requested:
         try:
             from budgetbench.strategies import LettaStrategy
@@ -242,7 +234,7 @@ def run_pilot(args):
                     results = runner.run_evaluation(max_tokens=budget, limit=limit)
                     duration = time.time() - start_time
 
-                    success_count = sum(1 for r in results if r.get("is_correct"))
+                    success_count = sum(float(r.get("is_correct", 0)) for r in results)
                     total_count = len(results)
                     accuracy = success_count / total_count if total_count > 0 else 0
 
