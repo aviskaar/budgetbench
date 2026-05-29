@@ -51,45 +51,87 @@ def test_longbench_wrapper(mock_datasets):
     assert task.grade("B.", "B") is True
     assert task.grade("Selected answer: C", "C") is True
 
-def test_swe_wrapper(mock_datasets):
-    # Mock dataset
+GOLD_PATCH = """\
+diff --git a/src/foo.py b/src/foo.py
+--- a/src/foo.py
++++ b/src/foo.py
+@@ -10,7 +10,7 @@
+-    return x + 1
++    return x + 2
+"""
+
+def test_swe_run_extracts_patch(mock_datasets):
     mock_item = {
         "instance_id": "test_id",
-        "problem_statement": "Fix the bug in file.py",
-        "repo": "org/repo",
-        "version": "1.0"
+        "problem_statement": "Fix the off-by-one error in foo.py",
+        "hints_text": "",
+        "patch": GOLD_PATCH,
     }
     mock_ds = MagicMock()
     mock_ds.__iter__.return_value = [mock_item]
     mock_ds.__len__.return_value = 1
     mock_datasets.return_value = mock_ds
-    
+
     task = SWEBenchTask()
     items = task.get_dataset()
-    
-    # Mock LLM: 1st turn 'ls', 2nd turn 'submit'
-    llm_responses = [
-        {"choices": [{"message": {"content": '{"thought": "listing files", "command": "ls"}'}}]},
-        {"choices": [{"message": {"content": '{"thought": "done", "command": "submit"}'}}]}
-    ]
-    llm_client = MagicMock(side_effect=llm_responses)
+
+    # Model returns the patch inline
+    llm_client = MagicMock(return_value=GOLD_PATCH)
     strategy = MagicMock(side_effect=lambda msgs, budget: msgs)
     tokenizer_fn = MagicMock(return_value=10)
     logger = MagicMock()
-    
-    patch_result = task.run(
+
+    result = task.run(
         item=items[0],
         strategy=strategy,
         llm_client=llm_client,
         tokenizer_fn=tokenizer_fn,
         max_tokens=2000,
         logger=logger,
-        use_docker=False
     )
-    
-    assert patch_result != ""
-    assert task.grade(patch_result, items[0]) is True
-    assert llm_client.call_count == 2
+
+    assert "diff --git" in result
+    assert llm_client.call_count == 1  # single-turn, not multi-turn
+
+
+def test_swe_grade_exact_match():
+    task = SWEBenchTask()
+    item = {"patch": GOLD_PATCH}
+    assert task.grade(GOLD_PATCH, item) == 1.0
+
+
+def test_swe_grade_wrong_file():
+    task = SWEBenchTask()
+    wrong = GOLD_PATCH.replace("src/foo.py", "src/bar.py")
+    item = {"patch": GOLD_PATCH}
+    assert task.grade(wrong, item) == 0.0
+
+
+def test_swe_grade_right_file_wrong_lines():
+    task = SWEBenchTask()
+    wrong_lines = """\
+diff --git a/src/foo.py b/src/foo.py
+--- a/src/foo.py
++++ b/src/foo.py
+@@ -10,7 +10,7 @@
+-    return x + 1
++    return x + 99
+"""
+    item = {"patch": GOLD_PATCH}
+    score = task.grade(wrong_lines, item)
+    # File matched, removal line shared, only addition differs → 1/2 lines match
+    # 0.4 * file_recall(1.0) + 0.6 * line_score(0.5) = 0.7
+    assert score == pytest.approx(0.7)
+
+
+def test_swe_grade_empty_patch():
+    task = SWEBenchTask()
+    assert task.grade("", {"patch": GOLD_PATCH}) == 0.0
+
+
+def test_swe_grade_no_gold():
+    task = SWEBenchTask()
+    assert task.grade(GOLD_PATCH, {"patch": ""}) == 0.0
 
 
 def test_longbench_chunking():
