@@ -3,6 +3,34 @@ from budgetbench.strategies.rag import RAGStrategy
 from budgetbench.tasks.long import LongBenchV2Task
 from budgetbench.utils.types import OpenAIMessage
 
+
+class DummySentenceTransformer:
+    def __init__(self, model_name):
+        self.model_name = model_name
+
+    def encode(self, text):
+        lowered = text.lower()
+        if "blue" in lowered or "favorite color" in lowered:
+            return DummyEmbedding([1.0, 0.0, 0.0])
+        if "pizza" in lowered:
+            return DummyEmbedding([0.0, 1.0, 0.0])
+        if "paris" in lowered or "france" in lowered:
+            return DummyEmbedding([0.0, 0.0, 1.0])
+        if "rome" in lowered or "italy" in lowered:
+            return DummyEmbedding([0.0, 0.0, 0.5])
+        return DummyEmbedding([0.0, 0.0, 0.0])
+
+
+class DummyEmbedding(list):
+    def tolist(self):
+        return list(self)
+
+
+@pytest.fixture(autouse=True)
+def mock_sentence_transformer(monkeypatch):
+    monkeypatch.setattr("budgetbench.strategies.rag.SentenceTransformer", DummySentenceTransformer)
+
+
 def test_rag_strategy_initialization():
     strategy = RAGStrategy()
     assert strategy is not None

@@ -41,6 +41,7 @@ class Mem0Strategy(MemoryStrategy):
                     "config": {
                         "model": os.environ.get("BUDGETBENCH_MEM0_MODEL", "qwen2.5:14b"),
                         "temperature": 0.0,
+                        "ollama_base_url": os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"),
                     },
                 },
             }

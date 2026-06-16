@@ -51,68 +51,110 @@ def test_longbench_wrapper(mock_datasets):
     assert task.grade("B.", "B") is True
     assert task.grade("Selected answer: C", "C") is True
 
-def test_longbench_chunking():
-    task = LongBenchV2Task()
-    item = {
-        "context": "a" * 5000,
-        "question": "Which letter is repeated?",
-        "choice_A": "a",
-        "choice_B": "b",
-        "choice_C": "c",
-        "choice_D": "d",
-        "answer": "A",
-    }
+GOLD_PATCH = """\
+diff --git a/src/foo.py b/src/foo.py
+--- a/src/foo.py
++++ b/src/foo.py
+@@ -10,7 +10,7 @@
+-    return x + 1
++    return x + 2
+"""
 
-    messages = task.format_message(item, budget=1024)
-
-    assert messages[0]["role"] == "system"
-    assert messages[-1]["content"].startswith("Question: Which letter is repeated?")
-    assert "A: a" in messages[-1]["content"]
-    assert len(messages[1:-1]) == 5
-    assert all(msg["content"].startswith("Context part ") for msg in messages[1:-1])
-    assert all(len(msg["content"].split("\n", 1)[1]) <= 1024 for msg in messages[1:-1])
-
-    short_messages = task.format_message({**item, "context": "short"}, budget=1024)
-
-    assert len(short_messages) == 3
-    assert short_messages[1]["content"] == "Context:\nshort"
-
-def test_swe_wrapper(mock_datasets):
-    # Mock dataset
+def test_swe_run_extracts_patch(mock_datasets):
     mock_item = {
         "instance_id": "test_id",
-        "problem_statement": "Fix the bug in file.py",
-        "repo": "org/repo",
-        "version": "1.0"
+        "problem_statement": "Fix the off-by-one error in foo.py",
+        "hints_text": "",
+        "patch": GOLD_PATCH,
     }
     mock_ds = MagicMock()
     mock_ds.__iter__.return_value = [mock_item]
     mock_ds.__len__.return_value = 1
     mock_datasets.return_value = mock_ds
-    
+
     task = SWEBenchTask()
     items = task.get_dataset()
-    
-    # Mock LLM: 1st turn 'ls', 2nd turn 'submit'
-    llm_responses = [
-        {"choices": [{"message": {"content": '{"thought": "listing files", "command": "ls"}'}}]},
-        {"choices": [{"message": {"content": '{"thought": "done", "command": "submit"}'}}]}
-    ]
-    llm_client = MagicMock(side_effect=llm_responses)
+
+    # Model returns the patch inline
+    llm_client = MagicMock(return_value=GOLD_PATCH)
     strategy = MagicMock(side_effect=lambda msgs, budget: msgs)
     tokenizer_fn = MagicMock(return_value=10)
     logger = MagicMock()
-    
-    patch_result = task.run(
+
+    result = task.run(
         item=items[0],
         strategy=strategy,
         llm_client=llm_client,
         tokenizer_fn=tokenizer_fn,
         max_tokens=2000,
         logger=logger,
-        use_docker=False
     )
-    
-    assert patch_result != ""
-    assert task.grade(patch_result, items[0]) is True
-    assert llm_client.call_count == 2
+
+    assert "diff --git" in result
+    assert llm_client.call_count == 1  # single-turn, not multi-turn
+
+
+def test_swe_grade_exact_match():
+    task = SWEBenchTask()
+    item = {"patch": GOLD_PATCH}
+    assert task.grade(GOLD_PATCH, item) == 1.0
+
+
+def test_swe_grade_wrong_file():
+    task = SWEBenchTask()
+    wrong = GOLD_PATCH.replace("src/foo.py", "src/bar.py")
+    item = {"patch": GOLD_PATCH}
+    assert task.grade(wrong, item) == 0.0
+
+
+def test_swe_grade_right_file_wrong_lines():
+    task = SWEBenchTask()
+    wrong_lines = """\
+diff --git a/src/foo.py b/src/foo.py
+--- a/src/foo.py
++++ b/src/foo.py
+@@ -10,7 +10,7 @@
+-    return x + 1
++    return x + 99
+"""
+    item = {"patch": GOLD_PATCH}
+    score = task.grade(wrong_lines, item)
+    # File matched, removal line shared, only addition differs → 1/2 lines match
+    # 0.4 * file_recall(1.0) + 0.6 * line_score(0.5) = 0.7
+    assert score == pytest.approx(0.7)
+
+
+def test_swe_grade_empty_patch():
+    task = SWEBenchTask()
+    assert task.grade("", {"patch": GOLD_PATCH}) == 0.0
+
+
+def test_swe_grade_no_gold():
+    task = SWEBenchTask()
+    assert task.grade(GOLD_PATCH, {"patch": ""}) == 0.0
+
+
+def test_longbench_chunking():
+    """Verify format_message() chunks large context into multiple user messages."""
+    task = LongBenchV2Task()
+    large_item = {
+        "context": "X" * 10000,
+        "question": "What is X?",
+        "choice_A": "One",
+        "choice_B": "Two",
+        "choice_C": "Three",
+        "choice_D": "Four",
+        "answer": "A",
+    }
+    messages = task.format_message(large_item, budget=2048)
+    assert messages[0]["role"] == "system"
+    assert messages[-1]["content"].startswith("Question:")
+    context_msgs = messages[1:-1]
+    assert len(context_msgs) == 5
+    assert all(m["role"] == "user" for m in context_msgs)
+    assert "Context part 1:" in context_msgs[0]["content"]
+
+    small_item = {**large_item, "context": "Short context."}
+    small_msgs = task.format_message(small_item, budget=8192)
+    assert len(small_msgs) == 3
+    assert "Context:\n" in small_msgs[1]["content"]

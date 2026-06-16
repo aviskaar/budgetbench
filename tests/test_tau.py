@@ -1,9 +1,9 @@
 """
-Tests for TauBenchTask with correct ImportError behavior when tau2-bench is absent.
+Tests for TauBenchTask with correct ImportError behavior and tau2 task loading.
 
 These tests cover:
 - test_tau_raises_importerror_when_tau2_absent: run() and get_dataset() raise ImportError
-- test_tau_dataset_calls_env_when_available: get_dataset() calls env.get_dataset() when mocked
+- test_tau_dataset_calls_registry_when_available: get_dataset() calls tau2 task loaders when mocked
 - test_tau_dataset_limit: get_dataset(limit=1) returns at most 1 item
 - test_tau_run_calls_harness_when_available: run() calls run_evaluation_task (not mock success)
 """
@@ -30,30 +30,33 @@ def test_tau_raises_importerror_when_tau2_absent():
 
 
 def test_tau_dataset_calls_env_when_available():
-    """When tau2 is mocked as available, get_dataset() calls env.get_dataset()."""
-    mock_env = MagicMock()
-    mock_env.get_dataset.return_value = [
-        {"goal": "Find a laptop under $1000", "id": "retail-1"},
-        {"goal": "Cancel my flight to Paris", "id": "airline-1"},
+    """When tau2 is mocked as available, get_dataset() calls task loaders."""
+    task_one = MagicMock(id="retail-1")
+    task_two = MagicMock(id="airline-1")
+    mock_registry = MagicMock()
+    mock_registry.registry.get_tasks_loader.side_effect = [
+        lambda: [task_one],
+        lambda: [task_two],
     ]
     with patch("budgetbench.tasks.tau.TAU2_AVAILABLE", True), \
-         patch("budgetbench.tasks.tau._tau2_get_env", return_value=mock_env):
+         patch("budgetbench.tasks.tau._tau2_registry", mock_registry):
         import budgetbench.tasks.tau as tau_mod
         task = tau_mod.TauBenchTask()
         items = task.get_dataset()
         assert len(items) == 2
-        assert all("goal" in item and "id" in item for item in items)
+        assert items[0]["id"] == "retail:retail-1"
+        assert items[1]["id"] == "airline:airline-1"
 
 
 def test_tau_dataset_limit():
     """get_dataset(limit=1) returns at most 1 item."""
-    mock_env = MagicMock()
-    mock_env.get_dataset.return_value = [
-        {"goal": "goal 1", "id": "1"},
-        {"goal": "goal 2", "id": "2"},
+    mock_registry = MagicMock()
+    mock_registry.registry.get_tasks_loader.side_effect = [
+        lambda: [MagicMock(id="1"), MagicMock(id="2")],
+        lambda: [MagicMock(id="3")],
     ]
     with patch("budgetbench.tasks.tau.TAU2_AVAILABLE", True), \
-         patch("budgetbench.tasks.tau._tau2_get_env", return_value=mock_env):
+         patch("budgetbench.tasks.tau._tau2_registry", mock_registry):
         import budgetbench.tasks.tau as tau_mod
         task = tau_mod.TauBenchTask()
         items = task.get_dataset(limit=1)
@@ -62,10 +65,6 @@ def test_tau_dataset_limit():
 
 def test_tau_run_calls_harness_when_available(tokenizer_fn):
     """When tau2 is mocked, run() calls run_evaluation_task (not mock success)."""
-    mock_env = MagicMock()
-    mock_env.reset.return_value = ("Initial obs", {"tools": []})
-    mock_env.step.return_value = ("Next obs", 1.0, True, False, {"success": True})
-
     mock_llm = MagicMock(
         return_value={"choices": [{"message": {"content": "action"}}]}
     )
@@ -73,16 +72,14 @@ def test_tau_run_calls_harness_when_available(tokenizer_fn):
     mock_logger = MagicMock()
 
     with patch("budgetbench.tasks.tau.TAU2_AVAILABLE", True), \
-         patch("budgetbench.tasks.tau._tau2_get_env", return_value=mock_env), \
          patch(
              "budgetbench.tasks.tau.run_evaluation_task",
              return_value={"choices": [{"message": {"content": "action"}}]},
          ) as mock_harness:
         import budgetbench.tasks.tau as tau_mod
         task = tau_mod.TauBenchTask()
-        task.env = mock_env
         result = task.run(
-            item={"goal": "Test goal", "id": "t1"},
+            item={"scenario": "Test goal", "id": "t1", "domain": "retail"},
             strategy=mock_strategy,
             llm_client=mock_llm,
             tokenizer_fn=tokenizer_fn,

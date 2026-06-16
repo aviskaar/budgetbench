@@ -36,10 +36,9 @@ def run_evaluation_task(
             # 3. Call LLM
             response = llm_client(processed_messages)
             
-            # 4. Record success metrics
+            # 4. Record budget/latency metrics (quality logged by caller after grading)
             duration = time.time() - start_time
             metrics = {
-                "quality": 1.0,  # Placeholder: actual quality evaluation would happen here or later
                 "used_budget": token_count,
                 "peak_budget": peak_budget,
                 "violation_rate": violations / (attempt + 1),

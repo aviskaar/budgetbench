@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.mem0_db/
+.deps/
+logs/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.pdf

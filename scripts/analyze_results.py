@@ -1,7 +1,6 @@
 """
-BudgetBench Results Aggregator.
-
-Reads summary.jsonl from one or more log directories and produces an aggregated CSV.
+BudgetBench Results Aggregator
+Reads summary.jsonl from one or more log dirs and produces an aggregated CSV.
 
 Usage:
     python scripts/analyze_results.py --log-dirs logs/full_study/20260508_120000 --model qwen2.5:14b
@@ -37,7 +36,11 @@ def load_summary_files(log_dirs: List[str]) -> pd.DataFrame:
 
 
 def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
-    """Compute violation_rate from each row's per-combination JSONL file."""
+    """
+    For each row, read the per-combination JSONL to compute violation_rate.
+    Per-combination JSONL: {log_dir}/{task}_{strategy}_{budget}.jsonl
+    violation_rate = fraction of turns where violation == True.
+    """
     violation_rates = []
     for _, row in df.iterrows():
         log_dir = row.get("_log_dir", "")
@@ -48,7 +51,6 @@ def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
         if not os.path.exists(combo_file):
             violation_rates.append(None)
             continue
-
         total = 0
         violations = 0
         with open(combo_file) as f:
@@ -60,17 +62,17 @@ def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
                         violations += 1
                 except json.JSONDecodeError:
                     pass
-        violation_rates.append(violations / total if total > 0 else None)
-
+        rate = violations / total if total > 0 else None
+        violation_rates.append(rate)
     df = df.copy()
     df["violation_rate"] = violation_rates
     return df
 
 
-def main() -> None:
+def main():
     parser = argparse.ArgumentParser(description="Aggregate BudgetBench summary.jsonl files into CSV")
     parser.add_argument("--log-dirs", nargs="+", required=True, help="Log directories containing summary.jsonl")
-    parser.add_argument("--model", type=str, required=True, help="Model name, e.g. qwen2.5:14b")
+    parser.add_argument("--model", type=str, required=True, help="Model name (e.g. qwen2.5:14b)")
     args = parser.parse_args()
 
     print(f"Loading summary files from: {args.log_dirs}")

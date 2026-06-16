@@ -1,7 +1,4 @@
-import docker
-import json
 import re
-import os
 from typing import List, Callable, Any, Dict, Optional
 from budgetbench.utils.types import OpenAIMessage
 from budgetbench.evaluation.harness import run_evaluation_task
@@ -9,15 +6,12 @@ from budgetbench.core.strategy import MemoryStrategy
 from budgetbench.evaluation.metrics import MetricsLogger
 from budgetbench.tasks.base import BaseTask
 
+
 class SWEBenchTask(BaseTask):
     def __init__(self, dataset_name: str = "princeton-nlp/SWE-bench_Verified", split: str = "test"):
         self.dataset_name = dataset_name
         self.split = split
         self._dataset = None
-        try:
-            self.docker_client = docker.from_env()
-        except Exception:
-            self.docker_client = None
 
     @property
     def dataset(self):
@@ -34,22 +28,44 @@ class SWEBenchTask(BaseTask):
 
     def _get_system_prompt(self) -> str:
         return (
-            "You are a skilled software engineer. You are given a problem statement and access to a bash shell. "
-            "Your goal is to fix the issue by exploring the repository and applying a patch. "
-            "Available commands: ls, cat, grep, python, pytest, sed, and 'submit' to finish. "
-            "Format your response as a JSON object with two fields: 'thought' (your reasoning) and 'command' (the bash command to execute). "
-            "Example: {\"thought\": \"I will list the files.\", \"command\": \"ls -R\"}"
+            "You are an expert software engineer. You will be given a bug report and any available hints. "
+            "Your task is to produce a minimal unified diff patch that fixes the bug. "
+            "Output ONLY the patch in unified diff format, starting with 'diff --git'. "
+            "Do not include any explanation or prose outside the diff block."
         )
 
-    def _execute_command(self, container: Any, command: str) -> str:
-        if container is None:
-            return f"Mocked output for: {command}"
-        
-        try:
-            exit_code, output = container.exec_run(f"bash -c {json.dumps(command)}")
-            return output.decode("utf-8")
-        except Exception as e:
-            return f"Error executing command: {str(e)}"
+    def _extract_patch(self, content: str) -> str:
+        """Extract the unified diff block from the model's response."""
+        # Try a fenced code block first
+        fenced = re.search(r'```(?:diff|patch)?\s*\n(.*?)```', content, re.DOTALL)
+        if fenced:
+            block = fenced.group(1)
+            if 'diff --git' in block:
+                return block.strip()
+
+        # Fall back to finding "diff --git" and taking everything from there
+        idx = content.find('diff --git')
+        if idx != -1:
+            return content[idx:].strip()
+
+        return ""
+
+    def _parse_patch(self, patch: str) -> Dict[str, List[str]]:
+        """Return {filename: [changed_lines]} parsed from a unified diff."""
+        files: Dict[str, List[str]] = {}
+        current_file = None
+        for line in patch.splitlines():
+            if line.startswith('diff --git '):
+                parts = line.split()
+                if len(parts) >= 4:
+                    current_file = parts[3].lstrip('b/')
+                    files[current_file] = []
+            elif current_file is not None:
+                if line.startswith('+++ ') or line.startswith('--- '):
+                    continue
+                if line.startswith('+') or line.startswith('-'):
+                    files[current_file].append(line)
+        return files
 
     def run(
         self,
@@ -59,92 +75,74 @@ class SWEBenchTask(BaseTask):
         tokenizer_fn: Callable[[str], int],
         max_tokens: int,
         logger: MetricsLogger,
-        max_turns: int = 10,
-        use_docker: bool = False
     ) -> str:
-        instance_id = item["instance_id"]
-        problem_statement = item["problem_statement"]
-        
-        container = None
-        if use_docker and self.docker_client:
-            # Placeholder for actual container setup logic
-            # In a real scenario, we'd use a specific image for the repo/version
-            # image_name = f"swe-bench-{item['repo'].replace('/', '-')}-{item['version']}"
-            try:
-                container = self.docker_client.containers.run(
-                    "python:3.12-slim", # Placeholder image
-                    command="tail -f /dev/null",
-                    detach=True,
-                    # network_mode="none" # Security: mitigate T-03-01-01
-                )
-                # Clone repo and setup env... (Omitted for brevity in pilot)
-            except Exception as e:
-                logger.log_metrics({"error": f"Failed to start container: {str(e)}"})
-                container = None
+        problem_statement = item.get("problem_statement", "")
+        hints = item.get("hints_text", "").strip()
 
-        history: List[OpenAIMessage] = [
+        user_content = f"Bug report:\n{problem_statement}"
+        if hints:
+            user_content += f"\n\nHints:\n{hints}"
+        user_content += "\n\nProduce the patch now."
+
+        messages: List[OpenAIMessage] = [
             {"role": "system", "content": self._get_system_prompt()},
-            {"role": "user", "content": f"Problem Statement:\n{problem_statement}\n\nYou are in the root of the repository. What is your first command?"}
+            {"role": "user", "content": user_content},
         ]
-        
-        submitted_patch = ""
-        
-        try:
-            for turn in range(max_turns):
-                response = run_evaluation_task(
-                    messages=history,
-                    strategy=strategy,
-                    llm_client=llm_client,
-                    tokenizer_fn=tokenizer_fn,
-                    max_tokens=max_tokens,
-                    logger=logger
-                )
-                
-                if isinstance(response, dict):
-                    content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
-                elif hasattr(response, "choices"):
-                    content = response.choices[0].message.content
-                else:
-                    content = str(response)
-                
-                history.append({"role": "assistant", "content": content})
-                
-                # Parse command
-                command = ""
-                try:
-                    json_match = re.search(r'\{.*\}', content, re.DOTALL)
-                    if json_match:
-                        action = json.loads(json_match.group())
-                        command = action.get("command", "")
-                    else:
-                        # Fallback: try to find something that looks like a command if JSON fails
-                        pass
-                except:
-                    pass
 
-                if not command:
-                    history.append({"role": "user", "content": "Error: Could not parse command. Please provide a JSON object with 'thought' and 'command'."})
-                    continue
+        response = run_evaluation_task(
+            messages=messages,
+            strategy=strategy,
+            llm_client=llm_client,
+            tokenizer_fn=tokenizer_fn,
+            max_tokens=max_tokens,
+            logger=logger,
+        )
 
-                if command.strip() == "submit":
-                    # In real SWE-bench, we would generate a patch
-                    # For pilot, we take the last 'write' command or just return a dummy
-                    submitted_patch = "diff --git a/file.py b/file.py\n..." 
-                    break
-                
-                observation = self._execute_command(container, command)
-                history.append({"role": "user", "content": f"Observation:\n{observation}"})
-        finally:
-            if container:
-                container.stop()
-                container.remove()
-            
-        return submitted_patch
+        if isinstance(response, dict):
+            content = response.get("choices", [{}])[0].get("message", {}).get("content", "")
+        elif hasattr(response, "choices"):
+            content = response.choices[0].message.content
+        else:
+            content = str(response)
 
-    def grade(self, patch: str, item: Dict[str, Any]) -> bool:
+        return self._extract_patch(content)
+
+    def grade(self, patch: str, item: Dict[str, Any]) -> float:
         """
-        Grades the patch. In pilot, we check if it's non-empty and has basic diff format.
+        Deterministic patch similarity against the gold patch.
+
+        Scores file-level recall (40%) + changed-line overlap (60%).
+        Returns 0.0–1.0.
         """
-        if not patch:
-            return False
-        return "diff --git" in patch or patch == "SIMULATED_PATCH"
+        gold_patch = item.get("patch", "")
+        if not gold_patch:
+            return 0.0
+        if not patch or not patch.strip():
+            return 0.0
+
+        gold_files = self._parse_patch(gold_patch)
+        pred_files = self._parse_patch(patch)
+
+        if not gold_files:
+            return 0.0
+
+        gold_file_set = set(gold_files)
+        pred_file_set = set(pred_files)
+        matched_files = gold_file_set & pred_file_set
+
+        file_recall = len(matched_files) / len(gold_file_set)
+        if file_recall == 0.0:
+            return 0.0
+
+        # Line overlap on matched files only
+        total_gold_lines = sum(len(gold_files[f]) for f in matched_files)
+        if total_gold_lines == 0:
+            return 0.4 * file_recall
+
+        matched_lines = sum(
+            len(set(gold_files[f]) & set(pred_files[f]))
+            for f in matched_files
+        )
+        line_score = matched_lines / total_gold_lines
+
+        return 0.4 * file_recall + 0.6 * line_score

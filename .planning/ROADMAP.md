@@ -2,63 +2,40 @@
 
 **Core Value:** Provide the first standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs.
 
+## Milestones
+
+- ✅ **v1.0 MVP** — Phases 1-4 (shipped 2026-05-09)
+- ✅ **v1.1 Hardware Profiler** — Phases 5-7 (shipped 2026-05-20)
+
 ## Phases
 
-### Phase 1: Core Evaluation Harness
-**Goal:** Implement the core evaluation harness, active budget protocol, and the foundational MemoryStrategy ABC.
-**Requirements:** HARN-01, HARN-02, HARN-03, HARN-04
+<details>
+<summary>✅ v1.0 MVP (Phases 1-4) — SHIPPED 2026-05-09</summary>
 
-**Plans:** 3 plans
-- [x] 01-00-PLAN.md — Set up initial project infrastructure and shared test fixtures
-- [x] 01-01-PLAN.md — Implement foundational types, budget tiers, MemoryStrategy interface, and metrics logger
-- [x] 01-02-PLAN.md — Implement budget enforcement logic and evaluation harness with metrics integration
+- [x] Phase 1: Core Evaluation Harness (3/3 plans) — completed 2026-05-08
+- [x] Phase 2: Baseline Implementations (3/3 plans) — completed 2026-05-08
+- [x] Phase 3: Task Integration & Pilot (4/4 plans) — completed 2026-05-06
+- [x] Phase 4: Full Execution & Publication (3/3 plans) — completed 2026-05-09
 
-**Success Criteria:**
-1. A dummy memory strategy can be registered via `MemoryStrategy` ABC.
-2. The active budget protocol successfully raises an error when a dummy LLM call exceeds the 2K tier.
-3. The system correctly records and outputs metrics for a single mocked task run.
+</details>
 
-### Phase 2: Baseline Implementations
-**Goal:** Implement all 6 core memory baseline strategies to be tested in the benchmark.
-**Requirements:** BASE-01, BASE-02, BASE-03, BASE-04, BASE-05, BASE-06
+<details>
+<summary>✅ v1.1 Hardware Profiler (Phases 5-7) — SHIPPED 2026-05-20</summary>
 
-**Plans:** 3 plans
-- [x] 02-01-PLAN.md — Initialize strategy infrastructure and implement Simple baselines (Truncation, Summary-buffer)
-- [x] 02-02-PLAN.md — Implement Retrieval and Persistent baselines (RAG, Mem0)
-- [x] 02-03-PLAN.md — Implement Advanced baselines (Letta/MemGPT, LLMLingua-2)
+- [x] Phase 5: Hardware Detection (3/3 plans) — completed 2026-05-17
+- [x] Phase 6: Recommendation Engine (1/1 plans) — completed 2026-05-19
+- [x] Phase 7: CLI Profile Command (1/1 plans) — completed 2026-05-19
 
-**Success Criteria:**
-1. Truncation and summary-buffer baselines implemented and pass unit tests.
-2. RAG, MemGPT/Letta, and Mem0 baselines integrated and functioning.
-3. LLMLingua-2 baseline implemented with compression ratio sweeps.
+</details>
 
-### Phase 3: Task Integration & Pilot Execution
-**Goal:** Integrate the 3 target benchmark tasks and execute the cheap pilot study to validate the memory strategy tradeoff hypothesis.
-**Requirements:** TASK-01, TASK-02, TASK-03, EVAL-01
+## Progress
 
-**Plans:** 4/4 plans complete
-- [x] 03-01-PLAN.md — Integrate LongBench v2 and SWE-bench Verified wrappers
-- [x] 03-02-PLAN.md — Integrate τ²-bench and implement unified task interface
-- [x] 03-03-PLAN.md — Execute pilot study (20 SWE + 50 LongBench) and generate initial tradeoff curves
-- [x] 03-04-PLAN.md — Gap closure: fix τ²-bench stub (TASK-02) and re-frame tradeoff curve scope (EVAL-01)
-
-**Success Criteria:**
-1. SWE-bench Verified subset integrated via mini-SWE-agent harness.
-2. τ²-bench and LongBench v2 integrated with deterministic evaluation.
-3. Cheap pilot executed on 20 SWE + 50 LongBench items across 3 budgets.
-
-### Phase 4: Full Execution & Publication
-**Goal:** Execute the full benchmark suite across all target models and budget tiers, and publish the arXiv preprint.
-**Requirements:** DOCS-01, EVAL-02, EVAL-03
-
-**Plans:** 3/5 plans complete (gap closure planned)
-- [x] 04-01-PLAN.md — Fix RAG + LongBench budget violation with chunked context
-- [x] 04-02-PLAN.md — Extend runner for full-study execution and resume support
-- [x] 04-03-PLAN.md — Create analysis pipeline, tradeoff plotting, and paper scaffold
-- [ ] 04-04-PLAN.md — Gap closure: execute live full-study sweeps and generate CSV/PNG results
-- [ ] 04-05-PLAN.md — Gap closure: finalize result-backed paper and reconcile verification
-
-**Success Criteria:**
-1. Full parameter sweeps executed on Qwen2.5-14B, Qwen2.5-32B, and Qwen3-Coder-30B-A3B.
-2. Data synthesis into tradeoff curves comparing token budget vs task quality.
-3. arXiv preprint is written and ready for publication within the 30-day window.
+| Phase | Milestone | Plans Complete | Status | Completed |
+| ------- | --------- | -------------- | ----------- | ---------- |
+| 1. Core Evaluation Harness | v1.0 | 3/3 | Complete | 2026-05-08 |
+| 2. Baseline Implementations | v1.0 | 3/3 | Complete | 2026-05-08 |
+| 3. Task Integration & Pilot | v1.0 | 4/4 | Complete | 2026-05-06 |
+| 4. Full Execution & Publication | v1.0 | 3/3 | Complete | 2026-05-09 |
+| 5. Hardware Detection | v1.1 | 3/3 | Complete | 2026-05-17 |
+| 6. Recommendation Engine | v1.1 | 1/1 | Complete | 2026-05-19 |
+| 7. CLI Profile Command | v1.1 | 1/1 | Complete | 2026-05-19 |

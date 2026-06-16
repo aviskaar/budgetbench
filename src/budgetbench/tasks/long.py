@@ -37,14 +37,10 @@ class LongBenchV2Task(BaseTask):
                 choices_text += f"\n{char}: {val}"
         
         system_prompt = "You are a helpful assistant. Answer the following multiple choice question based on the provided context. Respond only with the letter of the correct answer (A, B, C, or D)."
-        
-        question_msg: OpenAIMessage = {
-            "role": "user",
-            "content": f"Question: {question}{choices_text}",
-        }
+        question_msg: OpenAIMessage = {"role": "user", "content": f"Question: {question}{choices_text}"}
 
-        chunk_size = min(budget // 4, 512)
-        chunk_chars = chunk_size * 4
+        chunk_size = min(budget // 4, 512)  # tokens
+        chunk_chars = chunk_size * 4  # chars (4-char/token heuristic)
 
         if len(context) <= chunk_chars:
             context_messages: List[OpenAIMessage] = [

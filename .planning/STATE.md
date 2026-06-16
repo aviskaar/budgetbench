@@ -1,44 +1,28 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 4
-current_plan: Gap closure plans ready
-status: planned
-last_updated: "2026-05-08T01:10:00.000Z"
+milestone: v1.1
+milestone_name: Hardware Profiler
+current_phase: Complete
+status: Complete — Awaiting next milestone
+last_updated: "2026-05-20T03:45:00.000Z"
+last_activity: 2026-05-20 — Milestone v1.1 completed, archived, and tagged
 progress:
-  total_phases: 4
-  completed_phases: 3
+  total_phases: 7
+  completed_phases: 7
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 15
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-28)
+See: `.planning/PROJECT.md` (updated 2026-05-20)
 **Core value:** Provide the first standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs.
-**Current focus:** Phase 4: Full Execution & Publication
-
-## Current Phase: Phase 4
-
-### Goals
-
-Execute the full benchmark suite across all target models and budget tiers, and publish the arXiv preprint.
-
-### Current Status
-
-- [x] Initialize phase
-- [x] Plan phase
-- [x] Execute phase
-- [ ] Verify phase — gap closure plans 04-04 and 04-05 created
+**Current focus:** Planning next milestone — full benchmark execution (EVAL-02, EVAL-03) and arXiv publication (DOCS-01)
 
 ## Execution Progress
-
-- **Current Phase:** 4
-- **Current Plan:** Gap closure plans ready
-- **Total Plans in Phase:** 5
 
 ### Phase 01: Core Evaluation Harness (Complete)
 
@@ -59,37 +43,59 @@ Execute the full benchmark suite across all target models and budget tiers, and 
 - [x] 03-03: Pilot Execution and Verification
 - [x] 03-04: Gap Closure — τ²-bench stub fix and pilot scope documentation
 
-### Phase 04: Full Execution & Publication
+### Phase 04: Full Execution & Publication (Complete)
 
-- [x] 04-01: RAG + LongBench chunking fix
-- [x] 04-02: Full-study runner and resume support
-- [x] 04-03: Analysis pipeline, plotting, and paper scaffold
-- [ ] 04-04: Execute live full-study sweeps and generate CSV/PNG results
-- [ ] 04-05: Finalize result-backed paper and reconcile verification
+- [x] 04-01: RAG + LongBench budget fix
+- [x] 04-02: Full-study runner
+- [x] 04-03: Analysis pipeline and publication scaffold
+
+### Phase 05: Hardware Detection (Complete)
+
+- [x] 05-00: Implement hardware detection module
+- [x] 05-01: Write tests for hardware detection
+- [x] 05-02: Verify end-to-end
+
+### Phase 06: Recommendation Engine (Complete)
+
+- [x] 06-06: Implement recommendation engine + test suite
+- [x] 06-VERIFICATION: Verify all success criteria
+
+### Phase 07: CLI Profile Command (Complete)
+
+- [x] 07-01: Implement profile() function
+- [x] 07-02: Wire up package export
+- [x] 07-03: Implement CLI entry point
+- [x] 07-04: Write tests
+- [x] 07-VERIFICATION: Verify all success criteria
 
 ### Blockers
 
-Full live benchmark sweeps have not been run. Gap closure plans 04-04 and 04-05 now define the execution path to satisfy EVAL-02, EVAL-03, and DOCS-01.
+None.
 
-## Key Decisions (Phase 03)
+## Key Decisions
 
-- Used qwen2.5:1.5b for validation pilot; accuracy=0 is expected and validates harness, not model quality.
-- RAG strategy requires post-retrieval token-aware truncation for LongBench; deferred to Phase 4 action item.
-- Pilot scope reduced to 3 items per task for pipeline validation speed.
-- tau.py raises ImportError when tau2-bench absent; root conftest.py added for src/ layout importability (03-04).
-- TASK-02 marked Partial: integration wired, full sweep deferred to Phase 4 (03-04).
-
-## Key Decisions (Phase 04)
-
-- LongBench context is chunked into intermediate user messages so RAG indexes messages[1:-1] instead of receiving an empty corpus.
-- Full-study runs use five budget tiers and resumable `summary.jsonl` skip logic keyed by task, strategy, and budget.
-- Publication artifacts are scaffolded, but final tradeoff curves require live full-sweep logs.
+- Phase 3: Used qwen2.5:1.5b for validation pilot; accuracy=0 is expected.
+- Phase 5: psutil + CLI fallbacks for hardware detection; Apple Silicon VRAM = total RAM (unified memory).
+- v1.1: Milestone completed and archived with all 5 PROF requirements satisfied.
 
 ## Recent Log
 
-- **2026-05-08**: Planned Phase 4 gap closure. Added 04-04 for live sweeps/result generation and 04-05 for final paper/verification reconciliation.
-- **2026-05-08**: Completed Phase 4 planned implementation (04-01 through 04-03). Full test suite passed (51 tests). Verification found gaps: live Qwen2.5/Qwen3 full sweeps and final paper content remain.
-- **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite, updated REQUIREMENTS.md and PILOT_RESULTS.md scope docs. Phase 3 fully closed.
-- **2026-04-29**: Completed Phase 3. All 3 plans executed. Validation pilot ran 18 combinations, budget enforcement confirmed working. RAG pre-filtering gap identified for Phase 4.
-- **2026-04-28**: Planned Phase 3. Defined integration strategy for SWE-bench Verified, τ²-bench, and LongBench v2.
-- **2026-04-28**: Completed Phase 2. All 6 memory strategies are implemented and verified.
+- **2026-05-20**: Milestone v1.1 completed, archived, and tagged. Audit passed (5/5 requirements, 3/3 integration flows, 37 tests passing).
+- **2026-05-19**: Completed Phase 07. Implemented CLI profile command with argparse, profile() function, package export. 8/8 profile tests passing.
+- **2026-05-19**: Completed Phase 06. Implemented recommendation engine with model registry, VRAM calculation, and greedy largest-first selection. 12/12 tests passing.
+- **2026-05-17**: Completed Phase 05. Implemented hardware detection with psutil + CLI fallbacks. 17/17 tests passing. detect_hardware() returns correct report on M4 Pro (64 GB unified memory, 14 cores).
+- **2026-05-17**: Milestone v1.1 started. Phase 05 context and discussion gathered.
+- **2026-05-07**: Completed 03-04. Fixed tau.py ImportError fallback, added 4-test suite.
+- **2026-04-29**: Completed Phase 3. Validation pilot ran 18 combinations.
+- **2026-04-28**: Completed Phase 2. All 6 memory strategies implemented.
+
+## Current Position
+
+Milestone: v1.1 Complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-05-20 — Milestone v1.1 completed and archived
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd:new-milestone

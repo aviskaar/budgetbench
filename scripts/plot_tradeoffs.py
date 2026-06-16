@@ -1,14 +1,16 @@
 """
-BudgetBench Tradeoff Curve Generator.
-
+BudgetBench Tradeoff Curve Generator
 Reads aggregated CSV and produces a 2x2 panel figure.
 
 Usage:
-    python scripts/plot_tradeoffs.py --csv results/full_study_qwen2_5_14b_20260508.csv --model "qwen2.5:14b"
+    python scripts/plot_tradeoffs.py --csv results/full_study_qwen2.5_14b_20260508.csv --model "qwen2.5:14b"
 """
 import argparse
 import os
+import tempfile
 
+os.environ.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "budgetbench-matplotlib"))
+os.environ.setdefault("XDG_CACHE_HOME", os.path.join(tempfile.gettempdir(), "budgetbench-cache"))
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -26,7 +28,6 @@ STRATEGY_COLORS = {
     "letta": "tab:purple",
     "llmlingua": "tab:brown",
 }
-
 STRATEGY_MARKERS = {
     "truncation": "o",
     "summary": "s",
@@ -38,7 +39,7 @@ STRATEGY_MARKERS = {
 
 
 def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
-    """Generate a 2x2 panel tradeoff figure and save it as a PNG."""
+    """Generate 2x2 panel tradeoff figure and save as PNG."""
     plt.rcParams.update({
         "font.size": 10,
         "font.family": "serif",
@@ -49,23 +50,23 @@ def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
 
     fig, axes = plt.subplots(2, 2, figsize=(12, 8), sharey="row")
     tasks = [("swe", "SWE-bench Verified"), ("long", "LongBench v2")]
+
     model_df = df[df["model"] == model] if "model" in df.columns else df
 
     for col, (task_id, task_label) in enumerate(tasks):
-        sub = model_df[model_df["task"] == task_id] if "task" in model_df.columns else pd.DataFrame()
-        strategies_in_data = sub["strategy"].unique() if not sub.empty and "strategy" in sub.columns else []
+        sub = model_df[model_df["task"] == task_id] if "task" in model_df.columns else model_df.iloc[0:0]
+        strategies_in_data = sub["strategy"].unique() if not sub.empty else []
 
         for strategy in strategies_in_data:
             s_data = sub[sub["strategy"] == strategy].sort_values("budget")
             x = s_data["budget"].tolist()
             y_acc = s_data["accuracy"].tolist()
-            y_viol = (
-                s_data["violation_rate"].fillna(0).tolist()
-                if "violation_rate" in s_data
-                else [0] * len(x)
-            )
+            if "violation_rate" in s_data:
+                y_viol = s_data["violation_rate"].fillna(0).tolist()
+            else:
+                y_viol = [0] * len(x)
 
-            color = STRATEGY_COLORS.get(strategy)
+            color = STRATEGY_COLORS.get(strategy, None)
             marker = STRATEGY_MARKERS.get(strategy, "o")
 
             axes[0][col].plot(x, y_acc, label=strategy, color=color, marker=marker)
@@ -97,10 +98,10 @@ def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
     print(f"Figure saved to: {out_path}")
 
 
-def main() -> None:
+def main():
     parser = argparse.ArgumentParser(description="Generate BudgetBench tradeoff curve figure")
     parser.add_argument("--csv", required=True, help="Path to aggregated results CSV")
-    parser.add_argument("--model", required=True, help="Model name to plot, e.g. qwen2.5:14b")
+    parser.add_argument("--model", required=True, help="Model name to plot (e.g. qwen2.5:14b)")
     args = parser.parse_args()
 
     df = pd.read_csv(args.csv)
