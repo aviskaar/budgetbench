@@ -1,0 +1,7 @@
+{
+  "model": "qwen3-vl:2b",
+  "items": 6,
+  "accuracy": 1.0,
+  "mean_duration_sec": 1.7418410778045654,
+  "csv": "results/multimodal_smoke_qwen3_vl_2b.csv"
+}

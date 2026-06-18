@@ -1,0 +1,7 @@
+model,item_id,image_path,question,answer,prediction,correct,duration_sec,response
+qwen3-vl:2b,red_square,results/multimodal_smoke/red_square.png,What color is the shape? A) red B) blue C) green D) yellow,A,A,1,4.50290322303772,A
+qwen3-vl:2b,blue_circle,results/multimodal_smoke/blue_circle.png,What shape is shown? A) square B) triangle C) circle D) star,C,C,1,1.2119112014770508,C
+qwen3-vl:2b,green_triangle,results/multimodal_smoke/green_triangle.png,What color is the shape? A) red B) blue C) green D) yellow,C,C,1,1.186161994934082,C
+qwen3-vl:2b,yellow_square,results/multimodal_smoke/yellow_square.png,What shape is shown? A) circle B) square C) triangle D) star,B,B,1,1.1449220180511475,B
+qwen3-vl:2b,blue_triangle,results/multimodal_smoke/blue_triangle.png,What color is the shape? A) green B) yellow C) red D) blue,D,D,1,1.1879658699035645,D
+qwen3-vl:2b,red_circle,results/multimodal_smoke/red_circle.png,What shape is shown? A) triangle B) circle C) square D) star,B,B,1,1.2171821594238281,B

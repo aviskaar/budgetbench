@@ -1,0 +1,144 @@
+\begin{table}[p]
+\centering
+\caption{Full quality matrix for the 89-item run. LongBench v2 values are exact-match accuracy. SWE values are patch-similarity proxy scores and are not official SWE-bench accuracy.}
+\label{tab:app_quality}
+\begin{tabular}{llccccc}
+\toprule
+Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
+\midrule
+\multirow{3}{*}{SWE} & Truncation & 0.18 & 0.19 & 0.19 & 0.19 & 0.19 \\
+& Summary & 0.18 & 0.19 & 0.19 & 0.19 & 0.19 \\
+& RAG & 0.18 & 0.19 & 0.19 & 0.19 & 0.19 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 0.29 & 0.27 & 0.27 & 0.33 & 0.33 \\
+& Summary & 0.30 & 0.24 & 0.26 & 0.29 & 0.31 \\
+& RAG & 0.30 & 0.31 & 0.35 & 0.34 & 0.31 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\caption{Full budget-violation matrix for the 89-item run.}
+\label{tab:app_violation}
+\begin{tabular}{llccccc}
+\toprule
+Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
+\midrule
+\multirow{3}{*}{SWE} & Truncation & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+& Summary & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+& RAG & 0.07 & 0.03 & 0.00 & 0.00 & 0.00 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+& Summary & 0.03 & 0.07 & 0.05 & 0.07 & 0.03 \\
+& RAG & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\caption{Mean used active budget in tokens.}
+\label{tab:app_mean_used}
+\begin{tabular}{llccccc}
+\toprule
+Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
+\midrule
+\multirow{3}{*}{SWE} & Truncation & 561 & 646 & 788 & 788 & 788 \\
+& Summary & 570 & 650 & 788 & 788 & 788 \\
+& RAG & 557 & 644 & 788 & 788 & 788 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 1,797 & 3,803 & 7,937 & 16,012 & 29,411 \\
+& Summary & 1,584 & 3,412 & 7,489 & 15,111 & 28,899 \\
+& RAG & 1,919 & 3,961 & 8,052 & 16,088 & 29,483 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\caption{Maximum observed peak budget in tokens.}
+\label{tab:app_peak}
+\begin{tabular}{llccccc}
+\toprule
+Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
+\midrule
+\multirow{3}{*}{SWE} & Truncation & 1,973 & 3,299 & 4,542 & 4,542 & 4,542 \\
+& Summary & 1,973 & 3,299 & 4,542 & 4,542 & 4,542 \\
+& RAG & 4,542 & 4,542 & 4,542 & 4,542 & 4,542 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 2,028 & 4,092 & 8,180 & 16,382 & 32,762 \\
+& Summary & 2,153 & 4,398 & 8,439 & 16,658 & 33,011 \\
+& RAG & 2,048 & 4,094 & 8,192 & 16,384 & 32,768 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\caption{Cell duration in seconds.}
+\label{tab:app_duration}
+\begin{tabular}{llccccc}
+\toprule
+Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
+\midrule
+\multirow{3}{*}{SWE} & Truncation & 206.4 & 210.2 & 209.0 & 203.0 & 208.7 \\
+& Summary & 219.4 & 214.8 & 218.5 & 214.9 & 207.2 \\
+& RAG & 187.0 & 194.2 & 203.3 & 202.9 & 202.4 \\
+\midrule
+\multirow{3}{*}{LongBench v2} & Truncation & 43.3 & 84.3 & 209.4 & 637.2 & 1794.8 \\
+& Summary & 1862.3 & 1982.7 & 1966.8 & 2261.3 & 3240.0 \\
+& RAG & 495.5 & 539.3 & 671.1 & 1103.5 & 2250.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{longtable}{lllrrrrr}
+\caption{Flat per-cell aggregate data for audit.}\\
+\toprule
+Model & Task & Strategy & Budget & Quality & Viol. & Mean Used & Duration \\
+\midrule
+\endfirsthead
+\toprule
+Model & Task & Strategy & Budget & Quality & Viol. & Mean Used & Duration \\
+\midrule
+\endhead
+qwen2.5:1.5b & long & rag & 2048 & 0.303 & 0.000 & 1919.2 & 495.5 \\
+qwen2.5:1.5b & long & rag & 4096 & 0.315 & 0.000 & 3960.8 & 539.3 \\
+qwen2.5:1.5b & long & rag & 8192 & 0.348 & 0.000 & 8052.4 & 671.1 \\
+qwen2.5:1.5b & long & rag & 16384 & 0.337 & 0.000 & 16087.7 & 1103.5 \\
+qwen2.5:1.5b & long & rag & 32768 & 0.315 & 0.000 & 29482.7 & 2250.0 \\
+qwen2.5:1.5b & long & summary & 2048 & 0.303 & 0.028 & 1584.4 & 1862.3 \\
+qwen2.5:1.5b & long & summary & 4096 & 0.236 & 0.068 & 3412.5 & 1982.7 \\
+qwen2.5:1.5b & long & summary & 8192 & 0.258 & 0.045 & 7488.5 & 1966.8 \\
+qwen2.5:1.5b & long & summary & 16384 & 0.292 & 0.068 & 15110.9 & 2261.3 \\
+qwen2.5:1.5b & long & summary & 32768 & 0.315 & 0.028 & 28898.8 & 3240.0 \\
+qwen2.5:1.5b & long & truncation & 2048 & 0.292 & 0.000 & 1796.6 & 43.3 \\
+qwen2.5:1.5b & long & truncation & 4096 & 0.270 & 0.000 & 3803.2 & 84.3 \\
+qwen2.5:1.5b & long & truncation & 8192 & 0.270 & 0.000 & 7936.5 & 209.4 \\
+qwen2.5:1.5b & long & truncation & 16384 & 0.326 & 0.000 & 16011.7 & 637.2 \\
+qwen2.5:1.5b & long & truncation & 32768 & 0.326 & 0.000 & 29410.9 & 1794.8 \\
+qwen2.5:1.5b & swe & rag & 2048 & 0.177 & 0.067 & 556.8 & 187.0 \\
+qwen2.5:1.5b & swe & rag & 4096 & 0.186 & 0.034 & 644.1 & 194.2 \\
+qwen2.5:1.5b & swe & rag & 8192 & 0.191 & 0.000 & 788.3 & 203.3 \\
+qwen2.5:1.5b & swe & rag & 16384 & 0.191 & 0.000 & 788.3 & 202.9 \\
+qwen2.5:1.5b & swe & rag & 32768 & 0.191 & 0.000 & 788.3 & 202.4 \\
+qwen2.5:1.5b & swe & summary & 2048 & 0.177 & 0.000 & 570.2 & 219.4 \\
+qwen2.5:1.5b & swe & summary & 4096 & 0.186 & 0.000 & 650.5 & 214.8 \\
+qwen2.5:1.5b & swe & summary & 8192 & 0.191 & 0.000 & 788.3 & 218.5 \\
+qwen2.5:1.5b & swe & summary & 16384 & 0.191 & 0.000 & 788.3 & 214.9 \\
+qwen2.5:1.5b & swe & summary & 32768 & 0.191 & 0.000 & 788.3 & 207.2 \\
+qwen2.5:1.5b & swe & truncation & 2048 & 0.177 & 0.000 & 561.0 & 206.4 \\
+qwen2.5:1.5b & swe & truncation & 4096 & 0.186 & 0.000 & 646.2 & 210.2 \\
+qwen2.5:1.5b & swe & truncation & 8192 & 0.191 & 0.000 & 788.3 & 209.0 \\
+qwen2.5:1.5b & swe & truncation & 16384 & 0.191 & 0.000 & 788.3 & 203.0 \\
+qwen2.5:1.5b & swe & truncation & 32768 & 0.191 & 0.000 & 788.3 & 208.7 \\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=\textwidth]{../results/figures/peak_budget_curves_qwen2_5_1_5b.png}
+  \caption{Maximum peak budget observed in each cell.}
+  \label{fig:peak_budget_89item}
+\end{figure}

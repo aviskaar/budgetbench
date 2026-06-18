@@ -40,7 +40,11 @@ def get_tokenizer_fn():
         return lambda x: len(x) // 4
 
 
-def get_llm_client(url: str = "http://localhost:11434/v1/chat/completions", model: Optional[str] = None):
+def get_llm_client(
+    url: str = "http://localhost:11434/v1/chat/completions",
+    model: Optional[str] = None,
+    max_output_tokens: int = 512,
+):
     def llm_client(messages: List[OpenAIMessage]) -> str:
         formatted_messages = []
         for m in messages:
@@ -52,7 +56,7 @@ def get_llm_client(url: str = "http://localhost:11434/v1/chat/completions", mode
         payload = {
             "messages": formatted_messages,
             "temperature": 0.0,
-            "max_tokens": 512,
+            "max_tokens": max_output_tokens,
         }
         if model:
             payload["model"] = model
@@ -155,7 +159,11 @@ def run_pilot(args):
     print(f"Logs will be saved to: {log_dir}")
 
     tokenizer_fn = get_tokenizer_fn()
-    llm_client = get_llm_client(args.llm_url, model=args.model)
+    llm_client = get_llm_client(
+        args.llm_url,
+        model=args.model,
+        max_output_tokens=args.max_output_tokens,
+    )
 
     budgets = FULL_STUDY_BUDGET_TIERS if args.full_study else BUDGET_TIERS
     if args.limit_budgets:
@@ -315,6 +323,12 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="Model name to pass in the API payload (required for Ollama; omit for llama.cpp)",
+    )
+    parser.add_argument(
+        "--max-output-tokens",
+        type=int,
+        default=512,
+        help="Maximum generated tokens for each LLM call",
     )
     parser.add_argument(
         "--dry-run",

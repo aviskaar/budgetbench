@@ -78,8 +78,8 @@ def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
             axes[row][col].set_xticklabels(BUDGET_LABELS)
             axes[row][col].set_xlim(1500, 40000)
 
-        axes[0][col].set_title(f"{task_label}\nAccuracy vs Budget")
-        axes[0][col].set_ylabel("Accuracy")
+        axes[0][col].set_title(f"{task_label}\nQuality vs Budget")
+        axes[0][col].set_ylabel("Quality")
         axes[0][col].set_ylim(0, 1)
         axes[1][col].set_title(f"{task_label}\nViolation Rate vs Budget")
         axes[1][col].set_ylabel("Violation Rate")

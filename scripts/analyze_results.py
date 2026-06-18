@@ -37,11 +37,13 @@ def load_summary_files(log_dirs: List[str]) -> pd.DataFrame:
 
 def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
     """
-    For each row, read the per-combination JSONL to compute violation_rate.
+    For each row, read the per-combination JSONL to compute budget metrics.
     Per-combination JSONL: {log_dir}/{task}_{strategy}_{budget}.jsonl
-    violation_rate = fraction of turns where violation == True.
+    violation_rate = mean violation rate across metric rows.
     """
     violation_rates = []
+    mean_used_budgets = []
+    peak_budgets = []
     for _, row in df.iterrows():
         log_dir = row.get("_log_dir", "")
         task = row.get("task", "")
@@ -50,22 +52,49 @@ def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
         combo_file = os.path.join(log_dir, f"{task}_{strategy}_{budget}.jsonl")
         if not os.path.exists(combo_file):
             violation_rates.append(None)
+            mean_used_budgets.append(None)
+            peak_budgets.append(None)
             continue
-        total = 0
-        violations = 0
+
+        bool_total = 0
+        bool_violations = 0
+        rate_values = []
+        used_values = []
+        peak_values = []
         with open(combo_file) as f:
             for line in f:
                 try:
                     turn = json.loads(line.strip())
-                    total += 1
-                    if turn.get("violation", False):
-                        violations += 1
                 except json.JSONDecodeError:
-                    pass
-        rate = violations / total if total > 0 else None
+                    continue
+
+                # Older logs used a boolean violation field.  Current runner logs
+                # per-item violation_rate after retries, so support both formats.
+                if "violation" in turn:
+                    bool_total += 1
+                    if turn.get("violation", False):
+                        bool_violations += 1
+                if "violation_rate" in turn:
+                    rate_values.append(float(turn["violation_rate"]))
+                if "used_budget" in turn and turn["used_budget"] is not None:
+                    used_values.append(float(turn["used_budget"]))
+                if "peak_budget" in turn and turn["peak_budget"] is not None:
+                    peak_values.append(float(turn["peak_budget"]))
+
+        if rate_values:
+            rate = sum(rate_values) / len(rate_values)
+        elif bool_total > 0:
+            rate = bool_violations / bool_total
+        else:
+            rate = None
         violation_rates.append(rate)
+        mean_used_budgets.append(sum(used_values) / len(used_values) if used_values else None)
+        peak_budgets.append(max(peak_values) if peak_values else None)
+
     df = df.copy()
     df["violation_rate"] = violation_rates
+    df["mean_used_budget"] = mean_used_budgets
+    df["max_peak_budget"] = peak_budgets
     return df
 
 
@@ -83,7 +112,17 @@ def main():
 
     df = compute_violation_rates(df)
 
-    out_cols = ["model", "task", "strategy", "budget", "accuracy", "violation_rate", "duration_sec"]
+    out_cols = [
+        "model",
+        "task",
+        "strategy",
+        "budget",
+        "accuracy",
+        "violation_rate",
+        "mean_used_budget",
+        "max_peak_budget",
+        "duration_sec",
+    ]
     for col in out_cols:
         if col not in df.columns:
             df[col] = None
