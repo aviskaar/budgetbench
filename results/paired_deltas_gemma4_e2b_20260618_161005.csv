@@ -1,0 +1,7 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+gemma4:e2b,long,truncation,8192,full_context,32768,20,0.0,0.05,-0.05,-0.15,0.0,170.32492899894714,123.34826683998108,0.0,0.0,logs/full_study/transfer_gemma4_fit32k_20
+gemma4:e2b,long,truncation,32768,full_context,32768,20,0.05,0.05,0.0,0.0,0.0,349.3368248939514,123.34826683998108,0.0,0.0,logs/full_study/transfer_gemma4_fit32k_20
+gemma4:e2b,long,rag,8192,full_context,32768,20,0.0,0.05,-0.05,-0.15,0.0,171.89222598075867,123.34826683998108,0.0,0.0,logs/full_study/transfer_gemma4_fit32k_20
+gemma4:e2b,long,rag,32768,full_context,32768,20,0.05,0.05,0.0,0.0,0.0,123.573322057724,123.34826683998108,0.0,0.0,logs/full_study/transfer_gemma4_fit32k_20
+gemma4:e2b,long,full_context,8192,full_context,32768,20,0.0,0.05,-0.05,-0.15,0.0,3.752755880355835,123.34826683998108,1.0,0.0,logs/full_study/transfer_gemma4_fit32k_20
+gemma4:e2b,long,full_context,32768,full_context,32768,20,0.05,0.05,0.0,0.0,0.0,123.34826683998108,123.34826683998108,0.0,0.0,logs/full_study/transfer_gemma4_fit32k_20

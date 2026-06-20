@@ -1,6 +1,8 @@
 import pytest
 from unittest.mock import MagicMock, patch
 from budgetbench.tasks import get_task, TauBenchTask, LongBenchV2Task, SWEBenchTask
+from budgetbench.tasks.longmem import LongMemEvalTask
+from budgetbench.tasks.memory import MemoryUpdateTask
 from budgetbench.tasks.base import BaseTask
 from budgetbench.evaluation.runner import TaskRunner
 from budgetbench.core.strategy import MemoryStrategy
@@ -42,6 +44,14 @@ def test_task_registry():
     tau_task = get_task("tau")
     assert isinstance(tau_task, TauBenchTask)
     assert isinstance(tau_task, BaseTask)
+
+    memory_task = get_task("memory")
+    assert isinstance(memory_task, MemoryUpdateTask)
+    assert isinstance(memory_task, BaseTask)
+
+    longmem_task = get_task("longmem")
+    assert isinstance(longmem_task, LongMemEvalTask)
+    assert isinstance(longmem_task, BaseTask)
     
     with pytest.raises(ValueError):
         get_task("nonexistent")

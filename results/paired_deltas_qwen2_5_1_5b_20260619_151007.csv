@@ -1,0 +1,16 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen2.5:1.5b,longmem,truncation,2048,full_context,8192,10,0.2,0.1,0.1,-0.2,0.4,6.7889580726623535,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,truncation,4096,full_context,8192,10,0.4,0.1,0.3,0.0,0.6,11.796129941940308,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,truncation,8192,full_context,8192,10,0.2,0.1,0.1,0.0,0.3,19.26857614517212,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,rag,2048,full_context,8192,10,0.3,0.1,0.2,0.0,0.5,9.177543878555298,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,rag,4096,full_context,8192,10,0.2,0.1,0.1,0.0,0.3,13.73666501045227,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,rag,8192,full_context,8192,10,0.1,0.1,0.0,0.0,0.0,12.25803804397583,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,lean_retrieval,2048,full_context,8192,10,0.4,0.1,0.3,0.0,0.6,8.605654954910278,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,lean_retrieval,4096,full_context,8192,10,0.4,0.1,0.3,0.0,0.6,9.621787071228027,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,lean_retrieval,8192,full_context,8192,10,0.1,0.1,0.0,0.0,0.0,9.803816080093384,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,checkpoint_context,2048,full_context,8192,10,0.1,0.1,0.0,0.0,0.0,5.942205905914307,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,checkpoint_context,4096,full_context,8192,10,0.3,0.1,0.2,0.0,0.5,9.59656810760498,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,checkpoint_context,8192,full_context,8192,10,0.1,0.1,0.0,0.0,0.0,8.904674053192139,3.1353440284729004,0.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,full_context,2048,full_context,8192,10,0.0,0.1,-0.1,-0.3,0.0,0.11674809455871582,3.1353440284729004,1.0,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,full_context,4096,full_context,8192,10,0.1,0.1,0.0,0.0,0.0,0.47492408752441406,3.1353440284729004,0.8,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10
+qwen2.5:1.5b,longmem,full_context,8192,full_context,8192,10,0.1,0.1,0.0,0.0,0.0,3.1353440284729004,3.1353440284729004,0.3,0.3,logs/full_study/longmem_oracle_checkpoint_qwen15b_10

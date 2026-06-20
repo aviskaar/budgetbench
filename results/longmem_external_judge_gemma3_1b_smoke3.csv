@@ -1,0 +1,2 @@
+candidate_model,judge_model,strategy,budget,judge_accuracy,judge_n,normalized_contains_accuracy,mean_judge_duration_sec,judge_prompt_version
+qwen2.5:1.5b,gemma3:1b,lean_retrieval,2048,1.0,2,0.0,0.5183684825897217,budgetbench-longmem-judge-v1

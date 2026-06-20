@@ -13,8 +13,11 @@ import requests
 from budgetbench.tasks import get_task
 from budgetbench.strategies import (
     TruncationStrategy,
+    FullContextStrategy,
     SummaryBufferStrategy,
     RAGStrategy,
+    LeanRetrievalStrategy,
+    CheckpointContextStrategy,
 )
 from budgetbench.evaluation.runner import TaskRunner
 from budgetbench.evaluation.metrics import MetricsLogger
@@ -26,15 +29,37 @@ FULL_STUDY_BUDGET_TIERS = [2048, 4096, 8192, 16384, 32768]
 DEFAULT_TASKS_CONFIG = [
     {"name": "swe", "default_limit": 100},
     {"name": "long", "default_limit": 100},
+    {"name": "memory", "default_limit": 30},
     {"name": "tau", "default_limit": 200},
+    {"name": "longmem", "default_limit": 20, "enabled_by_default": False},
 ]
+
+
+def resolve_budget_tiers(
+    full_study: bool = False,
+    limit_budgets: int = 0,
+    selected_budgets: Optional[List[int]] = None,
+) -> List[int]:
+    """Resolve the budget tier list for a run."""
+    if selected_budgets:
+        budgets = list(selected_budgets)
+    else:
+        budgets = list(FULL_STUDY_BUDGET_TIERS if full_study else BUDGET_TIERS)
+
+    if any(budget <= 0 for budget in budgets):
+        raise ValueError(f"Budgets must be positive integers: {budgets}")
+
+    if limit_budgets:
+        budgets = budgets[:limit_budgets]
+
+    return budgets
 
 
 def get_tokenizer_fn():
     try:
         import tiktoken
         enc = tiktoken.get_encoding("cl100k_base")
-        return lambda x: len(enc.encode(x))
+        return lambda x: len(enc.encode(x, disallowed_special=()))
     except ImportError:
         # Fallback to simple 4-char-per-token approximation
         return lambda x: len(x) // 4
@@ -100,6 +125,8 @@ def build_strategies(llm_client, selected_names: Optional[List[str]] = None) -> 
 
     if requested is None or "truncation" in requested:
         strategies["truncation"] = TruncationStrategy()
+    if requested is None or "full_context" in requested:
+        strategies["full_context"] = FullContextStrategy()
     if requested is None or "summary" in requested:
         strategies["summary"] = SummaryBufferStrategy(llm_client=llm_client)
 
@@ -108,6 +135,18 @@ def build_strategies(llm_client, selected_names: Optional[List[str]] = None) -> 
             strategies["rag"] = RAGStrategy()
         except Exception as e:
             print(f"  [skip] RAGStrategy not available: {e}")
+
+    if requested is None or "lean_retrieval" in requested:
+        try:
+            strategies["lean_retrieval"] = LeanRetrievalStrategy()
+        except Exception as e:
+            print(f"  [skip] LeanRetrievalStrategy not available: {e}")
+
+    if requested is None or "checkpoint_context" in requested:
+        try:
+            strategies["checkpoint_context"] = CheckpointContextStrategy()
+        except Exception as e:
+            print(f"  [skip] CheckpointContextStrategy not available: {e}")
 
     if requested is None or "mem0" in requested:
         try:
@@ -165,9 +204,11 @@ def run_pilot(args):
         max_output_tokens=args.max_output_tokens,
     )
 
-    budgets = FULL_STUDY_BUDGET_TIERS if args.full_study else BUDGET_TIERS
-    if args.limit_budgets:
-        budgets = budgets[: args.limit_budgets]
+    budgets = resolve_budget_tiers(
+        full_study=args.full_study,
+        limit_budgets=args.limit_budgets,
+        selected_budgets=args.budgets,
+    )
 
     all_strategies = build_strategies(llm_client, selected_names=args.strategies)
     selected_strategies = (
@@ -179,7 +220,10 @@ def run_pilot(args):
     # Fixed seed for reproducibility
     random.seed(42)
 
-    tasks_config = DEFAULT_TASKS_CONFIG
+    tasks_config = [
+        cfg for cfg in DEFAULT_TASKS_CONFIG
+        if cfg.get("enabled_by_default", True)
+    ]
     if args.tasks:
         task_names = set(args.tasks)
         tasks_config = [cfg for cfg in DEFAULT_TASKS_CONFIG if cfg["name"] in task_names]
@@ -234,6 +278,7 @@ def run_pilot(args):
                     llm_client=llm_client,
                     tokenizer_fn=tokenizer_fn,
                     logger=logger,
+                    max_natural_tokens=args.max_natural_tokens,
                 )
 
                 start_time = time.time()
@@ -258,6 +303,8 @@ def run_pilot(args):
                         "success": success_count,
                         "duration_sec": duration,
                     }
+                    if args.max_natural_tokens:
+                        summary["max_natural_tokens"] = args.max_natural_tokens
                     with open(summary_file, "a") as f:
                         f.write(json.dumps(summary) + "\n")
 
@@ -308,6 +355,13 @@ if __name__ == "__main__":
         help="Limit number of budget tiers to evaluate (0 = all 3)",
     )
     parser.add_argument(
+        "--budgets",
+        nargs="+",
+        type=int,
+        default=None,
+        help="Explicit active-context budgets to evaluate, e.g. --budgets 2048 8192 32768",
+    )
+    parser.add_argument(
         "--strategies",
         nargs="+",
         help="Specific strategy names to run (default: all available)",
@@ -316,7 +370,7 @@ if __name__ == "__main__":
         "--tasks",
         nargs="+",
         choices=[cfg["name"] for cfg in DEFAULT_TASKS_CONFIG],
-        help="Specific task names to run (default: swe long tau)",
+        help="Specific task names to run (default: swe long memory tau; longmem is opt-in)",
     )
     parser.add_argument(
         "--model",
@@ -329,6 +383,12 @@ if __name__ == "__main__":
         type=int,
         default=512,
         help="Maximum generated tokens for each LLM call",
+    )
+    parser.add_argument(
+        "--max-natural-tokens",
+        type=int,
+        default=None,
+        help="Filter to items whose uncompressed natural prompt is at or below this token count",
     )
     parser.add_argument(
         "--dry-run",

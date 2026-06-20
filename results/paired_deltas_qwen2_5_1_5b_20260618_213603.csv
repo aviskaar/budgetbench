@@ -1,0 +1,13 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen2.5:1.5b,longmem,truncation,2048,full_context,8192,50,0.34,0.34,0.0,-0.12,0.12,30.25273299217224,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,truncation,4096,full_context,8192,50,0.48,0.34,0.14,0.06,0.24,49.90044903755188,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,truncation,8192,full_context,8192,50,0.38,0.34,0.04,0.0,0.1,76.89177393913269,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,rag,2048,full_context,8192,50,0.38,0.34,0.04,-0.08,0.16,41.124125957489014,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,rag,4096,full_context,8192,50,0.4,0.34,0.06,-0.02,0.14,55.87529969215393,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,rag,8192,full_context,8192,50,0.36,0.34,0.02,0.0,0.06,75.53553986549377,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,lean_retrieval,2048,full_context,8192,50,0.46,0.34,0.12,0.02,0.22,36.49844002723694,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,lean_retrieval,4096,full_context,8192,50,0.46,0.34,0.12,0.02,0.24,52.80262017250061,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,lean_retrieval,8192,full_context,8192,50,0.36,0.34,0.02,0.0,0.06,77.95965003967285,13.797018766403198,0.0,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,full_context,2048,full_context,8192,50,0.08,0.34,-0.26,-0.38,-0.14,1.3948149681091309,13.797018766403198,0.9,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,full_context,4096,full_context,8192,50,0.22,0.34,-0.12,-0.22,-0.04,3.045900821685791,13.797018766403198,0.7,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions
+qwen2.5:1.5b,longmem,full_context,8192,full_context,8192,50,0.34,0.34,0.0,0.0,0.0,13.797018766403198,13.797018766403198,0.16,0.16,logs/full_study/longmem_oracle_qwen15b_50_predictions

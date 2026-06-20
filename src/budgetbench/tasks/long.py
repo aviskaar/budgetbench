@@ -8,6 +8,8 @@ from budgetbench.evaluation.metrics import MetricsLogger
 from budgetbench.tasks.base import BaseTask
 
 class LongBenchV2Task(BaseTask):
+    NATURAL_PROMPT_BUDGET = 32768
+
     def __init__(self, dataset_name: str = "THUDM/LongBench-v2", split: str = "train"):
         self.dataset_name = dataset_name
         self.split = split
@@ -23,7 +25,15 @@ class LongBenchV2Task(BaseTask):
         ds = self.dataset
         if limit:
             ds = ds.select(range(min(limit, len(ds))))
-        return list(ds)
+        items = []
+        for index, item in enumerate(ds):
+            row = dict(item)
+            row.setdefault(
+                "_budgetbench_item_id",
+                f"{self.dataset_name}:{self.split}:{index}",
+            )
+            items.append(row)
+        return items
 
     def format_message(self, item: Dict[str, Any], budget: int = 8192) -> List[OpenAIMessage]:
         context = item.get("context", "")
@@ -56,6 +66,14 @@ class LongBenchV2Task(BaseTask):
                 })
 
         return [{"role": "system", "content": system_prompt}] + context_messages + [question_msg]
+
+    def natural_prompt_token_count(
+        self,
+        item: Dict[str, Any],
+        tokenizer_fn: Callable[[str], int],
+    ) -> int:
+        messages = self.format_message(item, budget=self.NATURAL_PROMPT_BUDGET)
+        return sum(tokenizer_fn(m.get("content", "")) for m in messages)
 
     def run(
         self,

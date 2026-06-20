@@ -1,0 +1,9 @@
+model,task,strategy,budget,accuracy,violation_rate,mean_used_budget,max_peak_budget,quality_ci_low,quality_ci_high,quality_n,duration_sec
+qwen3.5:2b,long,truncation,8192,0.0,0.0,7900.6,8096.0,0.0,0.0,5,41.31159520149231
+qwen3.5:2b,long,truncation,32768,0.0,0.0,20849.2,24176.0,0.0,0.0,5,63.68138098716736
+qwen3.5:2b,long,rag,8192,0.0,0.0,7962.0,8101.0,0.0,0.0,5,39.38168215751648
+qwen3.5:2b,long,rag,32768,0.0,0.0,20849.2,24176.0,0.0,0.0,5,30.26876997947693
+qwen3.5:2b,long,lean_retrieval,8192,0.0,0.0,7930.4,8053.0,0.0,0.0,5,39.29889512062073
+qwen3.5:2b,long,lean_retrieval,32768,0.0,0.0,20849.2,24176.0,0.0,0.0,5,31.74328899383545
+qwen3.5:2b,long,full_context,8192,0.0,1.0,0.0,24176.0,0.0,0.0,5,1.2468361854553223
+qwen3.5:2b,long,full_context,32768,0.0,0.0,20849.2,24176.0,0.0,0.0,5,31.4372820854187

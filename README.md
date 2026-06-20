@@ -2,7 +2,7 @@
 
 BudgetBench is a standardized community benchmark for local LLM agents to evaluate memory strategies across fixed active-context-budget tiers (2k/4k/8k/16k/32k). 
 
-In the regime of local consumer hardware, context length is a scarce resource. BudgetBench provides the first standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs, allowing researchers and developers to understand exactly how different memory-management approaches perform when context is constrained.
+In the regime of local consumer hardware, context length is a scarce resource. BudgetBench provides standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs, allowing researchers and developers to understand how different memory-management approaches perform when context is constrained.
 
 ## 🚀 Core Value Proposition
 
@@ -21,17 +21,20 @@ BudgetBench is designed as a plug-and-play framework. The core components are:
 ### Supported Memory Strategies (Baselines)
 BudgetBench includes several reference implementations:
 - **Truncation**: Simple sliding-window approach.
+- **Full Context**: Pass-through baseline for full-history comparisons and infeasibility checks.
 - **Summary-Buffer**: Rolling summarization of conversation history.
 - **RAG**: Vanilla retrieval over an episodic FAISS store.
+- **Checkpoint-Context**: Extractive checkpoint plus recent tail plus retrieved evidence.
 - **Mem0**: Production-grade hierarchical memory.
 - **Letta**: OS-style hierarchical memory (MemGPT).
 - **LLMLingua-2**: Prompt compression for smooth budget/quality curves.
 
 ### Evaluated Task Families
 The benchmark focuses on long-horizon agentic tasks with deterministic grading:
-1. **Software Engineering**: A stratified subset of **SWE-bench Verified** (graded via pytest).
-2. **Tool-Use Chains**: **$\tau^2$-bench** for retail and airline domains (graded via state-comparison).
-3. **Multi-Doc Synthesis**: **LongBench v2** and **MuSiQue** (graded via MCQ/Exact Match).
+1. **Software Engineering**: A SWE-bench Verified scaffold with deterministic patch-similarity proxy scoring.
+2. **Long-Context QA**: LongBench v2 multiple-choice QA with exact-match grading.
+3. **Memory-Agent Pilots**: A deterministic synthetic memory task and an opt-in LongMemEval oracle adapter.
+4. **Tool-Use Chains**: Tau-bench/tau2-bench adapters where local data dependencies are installed.
 
 ## 📦 Installation
 
@@ -66,6 +69,54 @@ python scripts/run_pilot.py --full-study --model qwen2.5-14b
 ```bash
 python scripts/run_pilot.py --tasks swe tau --strategies rag summary
 ```
+
+**Public LongMemEval Oracle Pilot:**
+Download `longmemeval_oracle.json` from the official
+`xiaowu0162/longmemeval-cleaned` Hugging Face dataset to
+`data/longmemeval_oracle.json`, then run:
+
+```bash
+python scripts/run_pilot.py --full-study \
+  --run-id longmem_oracle_qwen15b_50_predictions \
+  --tasks longmem \
+  --strategies truncation rag lean_retrieval full_context \
+  --budgets 2048 4096 8192 \
+  --limit-tasks 50 \
+  --model qwen2.5:1.5b
+```
+
+The LongMemEval adapter uses deterministic normalized-containment scoring for
+local pilots; this is not the official LongMemEval judge.
+
+Export prediction-bearing logs for external LongMemEval judge review:
+
+```bash
+python scripts/export_longmem_judge_inputs.py \
+  --log-dir logs/full_study/longmem_oracle_qwen15b_50_predictions \
+  --data-path data/longmemeval_oracle.json \
+  --output results/longmem_judge_inputs_qwen15b_50_predictions.jsonl
+```
+
+The export includes every item-strategy-budget row; budget violations without
+model predictions are marked as not judgeable instead of being silently dropped.
+
+Run the external judge bridge with a real judge key when available:
+
+```bash
+python scripts/run_longmem_external_judge.py \
+  --input results/longmem_judge_inputs_qwen15b_50_prediction_only.jsonl \
+  --output results/longmem_external_judge_gpt4omini.jsonl \
+  --aggregate-output results/longmem_external_judge_gpt4omini.csv \
+  --judge-url https://openrouter.ai/api/v1/chat/completions \
+  --judge-model openai/gpt-4o-mini \
+  --api-key-env OPENROUTER_API_KEY \
+  --strategies lean_retrieval full_context truncation \
+  --budgets 2048 4096 8192
+```
+
+Use the judge model, prompt version, and provider URL in any reported result.
+The bundled local smokes are only serializer/sanity checks; they do not count as
+official LongMemEval evidence.
 
 ### Analyzing Results
 BudgetBench saves results in JSONL format in the `logs/` directory. You can use the provided analysis scripts to visualize the tradeoff curves:

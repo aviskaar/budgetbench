@@ -1,0 +1,7 @@
+model,task,strategy,budget,accuracy,violation_rate,mean_used_budget,max_peak_budget,quality_ci_low,quality_ci_high,quality_n,duration_sec
+gemma4:e2b,long,truncation,8192,0.0,0.0,7963.9,8120.0,0.0,0.0,20,170.32492899894714
+gemma4:e2b,long,truncation,32768,0.05,0.0,19686.3,29781.0,0.0,0.15,20,349.3368248939514
+gemma4:e2b,long,rag,8192,0.0,0.0,8010.7,8189.0,0.0,0.0,20,171.89222598075867
+gemma4:e2b,long,rag,32768,0.05,0.0,19686.3,29781.0,0.0,0.15,20,123.573322057724
+gemma4:e2b,long,full_context,8192,0.0,1.0,0.0,29781.0,0.0,0.0,20,3.752755880355835
+gemma4:e2b,long,full_context,32768,0.05,0.0,19686.3,29781.0,0.0,0.15,20,123.34826683998108

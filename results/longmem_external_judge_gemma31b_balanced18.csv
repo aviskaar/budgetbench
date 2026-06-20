@@ -1,0 +1,7 @@
+candidate_model,judge_model,strategy,budget,judge_accuracy,judge_n,normalized_contains_accuracy,mean_judge_duration_sec,judge_prompt_version
+qwen2.5:1.5b,gemma4:31b-mlx,full_context,8192,0.0,1,0.0,10.20363187789917,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,lean_retrieval,2048,0.0,1,0.0,11.727472066879272,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,lean_retrieval,8192,0.0,1,0.0,10.0677969455719,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,truncation,2048,0.0,1,0.0,10.067303895950317,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,truncation,4096,0.0,1,0.0,11.622713088989258,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,truncation,8192,0.0,1,0.0,9.775704145431519,budgetbench-longmem-judge-v2

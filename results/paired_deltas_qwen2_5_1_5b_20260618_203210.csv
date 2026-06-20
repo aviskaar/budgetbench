@@ -1,0 +1,13 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen2.5:1.5b,memory,truncation,512,full_context,2048,30,0.43333333333333335,0.8,-0.36666666666666664,-0.5666666666666667,-0.16666666666666666,5.701947212219238,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,truncation,1024,full_context,2048,30,0.43333333333333335,0.8,-0.36666666666666664,-0.5666666666666667,-0.16666666666666666,8.445213079452515,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,truncation,2048,full_context,2048,30,0.8,0.8,0.0,0.0,0.0,13.409635066986084,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,rag,512,full_context,2048,30,0.7333333333333333,0.8,-0.06666666666666667,-0.16666666666666666,0.0,18.77167797088623,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,rag,1024,full_context,2048,30,0.8,0.8,0.0,0.0,0.0,22.131889820098877,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,rag,2048,full_context,2048,30,0.8,0.8,0.0,0.0,0.0,3.1713030338287354,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,lean_retrieval,512,full_context,2048,30,0.8,0.8,0.0,0.0,0.0,15.635197877883911,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,lean_retrieval,1024,full_context,2048,30,0.8333333333333334,0.8,0.03333333333333333,0.0,0.1,19.14290499687195,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,lean_retrieval,2048,full_context,2048,30,0.8,0.8,0.0,0.0,0.0,3.093930959701538,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,full_context,512,full_context,2048,30,0.0,0.8,-0.8,-0.9333333333333333,-0.6333333333333333,0.09714198112487793,3.105504035949707,1.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,full_context,1024,full_context,2048,30,0.0,0.8,-0.8,-0.9333333333333333,-0.6666666666666666,0.0718998908996582,3.105504035949707,1.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live
+qwen2.5:1.5b,memory,full_context,2048,full_context,2048,30,0.8,0.8,0.0,0.0,0.0,3.105504035949707,3.105504035949707,0.0,0.0,logs/full_study/memory_synthetic_qwen15b_30_categories_live

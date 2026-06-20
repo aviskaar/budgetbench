@@ -1,0 +1,10 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen2.5:1.5b,long,truncation,2048,full_context,32768,10,0.5,0.4,0.1,0.0,0.3,8.434310913085938,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,truncation,8192,full_context,32768,10,0.5,0.4,0.1,0.0,0.3,25.88437008857727,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,truncation,32768,full_context,32768,10,0.4,0.4,0.0,0.0,0.0,156.2898097038269,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,rag,2048,full_context,32768,10,0.3,0.4,-0.1,-0.3,0.0,11.184746026992798,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,rag,8192,full_context,32768,10,0.6,0.4,0.2,0.0,0.5,32.60787010192871,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,rag,32768,full_context,32768,10,0.4,0.4,0.0,0.0,0.0,50.765300989151,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,full_context,2048,full_context,32768,10,0.0,0.4,-0.4,-0.7,-0.1,2.664685010910034,7.828180313110352,1.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,full_context,8192,full_context,32768,10,0.0,0.4,-0.4,-0.7,-0.1,2.4697721004486084,7.828180313110352,1.0,0.0,logs/full_study/feasibility_long10_fit32k_v2
+qwen2.5:1.5b,long,full_context,32768,full_context,32768,10,0.4,0.4,0.0,0.0,0.0,7.828180313110352,7.828180313110352,0.0,0.0,logs/full_study/feasibility_long10_fit32k_v2

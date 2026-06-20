@@ -3,11 +3,15 @@ from budgetbench.tasks.base import BaseTask
 from budgetbench.tasks.long import LongBenchV2Task
 from budgetbench.tasks.swe import SWEBenchTask
 from budgetbench.tasks.tau import TauBenchTask
+from budgetbench.tasks.memory import MemoryUpdateTask
+from budgetbench.tasks.longmem import LongMemEvalTask
 
 _REGISTRY: Dict[str, Type[BaseTask]] = {
     "long": LongBenchV2Task,
     "swe": SWEBenchTask,
-    "tau": TauBenchTask
+    "tau": TauBenchTask,
+    "memory": MemoryUpdateTask,
+    "longmem": LongMemEvalTask,
 }
 
 def get_task(name: str, **kwargs) -> BaseTask:

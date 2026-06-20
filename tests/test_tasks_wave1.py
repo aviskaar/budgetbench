@@ -30,6 +30,7 @@ def test_longbench_wrapper(mock_datasets):
     items = task.get_dataset()
     assert len(items) == 1
     assert items[0]["answer"] == "B"
+    assert items[0]["_budgetbench_item_id"] == "THUDM/LongBench-v2:train:0"
     
     # Mock LLM and Strategy
     strategy = MagicMock(side_effect=lambda msgs, budget: msgs)
@@ -158,3 +159,23 @@ def test_longbench_chunking():
     small_msgs = task.format_message(small_item, budget=8192)
     assert len(small_msgs) == 3
     assert "Context:\n" in small_msgs[1]["content"]
+
+
+def test_longbench_natural_prompt_token_count():
+    task = LongBenchV2Task()
+    item = {
+        "context": "alpha beta gamma",
+        "question": "Which word appears?",
+        "choice_A": "alpha",
+        "choice_B": "delta",
+        "choice_C": "epsilon",
+        "choice_D": "zeta",
+        "answer": "A",
+    }
+
+    token_count = task.natural_prompt_token_count(
+        item,
+        tokenizer_fn=lambda text: len(text.split()),
+    )
+
+    assert token_count > 0

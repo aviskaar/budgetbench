@@ -13,7 +13,7 @@ class TruncationStrategy(MemoryStrategy):
 
     def _default_tokenizer(self, text: str) -> int:
         encoding = tiktoken.get_encoding("cl100k_base")
-        return len(encoding.encode(text))
+        return len(encoding.encode(text, disallowed_special=()))
 
     def __call__(self, messages: List[OpenAIMessage], active_budget: int) -> List[OpenAIMessage]:
         if not messages:

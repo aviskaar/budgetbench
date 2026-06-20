@@ -1,0 +1,16 @@
+model,task,strategy,budget,accuracy,violation_rate,mean_used_budget,max_peak_budget,quality_ci_low,quality_ci_high,quality_n,duration_sec
+qwen2.5:1.5b,longmem,truncation,2048,0.2,0.0,1840.2,2046.0,0.0,0.5,10,6.7889580726623535
+qwen2.5:1.5b,longmem,truncation,4096,0.4,0.0,3677.4,4078.0,0.1,0.7,10,11.796129941940308
+qwen2.5:1.5b,longmem,truncation,8192,0.2,0.0,6406.4,8157.0,0.0,0.5,10,19.26857614517212
+qwen2.5:1.5b,longmem,rag,2048,0.3,0.0,1996.3,2042.0,0.0,0.6,10,9.177543878555298
+qwen2.5:1.5b,longmem,rag,4096,0.2,0.0,3843.0,4086.0,0.0,0.5,10,13.73666501045227
+qwen2.5:1.5b,longmem,rag,8192,0.1,0.0,6417.4,8144.0,0.0,0.3,10,12.25803804397583
+qwen2.5:1.5b,longmem,lean_retrieval,2048,0.4,0.0,2032.8,2046.0,0.1,0.7,10,8.605654954910278
+qwen2.5:1.5b,longmem,lean_retrieval,4096,0.4,0.0,3777.5,4084.0,0.1,0.7,10,9.621787071228027
+qwen2.5:1.5b,longmem,lean_retrieval,8192,0.1,0.0,6428.1,8180.0,0.0,0.3,10,9.803816080093384
+qwen2.5:1.5b,longmem,checkpoint_context,2048,0.1,0.0,1820.5,1996.0,0.0,0.3,10,5.942205905914307
+qwen2.5:1.5b,longmem,checkpoint_context,4096,0.3,0.0,3324.7,3969.0,0.0,0.6,10,9.59656810760498
+qwen2.5:1.5b,longmem,checkpoint_context,8192,0.1,0.0,5951.1,7852.0,0.0,0.3,10,8.904674053192139
+qwen2.5:1.5b,longmem,full_context,2048,0.0,1.0,0.0,14834.0,0.0,0.0,10,0.11674809455871582
+qwen2.5:1.5b,longmem,full_context,4096,0.1,0.8,631.9,14834.0,0.0,0.3,10,0.47492408752441406
+qwen2.5:1.5b,longmem,full_context,8192,0.1,0.3,3995.8,14834.0,0.0,0.3,10,3.1353440284729004

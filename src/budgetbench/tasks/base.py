@@ -27,3 +27,7 @@ class BaseTask(ABC):
     def grade(self, prediction: Any, item: Dict[str, Any]) -> bool:
         """Grades the prediction against the item's ground truth."""
         pass
+
+    def metric_context(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        """Optional per-item metadata to attach to raw metric rows."""
+        return {}

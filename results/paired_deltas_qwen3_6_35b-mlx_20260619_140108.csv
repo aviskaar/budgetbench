@@ -1,0 +1,13 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen3.6:35b-mlx,longmem,truncation,2048,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,81.72444820404053,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,truncation,4096,full_context,8192,10,1.0,0.7,0.3,0.1,0.6,86.063227891922,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,truncation,8192,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,100.98413801193237,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,rag,2048,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,84.66778588294983,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,rag,4096,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,90.15587568283081,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,rag,8192,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,119.44036984443665,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,lean_retrieval,2048,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,78.1638879776001,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,lean_retrieval,4096,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,93.82062888145447,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,lean_retrieval,8192,full_context,8192,10,1.0,0.7,0.3,0.0,0.6,101.7190408706665,50.31245684623718,0.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,full_context,2048,full_context,8192,10,0.0,0.7,-0.7,-1.0,-0.4,0.09420299530029297,50.31245684623718,1.0,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,full_context,4096,full_context,8192,10,0.2,0.7,-0.5,-0.8,-0.2,14.619985818862915,50.31245684623718,0.8,0.3,logs/full_study/longmem_oracle_qwen36_35b_10
+qwen3.6:35b-mlx,longmem,full_context,8192,full_context,8192,10,0.7,0.7,0.0,0.0,0.0,50.31245684623718,50.31245684623718,0.3,0.3,logs/full_study/longmem_oracle_qwen36_35b_10

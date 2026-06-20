@@ -55,18 +55,26 @@ and budget-violation rates.  We report a local pilot conducted on June 16,
 2026 with Ollama and \RunModel{} over 89 SWE-bench Verified scaffold items
 and 89 LongBench v2 items.  The pilot evaluates sliding-window truncation,
 summary-buffer compression, and episodic retrieval at all five budget tiers.
-We also include a three-item LongBench v2 transfer check for
-\texttt{gemma4:e2b}.  Additional Qwen text and Qwen-VL tags were executed but
-are excluded from the main tables because their text-only exact-match cells
-were uninformative or dependent on serving configuration.  To evaluate the
-multimodal serving path separately, we include a six-item synthetic image
-question-answering probe for \texttt{qwen3-vl:2b}.  The results exhibit
-non-monotonic quality curves, tight-budget compliance failures,
-model-dependent behavior, limited multimodal endpoint viability, and
-substantial latency differences across strategies.  We present these results
-as pilot evidence, not as final strategy rankings, and provide the protocol,
-implementation details, limitations, reproducibility checklist, and planned
-extensions required for a larger community benchmark.
+We also report a June 18, 2026 full-context feasibility slice: 50 LongBench v2
+items whose natural prompts fit within 32K tokens, evaluated with truncation,
+RAG, and a \texttt{full\_context} pass-through baseline at 2K, 8K, and 32K.
+We also include a 20-item LongBench v2 transfer check for
+\texttt{gemma4:e2b}, a 30-item deterministic synthetic memory-agent pilot,
+and a 50-item public LongMemEval oracle-file pilot with an approximate
+deterministic scorer.
+Additional Qwen text and Qwen-VL tags were executed but are excluded from the
+main tables because their text-only exact-match cells were uninformative or
+dependent on serving configuration.  To evaluate the multimodal serving path
+separately, we include a six-item synthetic image question-answering probe for
+\texttt{qwen3-vl:2b}.  The results exhibit non-monotonic quality curves,
+tight-budget compliance failures, model-dependent behavior, limited
+multimodal endpoint viability, and substantial latency differences across
+strategies.  We present these results as pilot evidence, not as final strategy
+rankings.  The contribution is not the isolated act of varying context length;
+it is a standardized active-budget protocol for local agents with swappable
+strategies, deterministic task graders, operational metrics, implementation
+details, limitations, reproducibility checklist, and planned extensions
+required for a larger community benchmark.
 \end{abstract}
 
 \section{Introduction}
@@ -107,29 +115,44 @@ as $\tau$-bench evaluate tool-mediated interaction in realistic domains
 standardize the independent variable that local-agent developers routinely
 control: the active context budget assigned to each model call.
 
+Recent method papers make context budgets central, so \BudgetBench{} should
+not be read as claiming that budget sweeping itself is new.  ContextBudget
+formulates budget-aware context management as a sequential decision problem
+for long-horizon search agents \citep{wu2026contextbudget}.  BudgetMem learns
+query-aware routing among budget-tiered memory modules
+\citep{zhang2026budgetmem}.  Engram reports that a lean retrieved context can
+beat full history on LongMemEval\_S while using far fewer tokens
+\citep{wang2026engram}.  These papers raise the evidentiary bar: a benchmark
+paper must compare against full context, report operational metrics, and make
+its harness reusable.  The novelty claimed here is the conjunction of local
+LLM serving, fixed per-call active budgets, swappable strategy implementations,
+deterministic task graders, and comparable quality-latency-compliance logs.
+
 This paper contributes a budget-tiered protocol and a pilot implementation.
 The implementation is intentionally modest.  It includes a
 \texttt{MemoryStrategy} interface, a budget-enforced evaluation harness, JSONL
 metric logging, and reference implementations for truncation, summary-buffer
-compression, and retrieval-augmented context selection.  The pilot run uses a
-small local model and 89 items per task to obtain a denser pilot curve while
-remaining reproducible on a single machine.  The resulting numbers should not
-be read as final rankings.  They provide an empirical validation of the
-measurement surface: \BudgetBench{} can expose quality curves, compliance
-failures, and runtime tradeoffs that would be invisible in a single-budget
-evaluation.
+compression, retrieval-augmented context selection, and an exposed
+\texttt{full\_context} pass-through baseline for follow-up comparisons.  The
+pilot run uses a small local model and 89 items per task to obtain a denser
+pilot curve while remaining reproducible on a single machine.  The resulting
+numbers should not be read as final rankings.  They provide an empirical
+validation of the measurement surface: \BudgetBench{} can expose quality
+curves, compliance failures, and runtime tradeoffs that would be invisible in
+a single-budget evaluation.
 
 \paragraph{Contributions.}
 This work makes six contributions.  First, it defines active-context-budget
-evaluation as a protocol distinct from standard long-context model evaluation.
-Second, it documents an implementation whose strategy interface admits new
-memory policies without modifying task logic.  Third, it reports an 89-item
-local pilot with complete five-tier tables for quality, violation rate, budget
-usage, and duration.  Fourth, it adds a filtered small-model transfer check
-showing how the same protocol can admit additional local text and
-vision-capable model tags while excluding uninformative runs from result
-tables.  Fifth, it adds a native image QA probe to separate multimodal serving
-viability from text-only benchmark performance.  Sixth, it provides
+evaluation as a local-agent protocol distinct from standard long-context model
+evaluation and from method-specific budget studies.  Second, it documents an
+implementation whose strategy interface admits new memory policies without
+modifying task logic.  Third, it reports an 89-item local pilot with complete
+five-tier tables for quality, violation rate, budget usage, and duration.
+Fourth, it adds a filtered small-model transfer check showing how the same
+protocol can admit additional local text and vision-capable model tags while
+excluding uninformative runs from result tables.  Fifth, it marks a native
+image QA probe as infrastructure validation only, separating multimodal
+serving viability from text-only benchmark performance.  Sixth, it provides
 reproducibility requirements and planned extensions for scaling
 \BudgetBench{} from a local pilot to a public benchmark.
 
@@ -182,6 +205,48 @@ reliable evidence use \citep{liu2023lost,hsieh2024ruler}; \BudgetBench{}
 extends this observation to memory strategy comparisons.
 
 \section{Related Work}
+
+\subsection{Closest Concurrent Work}
+
+ContextBudget/BACM-RL is the closest budget-control method paper.  It
+formalizes context management under a budget and evaluates learned compression
+policies for long-horizon search agents \citep{wu2026contextbudget}.  BudgetMem
+also treats cost as a controllable axis, but routes among memory-module budget
+tiers rather than exposing a raw per-call token budget and third-party strategy
+contract \citep{zhang2026budgetmem}.  EvoMemBench benchmarks agent memory from
+self-evolving in-episode and cross-episode perspectives, comparing many memory
+methods with long-context baselines, but it is not primarily a fixed
+active-budget harness for local deployments \citep{wang2026evomembench}.
+Engram is especially important because it includes full-context baselines,
+reproducible logs, and evidence that lean retrieved context can outperform
+full history on LongMemEval\_S \citep{wang2026engram}.  LightMem and Prompt
+Compression in the Wild reinforce the operational lens: latency, online
+overhead, hardware, and break-even points must be measured, not assumed
+\citep{zhang2026lightmem,kummer2026promptcompression}.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{p{0.17\textwidth}p{0.16\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.16\textwidth}}
+\toprule
+Artifact & Primary focus & Fixed active budgets & Swappable strategies & Local-agent focus & Operational metrics \\
+\midrule
+\BudgetBench{} & Benchmark protocol & Yes & Yes & Yes & Quality, used/peak budget, violations, latency \\
+ContextBudget \citep{wu2026contextbudget} & Learned context-management method & Yes, internally & No & No & Quality and budget-dependent cost \\
+BudgetMem \citep{zhang2026budgetmem} & Query-aware memory-tier router & Tiered modules & No & Limited & Accuracy-cost frontiers \\
+EvoMemBench \citep{wang2026evomembench} & Agent-memory benchmark & No fixed tier protocol & Method comparisons & No & Memory-task quality by category \\
+MemoryAgent\allowbreak Bench \citep{hu2025memoryagentbench} & Incremental memory benchmark & No fixed tier protocol & Method comparisons & No & Memory competency scores \\
+Engram \citep{wang2026engram} & Bi-temporal memory engine & Lean vs full context & No & Partial & Accuracy, tokens, errors, reproducible logs \\
+RULER \citep{hsieh2024ruler} & Long-context model capacity & Length sweep & No & No & Task accuracy by sequence length \\
+HELMET \citep{yen2024helmet} & Long-context model evaluation & Length sweep & No & No & Application-category quality \\
+LongBench v2 \citep{bai2024longbenchv2} & Long-context QA substrate & Natural long inputs & No & No & Exact-match multiple-choice quality \\
+\bottomrule
+\end{tabular}
+\caption{Positioning against the closest concurrent and background artifacts.  The intended distinction is the conjunction of fixed active budgets, strategy plug-ins, local deployment focus, deterministic graders, and operational metrics.}
+\label{tab:closest_work}
+\end{table}
 
 \subsection{Long-Context Benchmarks}
 
@@ -241,7 +306,10 @@ explicit management of context and archival stores \citep{packer2023memgpt}.
 Mem0 presents a production-oriented memory layer that extracts, consolidates,
 and retrieves salient conversational facts with substantial latency and token
 savings relative to full-context approaches \citep{chhikara2025mem0}.  These
-systems motivate richer strategy families than the three baselines used in the
+systems are commonly evaluated on chat-memory substrates such as LongMemEval,
+which tests long-term interactive memory over timestamped conversation
+histories \citep{wu2024longmemeval}.  Together, these systems motivate richer
+strategy families than the three baselines used in the
 pilot.  LLMLingua-2 represents a complementary compression family: rather than
 choosing which chunks to include, it compresses prompt content toward a target
 budget \citep{pan2024llmlingua2}.  \BudgetBench{} is designed to accommodate
@@ -287,9 +355,10 @@ Each cell logs raw per-item events and aggregate summary rows.  The primary
 quality metric depends on the task: patch-similarity for the current SWE
 scaffold and exact-match accuracy for LongBench v2.  The reliability metric is
 budget violation rate.  The resource metrics are mean used budget, maximum peak
-budget, duration, and tokens per task.  A full benchmark should also report
-confidence intervals and repeated trials; the present pilot reports point
-estimates because it is a bounded artifact-validation run.
+budget, duration, and tokens per task.  The analyzer supports bootstrap
+confidence intervals when item-level quality rows are available.  A full
+benchmark should report those intervals and repeated trials; the present pilot
+tables remain point-estimate artifact validation.
 
 \section{Implementation Details}
 
@@ -321,7 +390,9 @@ used budget, and maximum observed peak budget.  The analyzer supports both
 older boolean \texttt{violation} fields and the current runner's numeric
 \texttt{violation\_rate} rows.  This compatibility is important because a
 table that reports all-zero violations while raw retry failures exist would
-understate one of the key outcomes of budget-tiered evaluation.
+understate one of the key outcomes of budget-tiered evaluation.  Newer logs
+also include item-level quality rows, allowing the analyzer to emit bootstrap
+quality intervals without changing the raw logging format.
 
 \subsection{Multimodal Boundary}
 
@@ -393,6 +464,10 @@ context with the same local model and prepends that summary to the retained
 messages.  RAG embeds intermediate context messages with a sentence-transformer
 model, stores them in an in-memory Chroma collection, retrieves messages
 relevant to the query, and reconstructs a prompt within the active budget.
+The current harness also exposes a \texttt{full\_context} baseline for
+follow-up runs.  It returns the task's natural formatted prompt unchanged and
+lets the shared budget enforcer record whether that prompt fits the selected
+tier, making infeasible full-context rows explicit.
 
 \section{Results}
 
@@ -409,7 +484,292 @@ than because the strategies have independently identical coding performance.
 
 \input{results_89item_tables}
 
-\subsection{Supplementary Model and Multimodal Checks}
+\subsection{Full-Context-Feasible LongBench Slice}
+
+The initial 89-item pilot does not answer whether a budgeted strategy can
+match full context, because many natural LongBench v2 prompts exceed small
+active tiers and some exceed 32K.  We therefore ran a follow-up slice on the
+first 50 LongBench v2 training items whose natural formatted prompt contains
+at most 32,768 benchmark tokens.  The run used \RunModel{}, the same local
+Ollama endpoint, three strategies, and three active budgets: 2K, 8K, and 32K.
+The raw logs are in \path{logs/full_study/feasibility_long50_fit32k/}.  After
+appending an 8K \texttt{lean\_retrieval} row, the aggregate CSV is
+\path{results/full_study_qwen2_5_1_5b_20260618_155102.csv}, and the paired
+comparison table is
+\path{results/paired_deltas_qwen2_5_1_5b_20260618_155102.csv}.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Strategy & Budget & Accuracy & Violation & Used tokens & Duration \\
+\midrule
+Truncation & 2K & 0.34 & 0.00 & 1,751 & 31.6s \\
+Truncation & 8K & 0.26 & 0.00 & 7,961 & 128.3s \\
+Truncation & 32K & 0.32 & 0.00 & 20,921 & 610.0s \\
+RAG & 2K & 0.24 & 0.00 & 1,892 & 49.7s \\
+RAG & 8K & 0.34 & 0.00 & 8,018 & 144.6s \\
+RAG & 32K & 0.32 & 0.00 & 20,921 & 608.5s \\
+Lean retrieval & 8K & 0.30 & 0.00 & 7,956 & 147.6s \\
+Full context & 2K & 0.00 & 1.00 & 0 & 10.3s \\
+Full context & 8K & 0.00 & 1.00 & 0 & 10.3s \\
+Full context & 32K & 0.32 & 0.00 & 20,921 & 605.9s \\
+\bottomrule
+\end{tabular}
+\caption{Fifty-item LongBench v2 slice filtered to items whose natural prompt fits within 32K tokens.  Full context at 2K and 8K is infeasible by construction; those rows fail budget enforcement before model calls.}
+\label{tab:full_context_feasible_slice}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Candidate versus full context at 32K & Paired $N$ & Mean delta & 95\% bootstrap CI \\
+\midrule
+Truncation at 2K & 50 & +0.02 & [-0.10, +0.14] \\
+Truncation at 8K & 50 & -0.06 & [-0.14, +0.02] \\
+RAG at 2K & 50 & -0.08 & [-0.18, 0.00] \\
+RAG at 8K & 50 & +0.02 & [-0.08, +0.12] \\
+RAG at 32K & 50 & 0.00 & [0.00, 0.00] \\
+Lean retrieval at 8K & 50 & -0.02 & [-0.12, +0.08] \\
+\bottomrule
+\end{tabular}
+\caption{Paired item-level exact-match deltas against the 32K full-context baseline on the feasible slice.  Positive values mean the budgeted strategy answered more items correctly than full context on the same item set.}
+\label{tab:paired_full_context_deltas}
+\end{table}
+
+This slice gives the first direct full-context comparison in the artifact.
+The result should be interpreted conservatively: no budgeted strategy
+significantly beats full context.  The notable signal is operational.  RAG at
+8K matches full context at 32K within paired uncertainty while using roughly
+one quarter of the wall-clock time on this local setup.  Full context is also
+categorically infeasible at 2K and 8K, whereas truncation and RAG produce
+budget-compliant prompts at those tiers.  The initial lean retrieval baseline
+succeeds operationally but does not improve over simple RAG on this slice.
+This supports the benchmark claim that active-budget evaluation surfaces a
+quality-latency-compliance tradeoff that ordinary full-context evaluation
+hides, including negative baseline results that should be reported rather than
+silently discarded.
+
+\subsection{Synthetic Memory-Agent Pilot}
+
+We also added a deterministic memory-shaped task to test whether the harness
+can evaluate agent memory behavior beyond long-context multiple choice.  Each
+item contains a short event history with distractors and asks for an exact
+answer about one of five categories: single-session facts, knowledge updates,
+temporal reasoning, preferences, or abstention.  This task is synthetic and is
+not a replacement for LongMemEval, LoCoMo, or other public memory-agent
+benchmarks; its role here is to validate the protocol on memory-specific
+phenomena with deterministic scoring.  The raw logs are in
+\path{logs/full_study/memory_synthetic_qwen15b_30_categories_live/}; the
+aggregate, paired, and category CSV files are
+\path{results/full_study_qwen2_5_1_5b_20260618_203210.csv},
+\path{results/paired_deltas_qwen2_5_1_5b_20260618_203210.csv}, and
+\path{results/grouped_memory_category_qwen2_5_1_5b_20260618_203210.csv}.
+We also ran a \texttt{checkpoint\_context} baseline that keeps a compact
+extractive checkpoint, a recent tail, and query-relevant evidence.  On the
+same 30-item memory slice, it lands between truncation and lean retrieval:
+0.53 at 512, 0.67 at 1024, and 0.80 at 2048.  It is slower than the trivial
+baselines at the tightest tier, but it gives a more realistic practitioner
+workflow than either raw truncation or pure retrieval.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Strategy & Budget & Accuracy & Violation & Used tokens & Duration \\
+\midrule
+Truncation & 512 & 0.43 & 0.00 & 500 & 5.7s \\
+Truncation & 1024 & 0.43 & 0.00 & 1,016 & 8.4s \\
+Truncation & 2048 & 0.80 & 0.00 & 1,812 & 13.4s \\
+RAG & 512 & 0.73 & 0.00 & 500 & 18.9s \\
+RAG & 1024 & 0.80 & 0.00 & 1,014 & 22.2s \\
+RAG & 2048 & 0.80 & 0.00 & 1,812 & 3.2s \\
+Lean retrieval & 512 & 0.80 & 0.00 & 500 & 15.6s \\
+Lean retrieval & 1024 & 0.83 & 0.00 & 1,018 & 19.2s \\
+Lean retrieval & 2048 & 0.80 & 0.00 & 1,812 & 3.1s \\
+Checkpoint context & 512 & 0.53 & 0.00 & 479 & 5.3s \\
+Checkpoint context & 1024 & 0.67 & 0.00 & 968 & 7.7s \\
+Checkpoint context & 2048 & 0.80 & 0.00 & 1,812 & 3.2s \\
+Full context & 512 & 0.00 & 1.00 & 0 & 0.1s \\
+Full context & 1024 & 0.00 & 1.00 & 0 & 0.1s \\
+Full context & 2048 & 0.80 & 0.00 & 1,812 & 3.1s \\
+\bottomrule
+\end{tabular}
+\caption{Thirty-item synthetic memory-agent pilot.  Full context fails at
+512 and 1024 tokens because the natural memory trace exceeds those active
+budgets.}
+\label{tab:synthetic_memory_pilot}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Candidate versus full context at 2048 & Paired $N$ & Mean delta & 95\% bootstrap CI \\
+\midrule
+Truncation at 512 & 30 & -0.37 & [-0.57, -0.17] \\
+Truncation at 1024 & 30 & -0.37 & [-0.57, -0.17] \\
+RAG at 512 & 30 & -0.07 & [-0.17, 0.00] \\
+RAG at 1024 & 30 & 0.00 & [0.00, 0.00] \\
+Lean retrieval at 512 & 30 & 0.00 & [0.00, 0.00] \\
+Lean retrieval at 1024 & 30 & +0.03 & [0.00, +0.10] \\
+Checkpoint context at 512 & 30 & -0.27 & [-0.50, 0.00] \\
+Checkpoint context at 1024 & 30 & -0.13 & [-0.30, +0.03] \\
+Checkpoint context at 2048 & 30 & 0.00 & [0.00, 0.00] \\
+Full context at 512 & 30 & -0.80 & [-0.93, -0.63] \\
+Full context at 1024 & 30 & -0.80 & [-0.93, -0.67] \\
+\bottomrule
+\end{tabular}
+\caption{Paired item-level exact-match deltas against the 2048-token
+full-context baseline on the synthetic memory task.  The positive
+\texttt{lean\_retrieval} row corresponds to one additional correct item and
+should be treated as a pilot signal rather than proof of superiority.}
+\label{tab:synthetic_memory_deltas}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}
+\toprule
+Category & Trunc. 1024 & RAG 1024 & Lean 512 & Lean 1024 & Full 2048 \\
+\midrule
+Single fact & 0.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
+Temporal & 0.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
+Knowledge update & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
+Abstention & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
+Preference & 0.17 & 0.00 & 0.00 & 0.17 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Category-level exact-match accuracy on the synthetic memory pilot,
+six items per category.  Retrieval fixes early-fact and temporal cases at
+tight budgets where truncation fails, while preference remains a model/prompt
+failure even under full context.}
+\label{tab:synthetic_memory_categories}
+\end{table}
+
+The memory pilot gives a different failure profile from LongBench.  Tight
+truncation loses early single-session facts and temporal evidence, while
+retrieval-based strategies recover those categories at tight budgets.  The
+category split also prevents a false positive: preference questions remain
+poor even for full context, so that cell should be treated as a prompt/model
+weakness rather than a memory-strategy result.  The result is useful for the
+paper's protocol claim because it shows budget enforcement, exact-match
+memory scoring, paired comparisons, and category-level diagnostics.  It should
+not be used as a public benchmark claim until corroborated with an external
+memory-agent dataset.
+
+\subsection{Public LongMemEval Oracle Pilot}
+
+To corroborate the synthetic result on public data, we added an adapter for
+the official LongMemEval JSON format \citep{wu2024longmemeval}.  The adapter
+loads \path{longmemeval_oracle.json}, formats timestamped user-assistant
+sessions as a budgeted chat history, and records LongMemEval question type as
+the memory category.  This is not official LongMemEval scoring: the official
+evaluation uses an LLM judge, while this pilot uses a deterministic normalized
+containment scorer so that the budget sweep remains local and reproducible.
+The primary prediction-enabled run uses 50 category-balanced oracle-file items, \RunModel{}, and the
+2K, 4K, and 8K active budgets.  Raw logs are in
+\path{logs/full_study/longmem_oracle_qwen15b_50_predictions/}; the aggregate, paired, and
+category CSV files are
+\path{results/full_study_qwen2_5_1_5b_20260618_213603.csv},
+\path{results/paired_deltas_qwen2_5_1_5b_20260618_213603.csv}, and
+\path{results/grouped_memory_category_qwen2_5_1_5b_20260618_213603.csv}.
+The same run also logs raw predictions and exports
+\path{results/longmem_judge_inputs_qwen15b_50_predictions.jsonl}, a
+600-row bundle joining question IDs, reference answers, predictions when
+available, normalized-containment scores, and BudgetBench provenance for
+external LongMemEval-style judging.  Of these rows, 512 contain model
+predictions; rows that violate the active budget before a model prediction are
+explicitly marked as not judgeable budget violations.
+The judge bridge itself is implemented in
+\path{scripts/run_longmem_external_judge.py}; a remote OpenRouter smoke against
+\texttt{openai/gpt-4o-mini} currently returns 401 because no usable API key is
+available in this workspace, and the local \texttt{gemma3:1b} smoke was
+rejected as unreliable because it accepted obviously wrong answers.  The
+local \texttt{qwen2.5:1.5b} smoke is parseable and useful for serializer
+sanity checks, but it is not independent enough to count as official judge
+evidence.  A \texttt{gemma4:31b-mlx} judge sample over 12 LongMemEval rows did
+produce parseable JSON for 7 rows and yielded a 14.3\% judge accuracy on the
+truncation@2K cell.  A 20-row key-row sample improved that to 13 parseable
+rows with 53.8\% judge accuracy on the same truncation@2K cell.  A broader
+24-row prediction-only balanced sample spanning truncation, RAG, lean
+retrieval, and full context at 2K, 4K, and 8K yielded 12 parseable judge
+rows; in that tiny slice, \texttt{full\_context@2048} and
+\texttt{full\_context@4096} were judged correct, while the other judged
+buckets were not.  This is enough to show the bridge works across multiple
+buckets, but it still falls short of a full official judge run.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Strategy & Budget & Accuracy & Violation & Used tokens & Duration \\
+\midrule
+Truncation & 2K & 0.34 & 0.00 & 1,769 & 30.5s \\
+Truncation & 4K & 0.48 & 0.00 & 3,390 & 50.0s \\
+Truncation & 8K & 0.38 & 0.00 & 5,331 & 76.8s \\
+RAG & 2K & 0.38 & 0.00 & 1,891 & 41.4s \\
+RAG & 4K & 0.40 & 0.00 & 3,488 & 56.0s \\
+RAG & 8K & 0.36 & 0.00 & 5,365 & 75.7s \\
+Lean retrieval & 2K & 0.46 & 0.00 & 1,918 & 37.0s \\
+Lean retrieval & 4K & 0.46 & 0.00 & 3,479 & 53.2s \\
+Lean retrieval & 8K & 0.36 & 0.00 & 5,356 & 78.3s \\
+Full context & 2K & 0.08 & 0.90 & 126 & 1.4s \\
+Full context & 4K & 0.22 & 0.70 & 705 & 3.2s \\
+Full context & 8K & 0.34 & 0.16 & 4,063 & 14.2s \\
+\bottomrule
+\end{tabular}
+\caption{Fifty-item public LongMemEval oracle-file pilot with deterministic
+normalized-containment scoring.  Violation rates for full context are high
+because several oracle histories still exceed the active tier.}
+\label{tab:longmem_oracle_pilot}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Candidate versus full context at 8K & Paired $N$ & Mean delta & 95\% bootstrap CI \\
+\midrule
+Truncation at 2K & 50 & 0.00 & [-0.12, +0.12] \\
+Truncation at 4K & 50 & +0.14 & [+0.06, +0.24] \\
+Truncation at 8K & 50 & +0.04 & [0.00, +0.10] \\
+RAG at 2K & 50 & +0.04 & [-0.08, +0.16] \\
+RAG at 4K & 50 & +0.06 & [-0.02, +0.14] \\
+RAG at 8K & 50 & +0.02 & [0.00, +0.06] \\
+Lean retrieval at 2K & 50 & +0.12 & [+0.02, +0.22] \\
+Lean retrieval at 4K & 50 & +0.12 & [+0.02, +0.24] \\
+Lean retrieval at 8K & 50 & +0.02 & [0.00, +0.06] \\
+\bottomrule
+\end{tabular}
+\caption{Paired deltas against 8K full context on the public LongMemEval
+oracle pilot.  Lean retrieval at 2K and 4K beats the 8K full-context baseline
+under the deterministic pilot scorer, while still obeying the active budget.}
+\label{tab:longmem_oracle_deltas}
+\end{table}
+
+This public-memory pilot strengthens the novelty case in a limited but useful
+way.  It shows that the same harness can run an external long-term memory
+benchmark, expose full-context infeasibility as a measured violation rate, and
+produce category metadata for memory-specific diagnostics.  The category split
+shows that lean retrieval's gains are concentrated in knowledge-update and
+multi-session questions, while single-session preferences remain at zero
+accuracy for all strategies under this local prompt.  It does not yet replace
+official LongMemEval results: the oracle-file scorer is approximate and the
+sample is still a pilot subset.  The next required upgrade is to add official
+or external LongMemEval judge decisions over the exported prediction bundle
+before making benchmark-quality claims.
+
+\subsection{Supplementary Model and Infrastructure-Only Multimodal Checks}
 
 Table~\ref{tab:model_transfer_gemma4} reports the usable rows from the follow-up
 small-model sweep.  This is not a ranking comparison with the 89-item run: it
@@ -420,12 +780,54 @@ current text-only task.  On this slice, \texttt{gemma4:e2b} produced nonzero
 exact-match accuracy in every reported cell.  RAG matched or exceeded
 truncation while incurring roughly double the mean cell duration.
 
-Table~\ref{tab:multimodal_probe} reports the separate native multimodal
-probe.  The six generated items use simple image-plus-text prompts, so the
-result should not be read as evidence about real-world visual reasoning.  The
-probe verifies that the local serving stack can carry image payloads and that
-\BudgetBench{} can record multimodal artifacts without mixing them into the
-text-only LongBench budget table.
+We also ran a 20-item full-context-feasible transfer check with
+\texttt{gemma4:e2b}, using the same LongBench v2 filtering rule and the 8K and
+32K active budgets.  The raw logs are in
+\path{logs/full_study/transfer_gemma4_fit32k_20/}.  This check did not
+reproduce the \RunModel{} quality signal: truncation and RAG scored 0.00 at
+8K, while truncation, RAG, and full context each scored 0.05 at 32K.  Full
+context at 8K again had 100\% violation rate.  The result is useful as a
+transfer warning rather than a strategy ranking.  It shows that the benchmark
+can expose model-dependent prompt/serving suitability, and that the 50-item
+Qwen result should not be generalized across tasks or model scales without
+checking for the kind of flat LongBench ceiling we see on \texttt{qwen3.5:2b}
+and the strong LongMemEval transfer we see on \texttt{qwen3.6:35b-mlx}.
+
+We then ran \texttt{qwen3.5:2b} on a 5-item LongBench slice at 8K and 32K.
+That run completed quickly enough to be practical, but every reported cell was
+0.00 across truncation, RAG, lean retrieval, and full context.  This is a
+useful negative transfer result: the protocol can complete on a smaller local
+model without crashing, but the QA signal can collapse to a flat ceiling even
+when the memory transfer on \texttt{qwen3.6:35b-mlx} is strong.
+
+We additionally ran \texttt{qwen3.6:35b-mlx} on a 10-item LongMemEval oracle
+slice.  The budgeted truncation, RAG, and lean-retrieval rows all scored 1.00
+at 2K, 4K, and 8K, while full context scored 0.00 at 2K, 0.20 at 4K, and 0.70
+at 8K with violation rates of 1.00, 0.80, and 0.30.  The paired deltas
+versus \texttt{full\_context@8192} are +0.30 for every budgeted row.  This is
+the strongest transfer evidence yet: the larger local model preserves the
+budgeted-vs-full-context split on the public LongMemEval oracle subset, so
+the 5-item probe above is now a precursor rather than the result to cite.
+
+By contrast, a matched 10-item \texttt{gemma4:12b-mlx} LongMemEval probe
+returned 0.00 across truncation, RAG, lean retrieval, and full context at
+2K, 4K, and 8K.  That flat result is useful because it shows the same protocol
+does not magically produce a LongMemEval signal on a smaller intermediate
+model; model scale and serving regime remain first-order variables in the
+benchmark.
+
+A \texttt{checkpoint\_context} run on the same 10-item LongMemEval slice
+lands at 0.10 at 2K, 0.30 at 4K, and 0.10 at 8K.  That is not the best public
+memory result, but it is a distinct shape: the checkpoint policy behaves like
+a mid-budget compromise rather than a best-of-both-worlds strategy.
+
+Table~\ref{tab:multimodal_probe} reports the separate native multimodal probe
+as infrastructure validation only.  The six generated items use simple
+image-plus-text prompts, so the result should not be read as evidence about
+real-world visual reasoning or multimodal memory.  The probe verifies that the
+local serving stack can carry image payloads and that \BudgetBench{} can record
+multimodal artifacts without mixing them into the text-only LongBench budget
+table.
 
 \input{results_model_compare_tables}
 
@@ -461,18 +863,26 @@ extra call dominates runtime.  A memory strategy that improves accuracy by a
 small amount may still be unattractive if it multiplies latency.  Conversely,
 a retrieval strategy can have a fixed embedding cost but avoid repeated
 generation-based compression.  This is why \BudgetBench{} reports duration and
-budget utilization alongside quality.
+budget utilization alongside quality.  The 50-item full-context-feasible slice
+shows the reverse operational pattern: RAG at 8K matches 32K full context
+within paired uncertainty while taking substantially less wall-clock time on
+the same local model.  That result is not yet a general strategy ranking, but
+it is precisely the kind of deployment tradeoff a budgeted benchmark is meant
+to reveal.
 
 \subsection{Pilot Scope}
 
-The current run is intentionally small.  It demonstrates the measurement
-surface, not final superiority of one strategy over another.  A
-benchmark-scale study should increase the item count, use stronger local
-models, evaluate official SWE-bench resolution, include tau-bench state
-grading, add multimodal task families before making claims about
-vision-language memory, and report confidence intervals.  The pilot establishes
-the path from local serving to budget-constrained logs, analysis, tables,
-figures, and a reproducible paper artifact.
+The current runs are intentionally small.  They demonstrate the measurement
+surface, not final superiority of one strategy over another.  The 50-item
+feasible-slice result is enough to justify scaling because it includes a
+paired full-context comparison and shows a latency/compliance tradeoff at
+similar quality.  A benchmark-scale study should use stronger local models,
+expand the public memory-agent run beyond the current LongMemEval oracle
+pilot with official judge logs, add official SWE-bench resolution or a deterministic trace-debugging
+alternative, include richer strategy families, and add multimodal task
+families before making claims about vision-language memory.  The pilot
+establishes the path from local serving to budget-constrained logs, analysis,
+tables, figures, and a reproducible paper artifact.
 
 \section{Threats to Validity}
 
@@ -485,22 +895,25 @@ summarizer could change the results.  The RAG strategy uses generic embeddings
 and simple message-level retrieval rather than task-optimized chunking.
 
 \paragraph{External validity.}
-The model is small, the sample contains 89 items per task, and only two task
-families are included.  Larger local models may benefit more from larger
-budgets.  Production agents may maintain cross-item or cross-session memory,
-whereas this pilot resets strategy state between items.  The results should
-therefore be interpreted as a validation of the protocol and implementation,
-not as a general statement about all local memory strategies.  The additional
-\texttt{gemma4:e2b} sweep is even narrower: it is a three-item transfer check
-and should be read only as evidence that the protocol transfers to another
-local tag under controlled reporting rules.
+The model is small, the primary sample contains 89 items per task, and the
+memory-agent task is synthetic.  Larger local models may benefit more from
+larger budgets.  Production agents may maintain cross-item or cross-session
+memory, whereas this pilot resets strategy state between items.  The results
+should therefore be interpreted as a validation of the protocol and
+implementation, not as a general statement about all local memory strategies.
+The additional \texttt{gemma4:e2b} sweep is also narrow: it is a 20-item
+LongBench transfer check and should be read only as evidence that the protocol
+can expose model-dependent prompt and serving behavior.
 
 \paragraph{Construct validity.}
 The SWE patch-similarity proxy measures overlap with the reference patch, not
 actual repository repair.  It can reward patches that touch the right file or
 line without being executable fixes.  LongBench v2 exact-match scoring is more
-direct, but 89 questions are still too few for definitive estimates.  Future
-studies should use official task graders and report uncertainty.
+direct, but 89 questions are still too few for definitive estimates.  The
+LongMemEval oracle pilot uses normalized-containment scoring rather than the
+official judge, so its numbers prove integration and expose budget behavior
+rather than official LongMemEval accuracy.  Future studies should use official
+task graders and report uncertainty.
 
 \paragraph{Multimodal validity.}
 The primary benchmark run does not contain image, video, chart, or
@@ -518,10 +931,11 @@ Second, it should include tau-bench or tau2-bench once the local data
 dependency is installed, because tool-use chains stress memory in ways that
 single-call QA does not.  Third, it should add richer strategy families:
 LLMLingua-2 compression, Mem0, Letta/MemGPT-style hierarchical memory, and
-hybrid retrieval-summary policies.  Fourth, it should add repeated trials and
-confidence intervals so strategy crossovers can be distinguished from sampling
-noise.  Fifth, it should add multimodal tasks with native visual inputs and
-multimodal memory policies.  Examples include document-page QA where the active
+hybrid retrieval-summary policies.  Fourth, it should report the analyzer's
+confidence intervals and add repeated trials so strategy crossovers can be
+distinguished from sampling noise.  Fifth, it should add multimodal tasks with
+native visual inputs and multimodal memory policies.  Examples include
+document-page QA where the active
 budget controls OCR text plus image references, chart QA where retrieval
 chooses both visual crops and textual evidence, and tool-agent tasks where
 screenshots or UI state are part of the memory trace.
@@ -530,15 +944,20 @@ screenshots or UI state are part of the memory trace.
 
 \BudgetBench{} operationalizes an under-standardized evaluation
 question: how do memory strategies trade quality, budget compliance, and
-latency when active context is fixed?  The expanded 89-item pilot run
-demonstrates that this question can be evaluated locally with a small model,
-deterministic graders, five budget tiers, and swappable strategy baselines.
-This paper provides the protocol, literature positioning, result tables,
-operational metrics, and reproducibility record needed to inspect the pilot.
-The strongest claim is methodological rather than rank-oriented:
-fixed-budget evaluation reveals failure modes that standard long-context
-evaluation can hide, and those failure modes are central to practical local
-agent deployment.
+latency when active context is fixed?  The expanded 89-item pilot run and the
+50-item full-context-feasible LongBench slice demonstrate that this question
+can be evaluated locally with a small model, deterministic graders, fixed
+budget tiers, and swappable strategy baselines.  The strongest claim is
+methodological rather than rank-oriented: fixed-budget evaluation reveals
+failure modes and operating points that standard long-context evaluation can
+hide.  In the current evidence, full context is infeasible at tight tiers, and
+a budgeted RAG prompt at 8K can match the 32K full-context baseline within
+paired uncertainty at substantially lower local runtime.  The synthetic and
+LongMemEval oracle pilots show that the same protocol can expose
+memory-specific update, preference, temporal, and abstention behavior, but the
+public-memory result still uses an approximate scorer.  The next step is to
+test whether these signals transfer to stronger local models and to add
+official public-memory judge logs.
 
 \clearpage
 \appendix
@@ -568,6 +987,13 @@ Maximum generated tokens & 512 \\
 Random seed & 42 \\
 Primary raw logs & \path{logs/full_study/final_qwen25_15b_89items/summary.jsonl} \\
 Primary aggregate CSV & \path{results/full_study_qwen2_5_1_5b_89items.csv} \\
+Full-context LongBench slice & \path{logs/full_study/feasibility_long50_fit32k/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_155102.csv} \\
+Synthetic memory pilot & \path{logs/full_study/memory_synthetic_qwen15b_30_categories_live/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_203210.csv}; categories \path{results/grouped_memory_category_qwen2_5_1_5b_20260618_203210.csv} \\
+LongMemEval oracle pilot & \path{logs/full_study/longmem_oracle_qwen15b_50_predictions/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_213603.csv}; paired \path{results/paired_deltas_qwen2_5_1_5b_20260618_213603.csv}; judge inputs \path{results/longmem_judge_inputs_qwen15b_50_predictions.jsonl} \\
+Qwen3.6-35B LongMemEval probe & \path{logs/full_study/longmem_oracle_qwen36_35b_probe5/}; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260618_212102.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260618_212102.csv} \\
+Qwen3.6-35B LongMemEval transfer & \path{logs/full_study/longmem_oracle_qwen36_35b_10/}; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260619_140108.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260619_140108.csv}; categories \path{results/grouped_memory_category_qwen3_6_35b-mlx_20260619_140108.csv} \\
+Qwen3.5-2B LongBench 5-item transfer & \path{logs/full_study/feasibility_longbench_qwen35_2b_5/}; aggregate \path{results/full_study_qwen3_5_2b_20260619_142423.csv}; paired \path{results/paired_deltas_qwen3_5_2b_20260619_142423.csv} \\
+Gemma transfer check & \path{logs/full_study/transfer_gemma4_fit32k_20/}; aggregate \path{results/full_study_gemma4_e2b_20260618_161005.csv} \\
 Additional filtered model sweep & \path{results/model_compare_small_long3.csv}; reported rows limited to \texttt{gemma4:e2b} because zero-accuracy or endpoint-anomalous rows are excluded from paper tables \\
 Native multimodal probe artifacts & \path{results/multimodal_smoke_qwen3_vl_2b.csv}; generated PNGs in \path{results/multimodal_smoke/} \\
 \bottomrule
@@ -619,7 +1045,61 @@ Scaling path & Increase sample count; stratify by context length, evidence dispe
 \bottomrule
 \end{longtable}
 
+\subsection{Synthetic Memory Pilot}
+
+\begin{longtable}{p{0.24\textwidth}p{0.66\textwidth}}
+\caption{Synthetic memory pilot task card.}\\
+\toprule
+Field & Description \\
+\midrule
+\endfirsthead
+\toprule
+Field & Description \\
+\midrule
+\endhead
+Purpose & Evaluate whether a strategy can preserve or retrieve memory-relevant events under tight active budgets. \\
+Input format & System prompt, event history with distractors, and a direct question requiring a short exact answer. \\
+Categories & Single-session fact, knowledge update, temporal reasoning, preference, and abstention. \\
+Prediction format & Short text answer normalized for exact-match scoring. \\
+Grader & Deterministic normalized exact match. \\
+Strength & Fast, reproducible, and memory-specific without requiring an LLM judge. \\
+Limitation & Synthetic; not a substitute for public memory-agent benchmarks such as LongMemEval or LoCoMo. \\
+Scaling path & Replace or corroborate with public memory datasets; stratify by category and distractor density. \\
+\bottomrule
+\end{longtable}
+
+\subsection{LongMemEval Oracle Pilot}
+
+\begin{longtable}{p{0.24\textwidth}p{0.66\textwidth}}
+\caption{LongMemEval oracle pilot task card.}\\
+\toprule
+Field & Description \\
+\midrule
+\endfirsthead
+\toprule
+Field & Description \\
+\midrule
+\endhead
+Purpose & Evaluate public long-term chat memory data under BudgetBench active-context tiers. \\
+Input format & Timestamped LongMemEval oracle sessions flattened into chat messages, followed by the dated question. \\
+Categories & LongMemEval question type, including abstention, knowledge update, multi-session, single-session, and temporal reasoning variants. \\
+Prediction format & Short free-form text answer. \\
+Grader & Deterministic normalized containment; approximate and not official LongMemEval judge scoring. \\
+Strength & Public memory-agent data with natural long histories and category metadata. \\
+Limitation & Fifty-item pilot over the oracle file; not LongMemEval\_S full-history evaluation and not official judge accuracy. \\
+Scaling path & Run LongMemEval\_S/full-history variants, add official judge logs, and increase sample size by category. \\
+\bottomrule
+\end{longtable}
+
 \section{Strategy Specifications}
+
+\subsection{Full Context}
+
+The full-context baseline returns the task formatter's natural message list
+unchanged.  It is not a memory policy and is not included in the 89-item pilot
+tables.  Its purpose is to support follow-up comparisons against the largest
+prompt that the model/server can accept and to make infeasible full-context
+cells visible as budget violations rather than silent exclusions.
 
 \subsection{Truncation}
 
@@ -651,6 +1131,18 @@ history.  Its limitations are query dependence, chunking sensitivity, embedding
 cost, and the possibility that relevant information is not semantically close
 to the final question.
 
+\subsection{Lean Retrieval}
+
+The lean retrieval baseline combines dense similarity, lexical overlap,
+recency, and lightweight salience signals before packing selected messages
+into the active budget.  It is designed as a local, no-database contrast to
+the episodic RAG implementation.  In the current evidence it is a mixed
+baseline: it does not beat simple RAG on the LongBench feasible slice, but it
+is the strongest row in the synthetic memory pilot.  This is useful for
+diagnostics because it suggests that strategy crossovers may depend on
+whether evidence is semantically localized, temporally updated, or dispersed
+among distractors.
+
 \section{Metric Definitions}
 
 \subsection{Quality}
@@ -665,6 +1157,8 @@ For the SWE scaffold it is a continuous patch-similarity score:
 \]
 The proxy is useful for pilot measurement but should be replaced by official
 test execution for benchmark claims.
+For the synthetic memory pilot, quality is normalized exact-match accuracy on
+short answers.
 
 \subsection{Violation Rate}
 
@@ -878,6 +1372,12 @@ multi-turn histories.  In that regime, strategy choice should matter more
 because the context contains competing artifacts: issue text, retrieved files,
 test failures, prior edits, and tool outputs.
 
+We also ran a 5-item SWE checkpoint probe.  It behaved like the other budgeted
+strategies at 8K and 32K, and it matched the 0.16 baseline at 2K.  That is not
+yet enough to claim a strong coding result, but it does show the benchmark can
+carry a deterministic coding task with the same budget machinery and the same
+strategy interface.
+
 \section{Scaling to a Full Benchmark Study}
 
 This section outlines the expansion path from pilot artifact to larger
@@ -899,8 +1399,8 @@ The second phase should wire official SWE-bench grading and tau-bench
 state-comparison grading.  SWE should be run on a stratified subset first,
 because official container execution is substantially more expensive than the
 proxy grader.  Tau-bench should be pinned with a deterministic simulator
-configuration.  LongBench v2 should be expanded to at least 50 items and
-stratified by context length.
+configuration.  The LongBench v2 slice should be expanded beyond the current
+50-item full-context-feasible follow-up and stratified by context length.
 
 \subsection{Phase 3: Strategy Expansion}
 
@@ -986,6 +1486,144 @@ The figure-generation command was:
 python scripts/plot_tradeoffs.py \
   --csv results/full_study_qwen2_5_1_5b_89items.csv \
   --model qwen2.5:1.5b
+\end{verbatim}
+
+The full-context-feasible LongBench run was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id feasibility_long50_fit32k \
+  --model qwen2.5:1.5b \
+  --tasks long \
+  --strategies truncation rag full_context \
+  --budgets 2048 8192 32768 \
+  --limit-tasks 50 \
+  --max-natural-tokens 32768
+\end{verbatim}
+
+The paired full-context analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/feasibility_long50_fit32k \
+  --model qwen2.5:1.5b \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 32768
+\end{verbatim}
+
+The Gemma transfer check was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id transfer_gemma4_fit32k_20 \
+  --model gemma4:e2b \
+  --tasks long \
+  --strategies truncation rag full_context \
+  --budgets 8192 32768 \
+  --limit-tasks 20 \
+  --max-natural-tokens 32768
+\end{verbatim}
+
+The synthetic memory-agent pilot was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id memory_synthetic_qwen15b_30_categories_live \
+  --model qwen2.5:1.5b \
+  --tasks memory \
+  --strategies truncation rag lean_retrieval full_context \
+  --budgets 512 1024 2048 \
+  --limit-tasks 30
+\end{verbatim}
+
+The synthetic memory paired analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/memory_synthetic_qwen15b_30_categories_live \
+  --model qwen2.5:1.5b \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 2048 \
+  --group-by memory_category
+\end{verbatim}
+
+The LongMemEval oracle pilot used
+\path{data/longmemeval_oracle.json}, downloaded from the official
+\texttt{xiaowu0162/longmemeval-cleaned} Hugging Face dataset.  The run was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id longmem_oracle_qwen15b_50_predictions \
+  --model qwen2.5:1.5b \
+  --tasks longmem \
+  --strategies truncation rag lean_retrieval full_context \
+  --budgets 2048 4096 8192 \
+  --limit-tasks 50
+\end{verbatim}
+
+The LongMemEval oracle analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/longmem_oracle_qwen15b_50_predictions \
+  --model qwen2.5:1.5b \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 8192 \
+  --group-by memory_category
+\end{verbatim}
+
+The LongMemEval external-judge input export was:
+\begin{verbatim}
+python scripts/export_longmem_judge_inputs.py \
+  --log-dir logs/full_study/longmem_oracle_qwen15b_50_predictions \
+  --data-path data/longmemeval_oracle.json \
+  --output results/longmem_judge_inputs_qwen15b_50_predictions.jsonl
+\end{verbatim}
+
+The Qwen3.6-35B LongMemEval transfer run was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id longmem_oracle_qwen36_35b_10 \
+  --model qwen3.6:35b-mlx \
+  --tasks longmem \
+  --strategies truncation rag lean_retrieval full_context \
+  --budgets 2048 4096 8192 \
+  --limit-tasks 10
+\end{verbatim}
+
+The Qwen3.6-35B transfer analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/longmem_oracle_qwen36_35b_10 \
+  --model qwen3.6:35b-mlx \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 8192 \
+  --group-by memory_category
+\end{verbatim}
+
+The Qwen3.5-2B LongBench transfer command was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id feasibility_longbench_qwen35_2b_5 \
+  --model qwen3.5:2b \
+  --tasks long \
+  --strategies truncation rag lean_retrieval full_context \
+  --budgets 8192 32768 \
+  --limit-tasks 5 \
+  --max-natural-tokens 32768
+\end{verbatim}
+
+The Qwen3.5-2B transfer analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/feasibility_longbench_qwen35_2b_5 \
+  --model qwen3.5:2b \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 32768
 \end{verbatim}
 
 \bibliography{references}

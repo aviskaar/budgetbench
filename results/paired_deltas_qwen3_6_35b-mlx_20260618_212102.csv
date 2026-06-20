@@ -1,0 +1,7 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen3.6:35b-mlx,longmem,truncation,2048,full_context,8192,5,1.0,0.8,0.2,0.0,0.6,44.36616492271423,27.270386934280396,0.0,0.2,logs/full_study/longmem_oracle_qwen36_35b_probe5
+qwen3.6:35b-mlx,longmem,truncation,8192,full_context,8192,5,1.0,0.8,0.2,0.0,0.6,49.812275886535645,27.270386934280396,0.0,0.2,logs/full_study/longmem_oracle_qwen36_35b_probe5
+qwen3.6:35b-mlx,longmem,lean_retrieval,2048,full_context,8192,5,1.0,0.8,0.2,0.0,0.6,40.25213384628296,27.270386934280396,0.0,0.2,logs/full_study/longmem_oracle_qwen36_35b_probe5
+qwen3.6:35b-mlx,longmem,lean_retrieval,8192,full_context,8192,5,1.0,0.8,0.2,0.0,0.6,39.28894901275635,27.270386934280396,0.0,0.2,logs/full_study/longmem_oracle_qwen36_35b_probe5
+qwen3.6:35b-mlx,longmem,full_context,2048,full_context,8192,5,0.0,0.8,-0.8,-1.0,-0.4,0.05546903610229492,27.270386934280396,1.0,0.2,logs/full_study/longmem_oracle_qwen36_35b_probe5
+qwen3.6:35b-mlx,longmem,full_context,8192,full_context,8192,5,0.8,0.8,0.0,0.0,0.0,27.270386934280396,27.270386934280396,0.2,0.2,logs/full_study/longmem_oracle_qwen36_35b_probe5

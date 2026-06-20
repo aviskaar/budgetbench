@@ -1,0 +1,12 @@
+candidate_model,judge_model,strategy,budget,judge_accuracy,judge_n,normalized_contains_accuracy,mean_judge_duration_sec,judge_prompt_version
+qwen2.5:1.5b,gemma4:31b-mlx,full_context,2048,1.0,1,1.0,8.373321056365967,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,full_context,4096,1.0,2,1.0,7.650366306304932,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,full_context,8192,0.0,1,0.0,9.842409133911133,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,lean_retrieval,2048,0.0,1,0.0,12.001890659332275,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,lean_retrieval,8192,0.0,1,0.0,9.7498459815979,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,rag,2048,0.0,1,0.0,11.441892147064209,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,rag,4096,0.0,1,0.0,11.452635049819946,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,rag,8192,0.0,1,0.0,9.736042976379395,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,truncation,2048,0.0,1,0.0,9.750365972518921,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,truncation,4096,0.0,1,0.0,10.07706594467163,budgetbench-longmem-judge-v2
+qwen2.5:1.5b,gemma4:31b-mlx,truncation,8192,0.0,1,0.0,9.793239116668701,budgetbench-longmem-judge-v2

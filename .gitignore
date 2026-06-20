@@ -3,6 +3,7 @@ __pycache__/
 .mem0_db/
 .deps/
 logs/
+data/longmemeval_oracle.json
 paper/*.aux
 paper/*.log
 paper/*.out
