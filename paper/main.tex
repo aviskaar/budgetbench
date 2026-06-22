@@ -253,7 +253,7 @@ LongBench v2~\citep{bai2024longbenchv2} & Long-context QA substrate & Natural lo
 
 \subsection{Long-Context Benchmarks}
 
-LongBench introduced a unified bilingual benchmark for long-context
+LongBench introduces a unified bilingual benchmark for long-context
 understanding across single-document QA, multi-document QA, summarization,
 few-shot learning, synthetic tasks, and code completion~\citep{bai2023longbench}.
 LongBench v2 shifts toward more demanding multiple-choice settings with long
@@ -289,9 +289,9 @@ domains with domain APIs, policy documents, simulated users, and state-based
 grading~\citep{yao2024taubench}.  It is a strong candidate for future
 \BudgetBench{} expansion because tool-use chains stress exactly the kind of
 state retention, policy recall, and evidence selection that memory strategies
-are designed to support.  The current repository contains a tau integration
-path, but the pilot run omits it because the local tau2 data dependency was not
-installed.
+are designed to support.  The current repository contains a $\tau$-bench
+integration path, but the pilot run omits it because the local tau2-bench data
+dependency was not installed.
 
 \subsection{Memory, Retrieval, and Compression}
 
@@ -400,7 +400,7 @@ quality intervals without changing the raw logging format.
 \subsection{Multimodal Boundary}
 
 The current benchmark task adapters are text-first: LongBench v2, the SWE
-scaffold, and the tau integration path all produce chat messages.
+scaffold, and the $\tau$-bench integration path all produce chat messages.
 This matters for interpreting vision-capable local model tags.  A
 vision-language model can be served through the same local stack, but a
 text-only LongBench prompt is not a multimodal benchmark.  In this revision,
@@ -581,9 +581,10 @@ aggregate, paired, and category CSV files are
 We also ran a \texttt{checkpoint\_context} baseline that keeps a compact
 extractive checkpoint, a recent tail, and query-relevant evidence.  On the
 same 30-item memory slice, it lands between truncation and lean retrieval:
-0.53 at 512, 0.67 at 1,024, and 0.80 at 2,048.  It is slower than the trivial
-baselines at the tightest tier, but it gives a more realistic practitioner
-workflow than either raw truncation or pure retrieval.
+0.53 at 512, 0.67 at 1,024, and 0.80 at 2,048.  It is comparable to
+truncation at the tightest tier (5.3 s vs. 5.7 s at 512) but slower than RAG
+and lean retrieval at 2,048 tokens.  It still gives a more realistic
+practitioner workflow than either raw truncation or pure retrieval.
 Table~\ref{tab:synthetic_memory_pilot} reports the aggregate rows,
 Table~\ref{tab:synthetic_memory_deltas} reports paired deltas against full
 context at 2,048 tokens, and Table~\ref{tab:synthetic_memory_categories}
@@ -949,7 +950,7 @@ claiming benchmark-scale multimodal performance.
 
 The next version of \BudgetBench{} should expand in five directions.  First,
 it should replace proxy SWE grading with official containerized evaluation.
-Second, it should include tau-bench or tau2-bench once the local data
+Second, it should include $\tau$-bench or tau2-bench once the local data
 dependency is installed, because tool-use chains stress memory in ways that
 single-call QA does not.  Third, it should add richer strategy families:
 LLMLingua-2 compression, Mem0, Letta/MemGPT-style hierarchical memory, and
@@ -1361,8 +1362,8 @@ Leaderboard & Full public subset or fixed hidden split & Submission ranking, reg
 Random sampling is not enough for a benchmark paper.  SWE-bench items should be
 stratified by repository, patch size, issue text length, and whether the fix is
 localized or cross-file.  LongBench v2 items should be stratified by context
-length, evidence dispersion, and reasoning type.  Tau-bench items should be
-stratified by tool-call count, policy-document length, and whether the task
+length, evidence dispersion, and reasoning type.  For $\tau$-bench, items should
+be stratified by tool-call count, policy-document length, and whether the task
 requires state mutation.  Stratification prevents a small number of easy or
 pathological items from dominating a curve.
 
@@ -1446,10 +1447,10 @@ numeric retry-level violation rates.
 
 \subsection{Phase 2: Task Expansion}
 
-The second phase should wire official SWE-bench grading and tau-bench
+The second phase should wire official SWE-bench grading and $\tau$-bench
 state-comparison grading.  SWE should be run on a stratified subset first,
 because official container execution is substantially more expensive than the
-proxy grader.  Tau-bench should be pinned with a deterministic simulator
+proxy grader.  The $\tau$-bench simulator should be pinned with a deterministic
 configuration.  The LongBench v2 slice should be expanded beyond the current
 50-item full-context-feasible follow-up and stratified by context length.
 
@@ -1481,7 +1482,7 @@ Phase & Engineering work & Scientific output \\
 \midrule
 \endhead
 Hardening & Tokenizer alignment, metadata capture, stable schemas, official dependency lock. & Auditable measurements and reproducible run manifests. \\
-Task expansion & Official SWE grading, tau-bench data setup, larger LongBench v2 subsets. & Broader task coverage and deterministic multi-domain results. \\
+Task expansion & Official SWE grading, $\tau$-bench data setup, larger LongBench v2 subsets. & Broader task coverage and deterministic multi-domain results. \\
 Strategy expansion & LLMLingua-2, Mem0, Letta/MemGPT, hybrid policies, dependency declarations. & Strategy-family comparisons and local-vs-auxiliary cost analysis. \\
 Statistical analysis & Paired bootstrap intervals, stratified estimates, repeated trials. & Defensible dominance and crossover claims. \\
 Release & Public logs, fixed subsets, evaluation runner, submission documentation. & Community benchmark artifact suitable for datasets-and-benchmarks review. \\
