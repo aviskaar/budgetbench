@@ -22,6 +22,7 @@
 \usepackage{longtable}
 \usepackage{enumitem}
 \usepackage[numbers]{natbib}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \emergencystretch=2em
 
 \newcommand{\BudgetBench}{\textsc{BudgetBench}}
@@ -96,29 +97,29 @@ budgets but fail when the query is underspecified or when the retrieval corpus
 is not chunked at a useful granularity.  Hierarchical memory systems such as
 MemGPT-style stores and production systems such as Mem0 introduce additional
 state and extraction policies, which may improve recall but also complicate
-reproducibility \citep{packer2023memgpt,chhikara2025mem0}.
+reproducibility~\citep{packer2023memgpt,chhikara2025mem0}.
 
 Existing benchmarks address related problems.  SWE-bench evaluates whether
-models can produce patches for real GitHub issues \citep{jimenez2023swebench}.
+models can produce patches for real GitHub issues~\citep{jimenez2023swebench}.
 LongBench and LongBench v2 evaluate long-context understanding across diverse
-language tasks \citep{bai2023longbench,bai2024longbenchv2}.  RULER and HELMET
+language tasks~\citep{bai2023longbench,bai2024longbenchv2}.  RULER and HELMET
 stress-test long-context behavior across synthetic and application-centric
-length scales \citep{hsieh2024ruler,yen2024helmet}.  Lost-in-the-Middle shows
+length scales~\citep{hsieh2024ruler,yen2024helmet}.  Lost-in-the-Middle shows
 that accepting longer inputs does not imply reliable use of relevant
-information throughout the sequence \citep{liu2023lost}.  Agent benchmarks such
+information throughout the sequence~\citep{liu2023lost}.  Agent benchmarks such
 as $\tau$-bench evaluate tool-mediated interaction in realistic domains
-\citep{yao2024taubench}.  These benchmarks are valuable, but they do not
+~\citep{yao2024taubench}.  These benchmarks are valuable, but they do not
 standardize the independent variable that local-agent developers routinely
 control: the active context budget assigned to each model call.
 
 Recent method papers make context budgets central, so \BudgetBench{} should
 not be read as claiming that budget sweeping itself is new.  ContextBudget
 formulates budget-aware context management as a sequential decision problem
-for long-horizon search agents \citep{wu2026contextbudget}.  BudgetMem learns
+for long-horizon search agents~\citep{wu2026contextbudget}.  BudgetMem learns
 query-aware routing among budget-tiered memory modules
-\citep{zhang2026budgetmem}.  Engram reports that a lean retrieved context can
+~\citep{zhang2026budgetmem}.  Engram reports that a lean retrieved context can
 beat full history on LongMemEval\_S while using far fewer tokens
-\citep{wang2026engram}.  These papers raise the evidentiary bar: a benchmark
+~\citep{wang2026engram}.  These papers raise the evidentiary bar: a benchmark
 paper must compare against full context, report operational metrics, and make
 its harness reusable.  The novelty claimed here is the conjunction of local
 large language model (LLM) serving, fixed per-call active budgets, swappable
@@ -158,7 +159,8 @@ reproducibility requirements and planned extensions for scaling
 \subsection{Objects and Notation}
 
 Let $M$ denote a fixed local language model exposed through a chat-completion
-API.  Let $T$ denote a task distribution with items $x \sim T$ and deterministic
+application programming interface (API).  Let $T$ denote a task distribution
+with items $x \sim T$ and deterministic
 grader $g(\hat{y}, x) \in [0,1]$.  Let $B$ be an active context budget measured
 in tokens.  Let $\mathcal{S}$ be a set of memory strategies.  A strategy
 $s \in \mathcal{S}$ maps an input message history $H = (m_1,\ldots,m_n)$ and
@@ -167,11 +169,11 @@ budget $B$ to a budget-constrained message list:
   s(H, B) = H' \quad \text{such that} \quad \tau(H') \leq B,
 \]
 where $\tau$ is the benchmark tokenizer or tokenizer approximation.  The model
-prediction is $\hat{y}=M(s(H,B))$, and the observed quality is $g(\hat{y},x)$.
+prediction is $\hat{y}=M(s(H, B))$, and the observed quality is $g(\hat{y}, x)$.
 
 For $N$ evaluated items, the benchmark reports the empirical quality curve
 \[
-  Q(s, B, T, M) = \frac{1}{N}\sum_{i=1}^{N} g(M(s(H_i,B)), x_i),
+  Q(s, B, T, M) = \frac{1}{N}\sum_{i=1}^{N} g(M(s(H_i, B)), x_i),
 \]
 alongside utilization and reliability metrics.  The budget sweep is not a
 model capability test in isolation; it is a controlled ablation over strategy
@@ -198,7 +200,7 @@ truncation may be sufficient at 16K.  Third, it reveals non-monotonic behavior.
 Longer prompts can add distractors, shift relevant information away from
 positions the model uses reliably, or trigger different generation behavior.
 The long-context literature shows that larger context windows do not guarantee
-reliable evidence use \citep{liu2023lost,hsieh2024ruler}; \BudgetBench{}
+reliable evidence use~\citep{liu2023lost,hsieh2024ruler}; \BudgetBench{}
 extends this observation to memory strategy comparisons.
 
 \section{Related Work}
@@ -207,19 +209,19 @@ extends this observation to memory strategy comparisons.
 
 ContextBudget/BACM-RL is the closest budget-control method paper.  It
 formalizes context management under a budget and evaluates learned compression
-policies for long-horizon search agents \citep{wu2026contextbudget}.  BudgetMem
+policies for long-horizon search agents~\citep{wu2026contextbudget}.  BudgetMem
 also treats cost as a controllable axis, but routes among memory-module budget
 tiers rather than exposing a raw per-call token budget and third-party strategy
-contract \citep{zhang2026budgetmem}.  EvoMemBench benchmarks agent memory from
+contract~\citep{zhang2026budgetmem}.  EvoMemBench benchmarks agent memory from
 self-evolving in-episode and cross-episode perspectives, comparing many memory
 methods with long-context baselines, but it is not primarily a fixed
-active-budget harness for local deployments \citep{wang2026evomembench}.
+active-budget harness for local deployments~\citep{wang2026evomembench}.
 Engram is especially important because it includes full-context baselines,
 reproducible logs, and evidence that lean retrieved context can outperform
-full history on LongMemEval\_S \citep{wang2026engram}.  LightMem and Prompt
+full history on LongMemEval\_S~\citep{wang2026engram}.  LightMem and Prompt
 Compression in the Wild reinforce the operational lens: latency, online
 overhead, hardware, and break-even points must be measured, not assumed
-\citep{zhang2026lightmem,kummer2026promptcompression}.
+~\citep{zhang2026lightmem,kummer2026promptcompression}.
 
 Table~\ref{tab:closest_work} summarizes how \BudgetBench{} differs from the
 closest method and benchmark artifacts along the budget, strategy, deployment,
@@ -227,22 +229,22 @@ and metric axes.
 
 \begin{table}[t]
 \centering
-\small
-\setlength{\tabcolsep}{3pt}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{1.08}
-\begin{tabular}{p{0.17\textwidth}p{0.16\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.16\textwidth}}
+\begin{tabular}{L{0.20\textwidth}L{0.15\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.12\textwidth}L{0.15\textwidth}}
 \toprule
 Artifact & Primary focus & Fixed active budgets & Swappable strategies & Local-agent focus & Operational metrics \\
 \midrule
 \BudgetBench{} & Benchmark protocol & Yes & Yes & Yes & Quality, used/peak budget, violations, latency \\
-ContextBudget \citep{wu2026contextbudget} & Learned context-management method & Yes, internally & No & No & Quality and budget-dependent cost \\
-BudgetMem \citep{zhang2026budgetmem} & Query-aware memory-tier router & Tiered modules & No & Limited & Accuracy-cost frontiers \\
-EvoMemBench \citep{wang2026evomembench} & Agent-memory benchmark & No fixed tier protocol & Method comparisons & No & Memory-task quality by category \\
-MemoryAgent\allowbreak Bench \citep{hu2025memoryagentbench} & Incremental memory benchmark & No fixed tier protocol & Method comparisons & No & Memory competency scores \\
-Engram \citep{wang2026engram} & Bi-temporal memory engine & Lean vs full context & No & Partial & Accuracy, tokens, errors, reproducible logs \\
-RULER \citep{hsieh2024ruler} & Long-context model capacity & Length sweep & No & No & Task accuracy by sequence length \\
-HELMET \citep{yen2024helmet} & Long-context model evaluation & Length sweep & No & No & Application-category quality \\
-LongBench v2 \citep{bai2024longbenchv2} & Long-context QA substrate & Natural long inputs & No & No & Exact-match multiple-choice quality \\
+ContextBudget~\citep{wu2026contextbudget} & Learned context-management method & Yes, internally & No & No & Quality and budget-dependent cost \\
+BudgetMem~\citep{zhang2026budgetmem} & Query-aware memory-tier router & Tiered modules & No & Limited & Accuracy-cost frontiers \\
+EvoMemBench~\citep{wang2026evomembench} & Agent-memory benchmark & No fixed tier protocol & Method comparisons & No & Memory-task quality by category \\
+MemoryAgent\allowbreak Bench~\citep{hu2025memoryagentbench} & Incremental memory benchmark & No fixed tier protocol & Method comparisons & No & Memory competency scores \\
+Engram~\citep{wang2026engram} & Bi-temporal memory engine & Lean vs full context & No & Partial & Accuracy, tokens, errors, reproducible logs \\
+RULER~\citep{hsieh2024ruler} & Long-context model capacity & Length sweep & No & No & Task accuracy by sequence length \\
+HELMET~\citep{yen2024helmet} & Long-context model evaluation & Length sweep & No & No & Application-category quality \\
+LongBench v2~\citep{bai2024longbenchv2} & Long-context QA substrate & Natural long inputs & No & No & Exact-match multiple-choice quality \\
 \bottomrule
 \end{tabular}
 \caption{Positioning against the closest concurrent and background artifacts.  The intended distinction is the conjunction of fixed active budgets, strategy plug-ins, local deployment focus, deterministic graders, and operational metrics.}
@@ -253,9 +255,9 @@ LongBench v2 \citep{bai2024longbenchv2} & Long-context QA substrate & Natural lo
 
 LongBench introduced a unified bilingual benchmark for long-context
 understanding across single-document QA, multi-document QA, summarization,
-few-shot learning, synthetic tasks, and code completion \citep{bai2023longbench}.
+few-shot learning, synthetic tasks, and code completion~\citep{bai2023longbench}.
 LongBench v2 shifts toward more demanding multiple-choice settings with long
-contexts and reasoning-oriented questions \citep{bai2024longbenchv2}.  These
+contexts and reasoning-oriented questions~\citep{bai2024longbenchv2}.  These
 benchmarks are useful substrates for \BudgetBench{} because they expose
 long-context evidence selection while retaining automatic grading.  However,
 their default evaluation protocol asks how well a model handles a given long
@@ -264,18 +266,18 @@ budget.
 
 RULER evaluates long-context models with configurable synthetic tasks including
 retrieval, multi-hop tracing, aggregation, and question answering
-\citep{hsieh2024ruler}.  Its central lesson is that isolated retrieval success
+~\citep{hsieh2024ruler}.  Its central lesson is that isolated retrieval success
 can overstate long-context competence.  HELMET argues similarly for
 application-centric evaluation across diverse long-context categories and
 finds that synthetic tasks are not reliable predictors of downstream
-performance \citep{yen2024helmet}.  \BudgetBench{} is complementary: it does
+performance~\citep{yen2024helmet}.  \BudgetBench{} is complementary: it does
 not replace long-context benchmarks, but instead imposes a fixed-budget axis
 on task families where memory strategies are expected to matter.
 
 \subsection{Agentic and Software Engineering Benchmarks}
 
 SWE-bench grounds coding-agent evaluation in real repository issues and
-patches \citep{jimenez2023swebench}.  SWE-bench Verified further filters the
+patches~\citep{jimenez2023swebench}.  SWE-bench Verified further filters the
 benchmark to a human-validated subset of 500 instances.  In a full
 \BudgetBench{} study, official containerized SWE-bench grading should be used.
 The current pilot uses the public task data but replaces the official oracle
@@ -284,7 +286,7 @@ run quickly on a single workstation.
 
 $\tau$-bench evaluates tool-agent-user interaction in retail and airline
 domains with domain APIs, policy documents, simulated users, and state-based
-grading \citep{yao2024taubench}.  It is a strong candidate for future
+grading~\citep{yao2024taubench}.  It is a strong candidate for future
 \BudgetBench{} expansion because tool-use chains stress exactly the kind of
 state retention, policy recall, and evidence selection that memory strategies
 are designed to support.  The current repository contains a tau integration
@@ -295,7 +297,7 @@ installed.
 
 Retrieval-augmented generation (RAG) combines parametric model knowledge with
 non-parametric retrieval, improving factuality and specificity on
-knowledge-intensive tasks \citep{lewis2020rag}.  In the \BudgetBench{} setting,
+knowledge-intensive tasks~\citep{lewis2020rag}.  In the \BudgetBench{} setting,
 retrieval is not merely a way to add external knowledge; it is a strategy for
 selecting which internal task evidence enters a constrained prompt.  The RAG
 baseline in this repository embeds intermediate messages, retrieves messages
@@ -303,17 +305,17 @@ relevant to the current query, and reconstructs a prompt that fits the active
 budget.
 
 MemGPT frames language-model memory as an operating-system-like hierarchy with
-explicit management of context and archival stores \citep{packer2023memgpt}.
+explicit management of context and archival stores~\citep{packer2023memgpt}.
 Mem0 presents a production-oriented memory layer that extracts, consolidates,
 and retrieves salient conversational facts with substantial latency and token
-savings relative to full-context approaches \citep{chhikara2025mem0}.  These
+savings relative to full-context approaches~\citep{chhikara2025mem0}.  These
 systems are commonly evaluated on chat-memory substrates such as LongMemEval,
 which tests long-term interactive memory over timestamped conversation
-histories \citep{wu2024longmemeval}.  Together, these systems motivate richer
+histories~\citep{wu2024longmemeval}.  Together, these systems motivate richer
 strategy families than the three baselines used in the
 pilot.  LLMLingua-2 represents a complementary compression family: rather than
 choosing which chunks to include, it compresses prompt content toward a target
-budget \citep{pan2024llmlingua2}.  \BudgetBench{} is designed to accommodate
+budget~\citep{pan2024llmlingua2}.  \BudgetBench{} is designed to accommodate
 these systems under the same interface once their dependencies and local
 configuration are available.
 
@@ -678,7 +680,7 @@ memory-agent dataset.
 \subsection{Public LongMemEval Oracle Pilot}
 
 To corroborate the synthetic result on public data, we added an adapter for
-the official LongMemEval JSON format \citep{wu2024longmemeval}.  The adapter
+the official LongMemEval JSON format~\citep{wu2024longmemeval}.  The adapter
 loads \path{longmemeval_oracle.json}, formats timestamped user-assistant
 sessions as a budgeted chat history, and records LongMemEval question type as
 the memory category.  This is not official LongMemEval scoring: the official
@@ -727,9 +729,10 @@ Full context & 4K & 0.22 & 0.70 & 705 & 3.2 \\
 Full context & 8K & 0.34 & 0.16 & 4,063 & 14.2 \\
 \bottomrule
 \end{tabular}
-\caption{Fifty-item public LongMemEval oracle-file pilot with deterministic
-normalized-containment scoring.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  Violation rates for full context are high
-because several oracle histories still exceed the active tier.}
+\caption{Fifty-item public LongMemEval oracle-file pilot.  The scorer is
+deterministic normalized containment, and retrieval-augmented generation (RAG)
+denotes the episodic retrieval baseline.  High full-context violation rates
+indicate oracle histories that exceed the active tier.}
 \label{tab:longmem_oracle_pilot}
 \end{table}
 
@@ -815,8 +818,8 @@ slice.  The budgeted truncation, RAG, and lean-retrieval rows all scored 1.00
 at 2K, 4K, and 8K, while full context scored 0.00 at 2K, 0.20 at 4K, and 0.70
 at 8K with violation rates of 1.00, 0.80, and 0.30.  The paired deltas
 versus \texttt{full\_context@8192} are +0.30 for every budgeted row.  This is
-the strongest transfer evidence yet: the larger local model preserves the
-budgeted-vs-full-context split on the public LongMemEval oracle subset, so
+the clearest transfer signal in this artifact: the larger local model preserves
+the budgeted-vs-full-context split on the public LongMemEval oracle subset, so
 the 5-item probe above is now a precursor rather than the result to cite.
 
 By contrast, a matched 10-item \texttt{gemma4:12b-mlx} LongMemEval probe
@@ -827,10 +830,10 @@ model; model scale and serving regime remain first-order variables in the
 benchmark.
 
 A \texttt{checkpoint\_context} run with \RunModel{} on the same 10-item
-LongMemEval slice
-lands at 0.10 at 2K, 0.30 at 4K, and 0.10 at 8K.  That row is weaker than the
-stronger public-memory rows above, but it has a distinct shape: the checkpoint policy behaves like
-a mid-budget compromise rather than a balanced hybrid strategy.
+LongMemEval slice lands at 0.10 at 2K, 0.30 at 4K, and 0.10 at 8K.  That row is
+lower than the Qwen3.6 public-memory rows above, but it has a distinct shape:
+the checkpoint policy behaves like a mid-budget compromise rather than a
+balanced hybrid strategy.
 
 \begin{table}[t]
 \centering
@@ -984,7 +987,7 @@ official public-memory judge logs.
 
 \section{Reproducibility Checklist}
 
-\begin{longtable}{p{0.28\textwidth}p{0.62\textwidth}}
+\begin{longtable}{L{0.22\textwidth}L{0.68\textwidth}}
 \caption{Pilot reproducibility checklist.}\\
 \toprule
 Item & Value \\
@@ -1023,7 +1026,7 @@ Native multimodal probe artifacts & \path{results/multimodal_smoke_qwen3_vl_2b.c
 
 \subsection{SWE-bench Verified Scaffold}
 
-\begin{longtable}{p{0.24\textwidth}p{0.66\textwidth}}
+\begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
 \caption{SWE scaffold task card.}\\
 \toprule
 Field & Description \\
@@ -1045,7 +1048,7 @@ Scaling path & Replace proxy with official SWE-bench containerized oracle; strat
 
 \subsection{LongBench v2}
 
-\begin{longtable}{p{0.24\textwidth}p{0.66\textwidth}}
+\begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
 \caption{LongBench v2 task card.}\\
 \toprule
 Field & Description \\
@@ -1067,7 +1070,7 @@ Scaling path & Increase sample count; stratify by context length, evidence dispe
 
 \subsection{Synthetic Memory Pilot}
 
-\begin{longtable}{p{0.24\textwidth}p{0.66\textwidth}}
+\begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
 \caption{Synthetic memory pilot task card.}\\
 \toprule
 Field & Description \\
@@ -1090,7 +1093,7 @@ Scaling path & Replace or corroborate with public memory datasets; stratify by c
 
 \subsection{LongMemEval Oracle Pilot}
 
-\begin{longtable}{p{0.24\textwidth}p{0.66\textwidth}}
+\begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
 \caption{LongMemEval oracle pilot task card.}\\
 \toprule
 Field & Description \\
@@ -1145,7 +1148,7 @@ because long contexts trigger repeated compression calls.
 
 The RAG baseline indexes intermediate messages and retrieves chunks relevant
 to the current query.  It is a direct adaptation of retrieval-augmented
-generation to the prompt-budget setting \citep{lewis2020rag}.  Its advantage
+generation to the prompt-budget setting~\citep{lewis2020rag}.  Its advantage
 is selectivity: it can recover older evidence without including the full
 history.  Its limitations are query dependence, chunking sensitivity, embedding
 cost, and the possibility that relevant information is not semantically close
@@ -1266,7 +1269,7 @@ effect from a serving or measurement artifact.
 This paper makes several conservative claims.  First, it does not claim
 novelty on long-context evaluation alone; RULER, HELMET, LongBench,
 and LongBench v2 already address long-context measurement from different
-angles \citep{bai2023longbench,bai2024longbenchv2,hsieh2024ruler,yen2024helmet}.
+angles~\citep{bai2023longbench,bai2024longbenchv2,hsieh2024ruler,yen2024helmet}.
 Second, it does not claim that retrieval, summary, or truncation is globally
 best.  The pilot sample is too small.  Third, it does not claim official
 SWE-bench results.  The SWE column is clearly labeled as a scaffold proxy.
@@ -1335,7 +1338,7 @@ $N=100$, one item changes accuracy by 0.01.  For pilot validation, this
 artifacts.  For a paper-quality strategy comparison, $N=100$ or more per task
 family should be used when claiming budget crossovers.
 
-\begin{longtable}{p{0.18\textwidth}p{0.24\textwidth}p{0.44\textwidth}}
+\begin{longtable}{L{0.18\textwidth}L{0.24\textwidth}L{0.44\textwidth}}
 \caption{Recommended study sizes by claim type.}\\
 \toprule
 Study type & Suggested items & Appropriate claims \\
@@ -1372,7 +1375,7 @@ of these cases: RAG can violate tight SWE budgets when the irreducible prompt
 is too large, summary can violate LongBench budgets after compression, and
 LongBench quality can decrease as budget increases.
 
-\begin{longtable}{p{0.18\textwidth}p{0.25\textwidth}p{0.43\textwidth}}
+\begin{longtable}{L{0.18\textwidth}L{0.25\textwidth}L{0.43\textwidth}}
 \caption{Failure taxonomy for budget-tiered memory evaluation.}\\
 \toprule
 Failure type & Observable symptom & Interpretation and remediation \\
@@ -1467,7 +1470,7 @@ against a hidden or versioned split.  The report should emphasize Pareto
 frontiers rather than single scalar rankings: a strategy can be best at 2K and
 dominated at 32K, or accurate but too slow for interactive use.
 
-\begin{longtable}{p{0.16\textwidth}p{0.30\textwidth}p{0.38\textwidth}}
+\begin{longtable}{L{0.16\textwidth}L{0.30\textwidth}L{0.38\textwidth}}
 \caption{Expansion plan from pilot artifact to benchmark study.}\\
 \toprule
 Phase & Engineering work & Scientific output \\
