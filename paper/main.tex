@@ -438,6 +438,14 @@ images saved as portable network graphics (PNG) files and queried
 \texttt{qwen3-vl:2b} through Ollama's native image chat API; that
 native multimodal probe is reported because it produced nonzero results.
 
+Only \RunModel{} is treated as a claim-bearing, publicly reproducible model
+tag in this paper.  The supplementary tags above and the later local aliases
+\texttt{qwen3.6:35b-mlx}, \texttt{gemma4:12b-mlx},
+\texttt{gemma4:31b-mlx}, and \texttt{gemma3:1b} are local installation names
+without source registry, quantization hash, or conversion-command provenance.
+Their rows are therefore infrastructure and transfer diagnostics rather than
+benchmark claims a reader is expected to reproduce exactly.
+
 \subsection{Sampling and Decoding}
 
 The run uses 89 items per task.  For exact-match tasks, 89 examples produce
@@ -620,7 +628,7 @@ Full context & 1,024 & 0.00 & 1.00 & 0 & 0.1 \\
 Full context & 2,048 & 0.80 & 0.00 & 1,812 & 3.1 \\
 \bottomrule
 \end{tabular}
-\caption{Thirty-item synthetic memory-agent pilot.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  Full context fails at
+\caption{Thirty-item synthetic memory-agent pilot.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  Durations are single-run diagnostics; the non-monotonic timing values likely reflect warmup and execution-order effects and should not be read as stable latency estimates.  Full context fails at
 512 and 1,024 tokens because the natural memory trace exceeds those active
 budgets.}
 \label{tab:synthetic_memory_pilot}
@@ -932,7 +940,8 @@ and simple message-level retrieval rather than task-optimized chunking.
 The reported latency values are single-run wall-clock measurements.  They were
 not produced with repeated warmup-controlled trials or randomized cell order,
 so they should be read as operational diagnostics rather than stable latency
-benchmarks.
+benchmarks.  LLM serving latency also depends on request scheduling and
+key-value cache management, especially for long prompts~\citep{kwon2023pagedattention}.
 
 \paragraph{External validity.}
 The model is small, the primary sample contains 89 items per task, and the
@@ -1046,6 +1055,7 @@ Qwen3.6-35B LongMemEval transfer & \path{logs/full_study/longmem_oracle_qwen36_3
 Qwen3.5-2B LongBench 5-item transfer & \path{logs/full_study/feasibility_longbench_qwen35_2b_5/}; aggregate \path{results/full_study_qwen3_5_2b_20260619_142423.csv}; paired \path{results/paired_deltas_qwen3_5_2b_20260619_142423.csv} \\
 Gemma transfer check & \path{logs/full_study/transfer_gemma4_fit32k_20/}; aggregate \path{results/full_study_gemma4_e2b_20260618_161005.csv} \\
 Additional filtered model sweep & \path{results/model_compare_small_long3.csv}; nonzero and zero-accuracy rows are both reported in the supplementary model tables \\
+Supplementary local tag caveat & \texttt{gemma4:e2b}, \texttt{qwen3.5:0.8b}, \texttt{qwen3.5:2b}, \texttt{qwen3-vl:2b}, \texttt{qwen3.6:35b-mlx}, \texttt{gemma4:12b-mlx}, \texttt{gemma4:31b-mlx}, and \texttt{gemma3:1b} are local aliases without complete provenance records; their rows are not benchmark claims \\
 Native multimodal probe artifacts & \path{results/multimodal_smoke_qwen3_vl_2b.csv}; generated PNGs in \path{results/multimodal_smoke/} \\
 \bottomrule
 \end{longtable}
@@ -1322,7 +1332,8 @@ exact-match accuracy than truncation at the 2K active budget with a bootstrap
 95\% confidence interval that excludes zero.''
 Equivalence statements require a different estimand: the authors should
 pre-specify a practical equivalence margin and use an equivalence test rather
-than treating a confidence interval that crosses zero as a match.
+than treating a confidence interval that crosses zero as a match, following
+standard two-one-sided-test guidance~\citep{lakens2017equivalence}.
 
 \subsection{Recommended Estimands}
 
