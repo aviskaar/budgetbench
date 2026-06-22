@@ -66,7 +66,7 @@ and full context is infeasible at 2K and 8K by budget enforcement.  The
 expanded artifact also includes a 20-item LongBench v2 transfer check, a
 30-item deterministic synthetic memory-agent pilot, a 50-item public
 LongMemEval oracle-file pilot with an approximate deterministic scorer, and a
-six-item synthetic image question answering (QA) probe for \texttt{qwen3-vl:2b}.
+six-item synthetic image question answering probe for \texttt{qwen3-vl:2b}.
 These results are pilot evidence, not final strategy rankings.  The
 contribution is a standardized active-budget protocol for local agents with
 swappable strategies, deterministic task graders, operational metrics,
@@ -107,8 +107,8 @@ stress-test long-context behavior across synthetic and application-centric
 length scales~\citep{hsieh2024ruler,yen2024helmet}.  Lost-in-the-Middle shows
 that accepting longer inputs does not imply reliable use of relevant
 information throughout the sequence~\citep{liu2023lost}.  Agent benchmarks such
-as $\tau$-bench evaluate tool-mediated interaction in realistic domains
-~\citep{yao2024taubench}.  These benchmarks are valuable, but they do not
+as $\tau$-bench evaluate tool-mediated interaction in realistic
+domains~\citep{yao2024taubench}.  These benchmarks are valuable, but they do not
 standardize the independent variable that local-agent developers routinely
 control: the active context budget assigned to each model call.
 
@@ -116,10 +116,10 @@ Recent method papers make context budgets central, so \BudgetBench{} should
 not be read as claiming that budget sweeping itself is new.  ContextBudget
 formulates budget-aware context management as a sequential decision problem
 for long-horizon search agents~\citep{wu2026contextbudget}.  BudgetMem learns
-query-aware routing among budget-tiered memory modules
-~\citep{zhang2026budgetmem}.  Engram reports that a lean retrieved context can
-beat full history on LongMemEval\_S while using far fewer tokens
-~\citep{wang2026engram}.  These papers raise the evidentiary bar: a benchmark
+query-aware routing among budget-tiered memory
+modules~\citep{zhang2026budgetmem}.  Engram reports that a lean retrieved context can
+beat full history on LongMemEval\_S while using far fewer
+tokens~\citep{wang2026engram}.  These papers raise the evidentiary bar: a benchmark
 paper must compare against full context, report operational metrics, and make
 its harness reusable.  The novelty claimed here is the conjunction of local
 large language model (LLM) serving, fixed per-call active budgets, swappable
@@ -217,11 +217,11 @@ self-evolving in-episode and cross-episode perspectives, comparing many memory
 methods with long-context baselines, but it is not primarily a fixed
 active-budget harness for local deployments~\citep{wang2026evomembench}.
 Engram is especially important because it includes full-context baselines,
-reproducible logs, and evidence that lean retrieved context can outperform
-full history on LongMemEval\_S~\citep{wang2026engram}.  LightMem and Prompt
+reproducible logs, and evidence that lean retrieved context can achieve higher
+accuracy than full history on LongMemEval\_S~\citep{wang2026engram}.  LightMem and Prompt
 Compression in the Wild reinforce the operational lens: latency, online
-overhead, hardware, and break-even points must be measured, not assumed
-~\citep{zhang2026lightmem,kummer2026promptcompression}.
+overhead, hardware, and break-even points must be measured, not
+assumed~\citep{zhang2026lightmem,kummer2026promptcompression}.
 
 Table~\ref{tab:closest_work} summarizes how \BudgetBench{} differs from the
 closest method and benchmark artifacts along the budget, strategy, deployment,
@@ -265,8 +265,8 @@ input, not how well a memory strategy adapts the input to a fixed active
 budget.
 
 RULER evaluates long-context models with configurable synthetic tasks including
-retrieval, multi-hop tracing, aggregation, and question answering
-~\citep{hsieh2024ruler}.  Its central lesson is that isolated retrieval success
+retrieval, multi-hop tracing, aggregation, and question
+answering~\citep{hsieh2024ruler}.  Its central lesson is that isolated retrieval success
 can overstate long-context competence.  HELMET argues similarly for
 application-centric evaluation across diverse long-context categories and
 finds that synthetic tasks are not reliable predictors of downstream
@@ -429,11 +429,13 @@ After the primary 89-item-per-task run, we installed additional local Ollama tag
 chat path in preliminary checks.  We then ran a compact three-item LongBench v2
 transfer check over the 2K, 4K, and 8K tiers using truncation and RAG.  The
 paper reports only the informative \texttt{gemma4:e2b} rows.  The Qwen text
-tags and the Qwen-VL tag are preserved in raw logs and in the consolidated CSV,
+tags and the Qwen-VL tag are preserved in raw logs and in the consolidated
+comma-separated values (CSV) file,
 but excluded from the paper tables because their compact text-only exact-match
 results were uniformly zero or required endpoint-specific generation settings
-to avoid empty content.  We separately generated six simple colored-shape PNGs
-and queried \texttt{qwen3-vl:2b} through Ollama's native image chat API; that
+to avoid empty content.  We separately generated six simple colored-shape
+images saved as portable network graphics (PNG) files and queried
+\texttt{qwen3-vl:2b} through Ollama's native image chat API; that
 native multimodal probe is reported because it produced nonzero results.
 
 \subsection{Sampling and Decoding}
@@ -481,8 +483,8 @@ aggregate CSV and figures are generated by the scripts in \path{scripts/}.
 Table values are rounded to two decimals in the main text.  Table~\ref{tab:main_89item_results}
 reports the primary LongBench v2 quality and violation matrix, while
 Table~\ref{tab:swe_proxy_diagnostic} reports the SWE scaffold diagnostic.
-Figures~\ref{fig:tradeoff_89item}, \ref{fig:duration_89item}, and
-\ref{fig:used_budget_89item} show the corresponding quality, violation,
+Figures~\ref{fig:tradeoff_89item},~\ref{fig:duration_89item}, and~\ref{fig:used_budget_89item}
+show the corresponding quality, violation,
 duration, and budget-use curves.  The SWE cells are not official SWE-bench
 accuracy, and the repeated high-budget proxy values occur because the selected
 SWE prompts collapse into the same effective prompt regimes at the measured
@@ -546,7 +548,7 @@ RAG at 32K & 50 & 0.00 & [0.00, 0.00] \\
 Lean retrieval at 8K & 50 & -0.02 & [-0.12, +0.08] \\
 \bottomrule
 \end{tabular}
-\caption{Paired item-level exact-match deltas against the 32K full-context baseline on the feasible slice.  The 95\% bootstrap confidence interval (CI) is computed over paired item outcomes.  Positive values mean the budgeted strategy answered more items correctly than full context on the same item set.}
+\caption{Paired item-level exact-match deltas against the 32K full-context baseline on the feasible slice.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The 95\% bootstrap confidence interval (CI) is computed over paired item outcomes.  Positive values mean the budgeted strategy answered more items correctly than full context on the same item set.}
 \label{tab:paired_full_context_deltas}
 \end{table}
 
@@ -643,7 +645,7 @@ Full context at 1,024 & 30 & -0.80 & [-0.93, -0.67] \\
 \caption{Paired item-level exact-match deltas against the 2,048-token
 full-context baseline on the synthetic memory task.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The positive
 \texttt{lean\_retrieval} row corresponds to one additional correct item and
-should be treated as a pilot signal rather than proof of superiority.}
+should be treated as a pilot signal rather than a stable ranking claim.}
 \label{tab:synthetic_memory_deltas}
 \end{table}
 
@@ -895,8 +897,8 @@ to reveal.
 
 \subsection{Pilot Scope}
 
-The current runs are intentionally small.  They demonstrate the measurement
-surface, not final superiority of one strategy over another.  The 50-item
+The current runs are intentionally small.  They exercise the measurement
+surface, not final strategy rankings.  The 50-item
 feasible-slice result is enough to justify scaling because it includes a
 paired full-context comparison and shows a latency/compliance tradeoff at
 similar quality.  A benchmark-scale study should use stronger local models,
@@ -959,7 +961,7 @@ confidence intervals and add repeated trials so strategy crossovers can be
 distinguished from sampling noise.  Fifth, it should add multimodal tasks with
 native visual inputs and multimodal memory policies.  Examples include
 document-page QA where the active
-budget controls OCR text plus image references, chart QA where retrieval
+budget controls optical character recognition (OCR) text plus image references, chart QA where retrieval
 chooses both visual crops and textual evidence, and tool-agent tasks where
 screenshots or UI state are part of the memory trace.
 
@@ -968,7 +970,7 @@ screenshots or UI state are part of the memory trace.
 \BudgetBench{} operationalizes an under-standardized evaluation
 question: how do memory strategies trade quality, budget compliance, and
 latency when active context is fixed?  The expanded 89-item-per-task pilot run and the
-50-item full-context-feasible LongBench slice demonstrate that this question
+50-item full-context-feasible LongBench slice show that this question
 can be evaluated locally with a small model, deterministic graders, fixed
 budget tiers, and swappable strategy baselines.  The strongest claim is
 methodological rather than rank-oriented: fixed-budget evaluation reveals
@@ -988,8 +990,11 @@ official public-memory judge logs.
 
 \section{Reproducibility Checklist}
 
+Table~\ref{tab:repro_checklist} summarizes the pilot run metadata and artifact
+locations needed to reproduce the reported results.
+
 \begin{longtable}{L{0.22\textwidth}L{0.68\textwidth}}
-\caption{Pilot reproducibility checklist.}\\
+\caption{Pilot reproducibility checklist.  QA denotes question answering, RAG denotes retrieval-augmented generation, CSV denotes comma-separated values, and PNG denotes portable network graphics.}\label{tab:repro_checklist}\\
 \toprule
 Item & Value \\
 \midrule
@@ -1025,10 +1030,13 @@ Native multimodal probe artifacts & \path{results/multimodal_smoke_qwen3_vl_2b.c
 
 \section{Task Specifications}
 
+Tables~\ref{tab:task_swe_card},~\ref{tab:task_longbench_card},~\ref{tab:task_synth_memory_card}, and~\ref{tab:task_longmemeval_card}
+define the task cards used by the pilot and follow-up evaluations.
+
 \subsection{SWE-bench Verified Scaffold}
 
 \begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
-\caption{SWE scaffold task card.}\\
+\caption{SWE scaffold task card.}\label{tab:task_swe_card}\\
 \toprule
 Field & Description \\
 \midrule
@@ -1050,7 +1058,7 @@ Scaling path & Replace proxy with official SWE-bench containerized oracle; strat
 \subsection{LongBench v2}
 
 \begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
-\caption{LongBench v2 task card.}\\
+\caption{LongBench v2 task card.}\label{tab:task_longbench_card}\\
 \toprule
 Field & Description \\
 \midrule
@@ -1072,7 +1080,7 @@ Scaling path & Increase sample count; stratify by context length, evidence dispe
 \subsection{Synthetic Memory Pilot}
 
 \begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
-\caption{Synthetic memory pilot task card.}\\
+\caption{Synthetic memory pilot task card.}\label{tab:task_synth_memory_card}\\
 \toprule
 Field & Description \\
 \midrule
@@ -1095,7 +1103,7 @@ Scaling path & Replace or corroborate with public memory datasets; stratify by c
 \subsection{LongMemEval Oracle Pilot}
 
 \begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
-\caption{LongMemEval oracle pilot task card.}\\
+\caption{LongMemEval oracle pilot task card.}\label{tab:task_longmemeval_card}\\
 \toprule
 Field & Description \\
 \midrule
@@ -1208,10 +1216,10 @@ because the benchmark is explicitly about local deployment regimes.
 
 \section{Full Operational Tables}
 
-Tables~\ref{tab:app_quality}, \ref{tab:app_violation},
-\ref{tab:app_mean_used}, \ref{tab:app_peak}, and \ref{tab:app_duration}
+Tables~\ref{tab:app_quality},~\ref{tab:app_violation},~\ref{tab:app_mean_used},~\ref{tab:app_peak}, and~\ref{tab:app_duration}
 provide the full quality, violation, budget-use, peak-budget, and duration
-matrices for the 89-item-per-task run.  Figure~\ref{fig:peak_budget_89item}
+matrices for the 89-item-per-task run.  Table~\ref{tab:app_flat_audit}
+provides the flat per-cell aggregate audit view.  Figure~\ref{fig:peak_budget_89item}
 plots the peak-budget curves from the same run.
 
 \input{results_89item_appendix_tables}
@@ -1294,13 +1302,13 @@ exact-match accuracy than truncation at the 2K active budget with a bootstrap
 \subsection{Recommended Estimands}
 
 For a fixed model $M$, task family $T$, strategy $s$, and budget $B$, the
-primary estimand is expected task quality $Q(s,B,T,M)$.  The most useful
+primary estimand is expected task quality $Q(s, B, T, M)$.  The most useful
 comparative estimand is the paired difference between two strategies on the
 same items:
 \[
-  \Delta(s_a,s_b,B,T,M) =
+  \Delta(s_a, s_b, B, T, M) =
   \frac{1}{N}\sum_{i=1}^{N}
-  \left[g(M(s_a(H_i,B)),x_i) - g(M(s_b(H_i,B)),x_i)\right].
+  \left[g(M(s_a(H_i, B)), x_i) - g(M(s_b(H_i, B)), x_i)\right].
 \]
 Pairing is important because task difficulty can dominate strategy effects.
 The same item may be easy for every strategy or impossible for every strategy.
@@ -1339,8 +1347,11 @@ $N=100$, one item changes accuracy by 0.01.  For pilot validation, this
 artifacts.  For a paper-quality strategy comparison, $N=100$ or more per task
 family should be used when claiming budget crossovers.
 
+Table~\ref{tab:recommended_study_sizes} summarizes the study sizes that match
+different levels of claim strength.
+
 \begin{longtable}{L{0.18\textwidth}L{0.24\textwidth}L{0.44\textwidth}}
-\caption{Recommended study sizes by claim type.}\\
+\caption{Recommended study sizes by claim type.}\label{tab:recommended_study_sizes}\\
 \toprule
 Study type & Suggested items & Appropriate claims \\
 \midrule
@@ -1370,14 +1381,14 @@ pathological items from dominating a curve.
 \section{Failure Taxonomy}
 
 Budget-tiered evaluation creates failure modes that do not appear in standard
-single-prompt evaluation.  The table below gives a taxonomy that should be used
+single-prompt evaluation.  Table~\ref{tab:failure_taxonomy} gives a taxonomy that should be used
 when annotating future \BudgetBench{} runs.  The pilot already exhibits several
 of these cases: RAG can violate tight SWE budgets when the irreducible prompt
 is too large, summary can violate LongBench budgets after compression, and
 LongBench quality can decrease as budget increases.
 
 \begin{longtable}{L{0.18\textwidth}L{0.25\textwidth}L{0.43\textwidth}}
-\caption{Failure taxonomy for budget-tiered memory evaluation.}\\
+\caption{Failure taxonomy for budget-tiered memory evaluation.}\label{tab:failure_taxonomy}\\
 \toprule
 Failure type & Observable symptom & Interpretation and remediation \\
 \midrule
@@ -1471,8 +1482,11 @@ against a hidden or versioned split.  The report should emphasize Pareto
 frontiers rather than single scalar rankings: a strategy can be best at 2K and
 dominated at 32K, or accurate but too slow for interactive use.
 
+Table~\ref{tab:expansion_plan} summarizes the engineering work and scientific
+output expected at each expansion phase.
+
 \begin{longtable}{L{0.16\textwidth}L{0.30\textwidth}L{0.38\textwidth}}
-\caption{Expansion plan from pilot artifact to benchmark study.}\\
+\caption{Expansion plan from pilot artifact to benchmark study.}\label{tab:expansion_plan}\\
 \toprule
 Phase & Engineering work & Scientific output \\
 \midrule
