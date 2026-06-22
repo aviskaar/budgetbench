@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Usable nonzero rows from the additional small-model LongBench v2 transfer check.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The check used three LongBench v2 items, the 2K--8K budget tiers, temperature 0.0, and Ollama's OpenAI-compatible endpoint.  Zero-accuracy and endpoint-anomalous runs are omitted according to the artifact reporting policy rather than promoted to benchmark evidence.}
+\caption{Nonzero rows from the additional small-model LongBench v2 transfer check.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The check used three LongBench v2 items, the 2K--8K budget tiers, temperature 0.0, and Ollama's OpenAI-compatible endpoint.  Zero-accuracy and endpoint-mismatch rows from the same sweep are reported separately in Table~\ref{tab:model_transfer_excluded}.}
 \label{tab:model_transfer_gemma4}
 \begin{tabular}{llcccc}
 \toprule
@@ -10,6 +10,26 @@ Model & Strategy & 2K & 4K & 8K & Mean duration (s) \\
 \texttt{gemma4:e2b} & RAG & 0.67 & 0.67 & 0.67 & 46.6 \\
 \bottomrule
 \end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Zero-accuracy and endpoint-mismatch rows from the additional small-model LongBench v2 transfer check.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  All entries use three LongBench v2 items and report exact-match accuracy at 2K, 4K, and 8K.}
+\label{tab:model_transfer_excluded}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcl}
+\toprule
+Model & Strategy & Accuracy at 2K / 4K / 8K & Reporting note \\
+\midrule
+\texttt{qwen3-vl:2b} & Truncation & 0.00 / 0.00 / 0.00 & Text-only endpoint check \\
+\texttt{qwen3-vl:2b} & RAG & 0.00 / 0.00 / 0.00 & Text-only endpoint check \\
+\texttt{qwen3.5:0.8b} & Truncation & 0.00 / 0.00 / 0.00 & Zero exact-match signal \\
+\texttt{qwen3.5:0.8b} & RAG & 0.00 / 0.00 / 0.00 & Zero exact-match signal \\
+\texttt{qwen3.5:2b} & Truncation & 0.00 / 0.00 / 0.00 & Zero exact-match signal; 1,024-token output cap \\
+\texttt{qwen3.5:2b} & RAG & 0.00 / 0.00 / 0.00 & Zero exact-match signal; 1,024-token output cap \\
+\bottomrule
+\end{tabular}
+}
 \end{table}
 
 \begin{table}[t]
