@@ -1,16 +1,18 @@
 \begin{table}[t]
 \centering
-\caption{Eighty-nine-item-per-task LongBench v2 pilot results for \RunModel. Quality is exact-match accuracy, and retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.}
+\caption{LongBench v2 pilot results for \RunModel. Accuracy cells report exact-match accuracy with 95\% bootstrap confidence intervals computed from the available 88 item-level quality rows; point estimates are the aggregate run values. Violation rates are measured with the benchmark tokenizer approximation. Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.}
 \label{tab:main_89item_results}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lccccc|ccccc}
+\begin{tabular}{llccccc}
 \toprule
-& \multicolumn{5}{c|}{Quality} & \multicolumn{5}{c}{Violation rate} \\
-Strategy & 2K & 4K & 8K & 16K & 32K & 2K & 4K & 8K & 16K & 32K \\
+Strategy & Metric & 2K & 4K & 8K & 16K & 32K \\
 \midrule
-Truncation & 0.29 & 0.27 & 0.27 & 0.33 & 0.33 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
-Summary & 0.30 & 0.24 & 0.26 & 0.29 & 0.31 & 0.03 & 0.07 & 0.05 & 0.07 & 0.03 \\
-RAG & 0.30 & 0.31 & 0.35 & 0.34 & 0.31 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+Truncation & Accuracy (95\% CI) & 0.29 [0.20, 0.40] & 0.27 [0.18, 0.36] & 0.27 [0.18, 0.36] & 0.33 [0.23, 0.43] & 0.33 [0.24, 0.43] \\
+ & Violation rate & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+Summary & Accuracy (95\% CI) & 0.30 [0.22, 0.40] & 0.24 [0.16, 0.33] & 0.26 [0.17, 0.35] & 0.29 [0.20, 0.40] & 0.31 [0.23, 0.41] \\
+ & Violation rate & 0.03 & 0.07 & 0.05 & 0.07 & 0.03 \\
+RAG & Accuracy (95\% CI) & 0.30 [0.20, 0.40] & 0.31 [0.23, 0.42] & 0.35 [0.25, 0.45] & 0.34 [0.24, 0.43] & 0.31 [0.22, 0.42] \\
+ & Violation rate & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
 \bottomrule
 \end{tabular}%
 }

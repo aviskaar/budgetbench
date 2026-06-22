@@ -30,7 +30,7 @@
 \newcommand{\RunId}{\texttt{final\_qwen25\_15b\_89items}}
 \newcommand{\OllamaEndpoint}{\url{http://localhost:11434/v1/chat/completions}}
 
-\title{\BudgetBench: A Budget-Tiered Benchmark for Memory Strategy Evaluation in Local Large Language Model Agents}
+\title{\BudgetBench: A Budget-Tiered Protocol for Memory Strategy Evaluation in Local Large Language Model Agents}
 
 \author{%
   Aditya Karnam Gururaj Rao\\
@@ -61,8 +61,8 @@ report a June 18, 2026 full-context feasibility slice: 50 LongBench v2 items
 whose natural prompts fit within 32K tokens, evaluated with truncation, RAG,
 and a \texttt{full\_context} pass-through baseline at 2K, 8K, and 32K.  On
 that slice, we detect no paired accuracy difference between RAG at 8K and the
-32K full-context baseline at $N=50$, while the 8K RAG cell uses roughly one
-quarter of the wall-clock time; this is not an equivalence result.  Full
+32K full-context baseline at $N=50$; this is not an equivalence result, and the
+single-run latency values should be read as preliminary diagnostics.  Full
 context is infeasible at 2K and 8K by budget enforcement.  The
 expanded artifact also includes a 20-item LongBench v2 transfer check, a
 30-item deterministic synthetic memory-agent pilot, a 50-item public
@@ -141,7 +141,7 @@ curves, compliance failures, and runtime tradeoffs that would be invisible in
 a single-budget evaluation.
 
 \paragraph{Contributions.}
-This work makes six contributions.  First, it defines active-context-budget
+This work makes five contributions.  First, it defines active-context-budget
 evaluation as a local-agent protocol distinct from standard long-context model
 evaluation and from method-specific budget studies.  Second, it documents an
 implementation whose strategy interface is designed to admit new memory policies without
@@ -149,13 +149,11 @@ modifying task logic.  Third, it reports an 89-item-per-task local pilot with co
 five-tier tables for quality, violation rate, budget usage, and duration.
 Fourth, it adds a filtered small-model transfer check showing how the same
 protocol is compatible with additional local text and vision-capable model
-tags while keeping uninformative runs visible.  Fifth, it marks a native
-image question answering (QA) probe as infrastructure validation only,
-separating multimodal serving viability from text-only benchmark performance.  Sixth, it provides
+tags while keeping uninformative runs visible.  Fifth, it provides
 reproducibility requirements and planned extensions for scaling
 \BudgetBench{} from a local pilot to a public benchmark.
 
-\section{Benchmark Definition}
+\section{Protocol Definition}
 
 \subsection{Objects and Notation}
 
@@ -497,7 +495,9 @@ duration, and budget-use curves.  The SWE cells are not official SWE-bench
 accuracy, and the repeated high-budget proxy values occur because the selected
 SWE prompts collapse into the same effective prompt regimes at the measured
 budgets rather than because the strategies have independently identical coding
-performance.
+performance.  Therefore, the SWE scaffold is a plumbing check for budget
+enforcement and logging, not evidence that memory strategy is irrelevant for
+software engineering tasks.
 
 \input{results_89item_tables}
 
@@ -565,15 +565,14 @@ The result should be interpreted conservatively: no positive paired bootstrap
 confidence interval excludes zero, and the interval is too wide to establish
 equivalence.  The notable signal is operational rather than inferential.  At
 $N=50$, RAG at 8K has no detectable paired accuracy difference from full
-context at 32K, while the shorter prompt uses roughly one quarter of the
-wall-clock time on this local setup.  That timing difference is largely a
-budget-size and feasibility observation, not evidence that RAG is intrinsically
-faster than another strategy at the same active budget.  Full context is also
+context at 32K.  The single-run timing values are lower for the shorter prompt
+on this local setup, but they are not repeated warmup-controlled latency
+estimates and should not be used as a strategy-speed claim.  Full context is also
 categorically infeasible at 2K and 8K, whereas truncation and RAG produce
 budget-compliant prompts at those tiers.  The initial lean retrieval baseline
 succeeds operationally but does not improve over simple RAG on this slice.
-This supports the benchmark claim that active-budget evaluation surfaces a
-quality-latency-compliance tradeoff that ordinary full-context evaluation
+This supports the protocol claim that active-budget evaluation surfaces a
+quality-compliance tradeoff that ordinary full-context evaluation
 hides, including negative baseline results that should be reported rather than
 silently discarded.
 
@@ -781,8 +780,9 @@ produce category metadata for memory-specific diagnostics.  The category split
 is descriptive only: under the deterministic containment scorer, lean retrieval
 has higher measured values in knowledge-update and multi-session questions,
 while single-session preferences remain at zero accuracy for all strategies
-under this local prompt.  It does not yet replace official LongMemEval results:
-the oracle-file scorer is approximate, the sample is still a pilot subset, and
+under this local prompt.  It does not yet replace official LongMemEval results,
+including stronger official-judge LongMemEval\_S evidence reported by
+Engram~\citep{wang2026engram}: the oracle-file scorer is approximate, the sample is still a pilot subset, and
 the judge-smoke tests in Appendix~\ref{app:judge_bridge} show enough
 disagreement that the containment deltas should be treated as an
 infrastructure-path diagnostic rather than accuracy evidence.  The next
@@ -800,7 +800,7 @@ v2 items and only the 2K--8K tiers.  Its purpose is to verify that the
 keeping negative and uninformative runs visible.  On this slice,
 \texttt{gemma4:e2b} produced nonzero exact-match accuracy in every reported
 cell.  RAG had equal or higher measured accuracy than truncation, while
-incurring roughly double the mean cell duration.
+incurring higher single-run mean cell duration.
 
 Table~\ref{tab:multimodal_probe} reports the separate native multimodal probe
 as infrastructure validation only.  The six generated items use simple
@@ -907,10 +907,11 @@ a retrieval strategy can have a fixed embedding cost but avoid repeated
 generation-based compression.  This is why \BudgetBench{} reports duration and
 budget utilization alongside quality.  The 50-item full-context-feasible slice
 shows the reverse operational pattern: RAG at 8K has no detectable paired
-accuracy difference from 32K full context at this sample size while taking
-substantially less wall-clock time on the same local model.  That result is
-not an equivalence result or a general strategy ranking.  It is primarily a
-budget-size and feasibility tradeoff of the kind a budgeted benchmark is meant
+accuracy difference from 32K full context at this sample size while remaining
+budget-compliant at tighter tiers.  The associated wall-clock values are
+single-run diagnostics, not a stable latency result.  That result is not an
+equivalence result or a general strategy ranking.  It is primarily a
+budget-size and feasibility tradeoff of the kind a budgeted protocol is meant
 to reveal.
 
 \subsection{Pilot Scope}
@@ -918,7 +919,7 @@ to reveal.
 The current runs are intentionally small.  They exercise the measurement
 surface, not final strategy rankings.  The 50-item
 feasible-slice result is enough to justify scaling because it includes a
-paired full-context comparison and shows a latency/compliance tradeoff at
+paired full-context comparison and shows a compliance tradeoff at
 similar quality.  A benchmark-scale study should use stronger local models,
 expand the public memory-agent run beyond the current LongMemEval oracle
 pilot with official judge logs, add official SWE-bench resolution or a deterministic trace-debugging
@@ -931,9 +932,21 @@ tables, figures, and a reproducible paper artifact.
 
 \paragraph{Internal validity.}
 The runner uses a tokenizer function based on \texttt{tiktoken} rather than
-the exact Ollama model tokenizer.  This is acceptable for a pilot but should be
-replaced with model-specific token accounting in a final benchmark; the current
-artifact does not quantify the direction or magnitude of tokenizer error.  The
+the exact Ollama model tokenizer.  A post-hoc audit of the first 89 LongBench
+v2 natural prompts with the \texttt{Qwen/Qwen2.5-1.5B-Instruct} tokenizer found
+that Qwen counts average 5.5\% higher than \texttt{cl100k\_base} counts
+(median 4.1\%; range -6.4\% to +31.4\%).  Natural full-context feasibility is
+unchanged at 2K, 4K, 8K, and 32K in this audit, with one 16K item flipping from
+fit under \texttt{tiktoken} to over-budget under Qwen tokenization.  For
+reconstructed LongBench truncation prompts selected with the \texttt{tiktoken}
+budget enforcer, Qwen recounting would mark 14/89, 35/89, 53/89, 65/89, and
+50/89 prompts over budget at 2K, 4K, 8K, 16K, and 32K, respectively.  Thus the
+current violation-rate rows should be read as compliance with the benchmark
+tokenizer approximation, not compliance with the served model tokenizer.  This
+is not a full strategy-matrix recount because the current logs do not store
+strategy-processed prompts for retrieval or summary contents.  Final benchmark
+runs should log model-specific token counts, tokenizer identifiers, prompt
+hashes, and post-strategy prompt artifacts for auditability.  The
 summary strategy uses the same small model for compression; a stronger
 summarizer could change the results.  The RAG strategy uses generic embeddings
 and simple message-level retrieval rather than task-optimized chunking.
@@ -987,7 +1000,7 @@ dependency is installed, because tool-use chains stress memory in ways that
 single-call QA does not.  Third, it should add richer strategy families:
 LLMLingua-2 compression, Mem0, Letta/MemGPT-style hierarchical memory, and
 hybrid retrieval-summary policies.  Fourth, it should report the analyzer's
-confidence intervals and add repeated trials so strategy crossovers can be
+confidence intervals in every main quality table and add repeated trials so strategy crossovers can be
 distinguished from sampling noise.  Fifth, it should add multimodal tasks with
 native visual inputs and multimodal memory policies.  Examples include
 document-page QA where the active
@@ -1007,8 +1020,9 @@ methodological rather than rank-oriented: fixed-budget evaluation reveals
 failure modes and operating points that standard long-context evaluation can
 hide.  In the current evidence, full context is infeasible at tight tiers, and
 a budgeted RAG prompt at 8K has no detectable paired accuracy difference from
-the 32K full-context baseline at this sample size while using substantially
-less local runtime.  This is not an equivalence claim.  The synthetic and
+the 32K full-context baseline at this sample size.  This is not an equivalence
+claim, and the accompanying latency measurements remain preliminary single-run
+diagnostics.  The synthetic and
 LongMemEval oracle pilots show that the same protocol can expose
 memory-specific update, preference, temporal, and abstention behavior, but the
 public-memory result still uses an approximate scorer.  Despite these
