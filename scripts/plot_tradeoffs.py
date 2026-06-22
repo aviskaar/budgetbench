@@ -14,6 +14,7 @@ os.environ.setdefault("XDG_CACHE_HOME", os.path.join(tempfile.gettempdir(), "bud
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 import pandas as pd
 
 
@@ -38,6 +39,41 @@ STRATEGY_MARKERS = {
 }
 
 
+def _format_large_tick(value, _pos):
+    if abs(value) >= 1000:
+        return f"{value:,.0f}"
+    if float(value).is_integer():
+        return f"{value:.0f}"
+    return f"{value:g}"
+
+
+def _score_upper(values):
+    if not values:
+        return 1.0
+    max_value = max(values)
+    if max_value <= 0.10:
+        return 0.10
+    if max_value <= 0.25:
+        return 0.25
+    if max_value <= 0.40:
+        return 0.40
+    if max_value <= 0.60:
+        return 0.60
+    return 1.0
+
+
+def _finish_figure(fig, axes, out_path: str) -> None:
+    handles, labels = axes[0].get_legend_handles_labels()
+    if handles:
+        fig.legend(handles, labels, loc="lower center", ncol=min(len(labels), 4), bbox_to_anchor=(0.5, 0.01))
+
+    fig.tight_layout(rect=[0, 0.10, 1, 0.96])
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    fig.savefig(out_path, bbox_inches="tight", dpi=150)
+    plt.close(fig)
+    print(f"Figure saved to: {out_path}")
+
+
 def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
     """Generate 2x2 panel tradeoff figure and save as PNG."""
     plt.rcParams.update({
@@ -48,10 +84,12 @@ def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
         "grid.alpha": 0.3,
     })
 
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8), sharey="row")
+    fig, axes = plt.subplots(2, 2, figsize=(11, 6.6), sharey="row")
     tasks = [("swe", "SWE-bench Verified"), ("long", "LongBench v2")]
 
     model_df = df[df["model"] == model] if "model" in df.columns else df
+    quality_values = []
+    violation_values = []
 
     for col, (task_id, task_label) in enumerate(tasks):
         sub = model_df[model_df["task"] == task_id] if "task" in model_df.columns else model_df.iloc[0:0]
@@ -71,6 +109,8 @@ def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
 
             axes[0][col].plot(x, y_acc, label=strategy, color=color, marker=marker)
             axes[1][col].plot(x, y_viol, label=strategy, color=color, marker=marker)
+            quality_values.extend(y_acc)
+            violation_values.extend(y_viol)
 
         for row in range(2):
             axes[row][col].set_xscale("log", base=2)
@@ -80,22 +120,61 @@ def plot_tradeoff_curves(df: pd.DataFrame, model: str, out_path: str) -> None:
 
         axes[0][col].set_title(f"{task_label}\nQuality vs Budget")
         axes[0][col].set_ylabel("Quality")
-        axes[0][col].set_ylim(0, 1)
         axes[1][col].set_title(f"{task_label}\nViolation Rate vs Budget")
         axes[1][col].set_ylabel("Violation Rate")
         axes[1][col].set_xlabel("Context Budget (tokens)")
-        axes[1][col].set_ylim(0, 1)
 
-    handles, labels = axes[0][0].get_legend_handles_labels()
-    if handles:
-        fig.legend(handles, labels, loc="lower center", ncol=6, bbox_to_anchor=(0.5, -0.02))
+    axes[0][0].set_ylim(0, _score_upper(quality_values))
+    axes[0][1].set_ylim(0, _score_upper(quality_values))
+    axes[1][0].set_ylim(0, _score_upper(violation_values))
+    axes[1][1].set_ylim(0, _score_upper(violation_values))
 
-    fig.suptitle(f"BudgetBench Tradeoff Curves - {model}", fontsize=14, fontweight="bold")
-    plt.tight_layout(rect=[0, 0.05, 1, 1])
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    plt.savefig(out_path, bbox_inches="tight", dpi=150)
-    plt.close()
-    print(f"Figure saved to: {out_path}")
+    fig.suptitle(f"BudgetBench Tradeoff Curves - {model}", fontsize=12, fontweight="bold")
+    _finish_figure(fig, [axes[0][0], axes[0][1]], out_path)
+
+
+def plot_metric_curves(df: pd.DataFrame, model: str, metric: str, ylabel: str, out_path: str) -> None:
+    """Generate a two-panel metric curve figure and save as PNG."""
+    plt.rcParams.update({
+        "font.size": 10,
+        "font.family": "serif",
+        "figure.dpi": 150,
+        "axes.grid": True,
+        "grid.alpha": 0.3,
+    })
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 3.8), sharey=False)
+    tasks = [("swe", "SWE-bench Verified"), ("long", "LongBench v2")]
+    model_df = df[df["model"] == model] if "model" in df.columns else df
+
+    for ax, (task_id, task_label) in zip(axes, tasks):
+        sub = model_df[model_df["task"] == task_id] if "task" in model_df.columns else model_df.iloc[0:0]
+        strategies_in_data = sub["strategy"].unique() if not sub.empty else []
+
+        metric_values = []
+        for strategy in strategies_in_data:
+            s_data = sub[sub["strategy"] == strategy].sort_values("budget")
+            x = s_data["budget"].tolist()
+            y = s_data[metric].tolist()
+            metric_values.extend(v for v in y if pd.notna(v))
+
+            color = STRATEGY_COLORS.get(strategy, None)
+            marker = STRATEGY_MARKERS.get(strategy, "o")
+            ax.plot(x, y, label=strategy, color=color, marker=marker)
+
+        ax.set_title(task_label)
+        ax.set_xscale("log", base=2)
+        ax.set_xticks(BUDGET_TIERS)
+        ax.set_xticklabels(BUDGET_LABELS)
+        ax.set_xlim(1500, 40000)
+        ax.set_xlabel("Context Budget (tokens)")
+        ax.set_ylabel(ylabel)
+        ax.yaxis.set_major_formatter(FuncFormatter(_format_large_tick))
+        if metric_values:
+            ax.set_ylim(0, max(metric_values) * 1.10)
+
+    fig.suptitle(f"{ylabel} by Budget - {model}", fontsize=12, fontweight="bold")
+    _finish_figure(fig, axes, out_path)
 
 
 def main():
@@ -108,6 +187,27 @@ def main():
     model_slug = args.model.replace(":", "_").replace(".", "_")
     out_path = os.path.join("results", "figures", f"tradeoff_curves_{model_slug}.png")
     plot_tradeoff_curves(df, model=args.model, out_path=out_path)
+    plot_metric_curves(
+        df,
+        model=args.model,
+        metric="duration_sec",
+        ylabel="Cell duration (seconds)",
+        out_path=os.path.join("results", "figures", f"duration_curves_{model_slug}.png"),
+    )
+    plot_metric_curves(
+        df,
+        model=args.model,
+        metric="mean_used_budget",
+        ylabel="Mean used active budget (tokens)",
+        out_path=os.path.join("results", "figures", f"used_budget_curves_{model_slug}.png"),
+    )
+    plot_metric_curves(
+        df,
+        model=args.model,
+        metric="max_peak_budget",
+        ylabel="Maximum peak budget (tokens)",
+        out_path=os.path.join("results", "figures", f"peak_budget_curves_{model_slug}.png"),
+    )
 
 
 if __name__ == "__main__":

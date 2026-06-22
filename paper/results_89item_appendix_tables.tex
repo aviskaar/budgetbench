@@ -1,6 +1,6 @@
 \begin{table}[p]
 \centering
-\caption{Full quality matrix for the 89-item-per-task run. LongBench v2 values are exact-match accuracy. SWE values are patch-similarity proxy scores and are not official SWE-bench accuracy.}
+\caption{Full quality matrix for the 89-item-per-task run. Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline. LongBench v2 values are exact-match accuracy. SWE values are patch-similarity proxy scores and are not official SWE-bench accuracy.}
 \label{tab:app_quality}
 \begin{tabular}{llccccc}
 \toprule
@@ -19,7 +19,7 @@ Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
 
 \begin{table}[p]
 \centering
-\caption{Full budget-violation matrix for the 89-item-per-task run.}
+\caption{Full budget-violation matrix for the 89-item-per-task run. Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.}
 \label{tab:app_violation}
 \begin{tabular}{llccccc}
 \toprule
@@ -38,7 +38,7 @@ Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
 
 \begin{table}[p]
 \centering
-\caption{Mean used active budget in tokens.}
+\caption{Mean used active budget in tokens. Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.}
 \label{tab:app_mean_used}
 \begin{tabular}{llccccc}
 \toprule
@@ -57,7 +57,7 @@ Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
 
 \begin{table}[p]
 \centering
-\caption{Maximum observed peak budget in tokens.}
+\caption{Maximum observed peak budget in tokens. Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.}
 \label{tab:app_peak}
 \begin{tabular}{llccccc}
 \toprule
@@ -76,7 +76,7 @@ Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
 
 \begin{table}[p]
 \centering
-\caption{Cell duration in seconds.}
+\caption{Cell duration in seconds. Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.}
 \label{tab:app_duration}
 \begin{tabular}{llccccc}
 \toprule
@@ -96,49 +96,49 @@ Task & Strategy & 2K & 4K & 8K & 16K & 32K \\
 \begin{longtable}{lllrrrrr}
 \caption{Flat per-cell aggregate data for audit.}\\
 \toprule
-Model & Task & Strategy & Budget & Quality & Viol. & Mean Used & Duration \\
+Model & Task & Strategy & Budget & Quality & Viol. & Mean Used & Duration (s) \\
 \midrule
 \endfirsthead
 \toprule
-Model & Task & Strategy & Budget & Quality & Viol. & Mean Used & Duration \\
+Model & Task & Strategy & Budget & Quality & Viol. & Mean Used & Duration (s) \\
 \midrule
 \endhead
-qwen2.5:1.5b & long & rag & 2048 & 0.303 & 0.000 & 1919.2 & 495.5 \\
-qwen2.5:1.5b & long & rag & 4096 & 0.315 & 0.000 & 3960.8 & 539.3 \\
-qwen2.5:1.5b & long & rag & 8192 & 0.348 & 0.000 & 8052.4 & 671.1 \\
-qwen2.5:1.5b & long & rag & 16384 & 0.337 & 0.000 & 16087.7 & 1103.5 \\
-qwen2.5:1.5b & long & rag & 32768 & 0.315 & 0.000 & 29482.7 & 2250.0 \\
-qwen2.5:1.5b & long & summary & 2048 & 0.303 & 0.028 & 1584.4 & 1862.3 \\
-qwen2.5:1.5b & long & summary & 4096 & 0.236 & 0.068 & 3412.5 & 1982.7 \\
-qwen2.5:1.5b & long & summary & 8192 & 0.258 & 0.045 & 7488.5 & 1966.8 \\
-qwen2.5:1.5b & long & summary & 16384 & 0.292 & 0.068 & 15110.9 & 2261.3 \\
-qwen2.5:1.5b & long & summary & 32768 & 0.315 & 0.028 & 28898.8 & 3240.0 \\
-qwen2.5:1.5b & long & truncation & 2048 & 0.292 & 0.000 & 1796.6 & 43.3 \\
-qwen2.5:1.5b & long & truncation & 4096 & 0.270 & 0.000 & 3803.2 & 84.3 \\
-qwen2.5:1.5b & long & truncation & 8192 & 0.270 & 0.000 & 7936.5 & 209.4 \\
-qwen2.5:1.5b & long & truncation & 16384 & 0.326 & 0.000 & 16011.7 & 637.2 \\
-qwen2.5:1.5b & long & truncation & 32768 & 0.326 & 0.000 & 29410.9 & 1794.8 \\
-qwen2.5:1.5b & swe & rag & 2048 & 0.177 & 0.067 & 556.8 & 187.0 \\
-qwen2.5:1.5b & swe & rag & 4096 & 0.186 & 0.034 & 644.1 & 194.2 \\
-qwen2.5:1.5b & swe & rag & 8192 & 0.191 & 0.000 & 788.3 & 203.3 \\
-qwen2.5:1.5b & swe & rag & 16384 & 0.191 & 0.000 & 788.3 & 202.9 \\
-qwen2.5:1.5b & swe & rag & 32768 & 0.191 & 0.000 & 788.3 & 202.4 \\
-qwen2.5:1.5b & swe & summary & 2048 & 0.177 & 0.000 & 570.2 & 219.4 \\
-qwen2.5:1.5b & swe & summary & 4096 & 0.186 & 0.000 & 650.5 & 214.8 \\
-qwen2.5:1.5b & swe & summary & 8192 & 0.191 & 0.000 & 788.3 & 218.5 \\
-qwen2.5:1.5b & swe & summary & 16384 & 0.191 & 0.000 & 788.3 & 214.9 \\
-qwen2.5:1.5b & swe & summary & 32768 & 0.191 & 0.000 & 788.3 & 207.2 \\
-qwen2.5:1.5b & swe & truncation & 2048 & 0.177 & 0.000 & 561.0 & 206.4 \\
-qwen2.5:1.5b & swe & truncation & 4096 & 0.186 & 0.000 & 646.2 & 210.2 \\
-qwen2.5:1.5b & swe & truncation & 8192 & 0.191 & 0.000 & 788.3 & 209.0 \\
-qwen2.5:1.5b & swe & truncation & 16384 & 0.191 & 0.000 & 788.3 & 203.0 \\
-qwen2.5:1.5b & swe & truncation & 32768 & 0.191 & 0.000 & 788.3 & 208.7 \\
+qwen2.5:1.5b & long & rag & 2,048 & 0.303 & 0.000 & 1919.2 & 495.5 \\
+qwen2.5:1.5b & long & rag & 4,096 & 0.315 & 0.000 & 3960.8 & 539.3 \\
+qwen2.5:1.5b & long & rag & 8,192 & 0.348 & 0.000 & 8052.4 & 671.1 \\
+qwen2.5:1.5b & long & rag & 16,384 & 0.337 & 0.000 & 16087.7 & 1103.5 \\
+qwen2.5:1.5b & long & rag & 32,768 & 0.315 & 0.000 & 29482.7 & 2250.0 \\
+qwen2.5:1.5b & long & summary & 2,048 & 0.303 & 0.028 & 1584.4 & 1862.3 \\
+qwen2.5:1.5b & long & summary & 4,096 & 0.236 & 0.068 & 3412.5 & 1982.7 \\
+qwen2.5:1.5b & long & summary & 8,192 & 0.258 & 0.045 & 7488.5 & 1966.8 \\
+qwen2.5:1.5b & long & summary & 16,384 & 0.292 & 0.068 & 15110.9 & 2261.3 \\
+qwen2.5:1.5b & long & summary & 32,768 & 0.315 & 0.028 & 28898.8 & 3240.0 \\
+qwen2.5:1.5b & long & truncation & 2,048 & 0.292 & 0.000 & 1796.6 & 43.3 \\
+qwen2.5:1.5b & long & truncation & 4,096 & 0.270 & 0.000 & 3803.2 & 84.3 \\
+qwen2.5:1.5b & long & truncation & 8,192 & 0.270 & 0.000 & 7936.5 & 209.4 \\
+qwen2.5:1.5b & long & truncation & 16,384 & 0.326 & 0.000 & 16011.7 & 637.2 \\
+qwen2.5:1.5b & long & truncation & 32,768 & 0.326 & 0.000 & 29410.9 & 1794.8 \\
+qwen2.5:1.5b & swe & rag & 2,048 & 0.177 & 0.067 & 556.8 & 187.0 \\
+qwen2.5:1.5b & swe & rag & 4,096 & 0.186 & 0.034 & 644.1 & 194.2 \\
+qwen2.5:1.5b & swe & rag & 8,192 & 0.191 & 0.000 & 788.3 & 203.3 \\
+qwen2.5:1.5b & swe & rag & 16,384 & 0.191 & 0.000 & 788.3 & 202.9 \\
+qwen2.5:1.5b & swe & rag & 32,768 & 0.191 & 0.000 & 788.3 & 202.4 \\
+qwen2.5:1.5b & swe & summary & 2,048 & 0.177 & 0.000 & 570.2 & 219.4 \\
+qwen2.5:1.5b & swe & summary & 4,096 & 0.186 & 0.000 & 650.5 & 214.8 \\
+qwen2.5:1.5b & swe & summary & 8,192 & 0.191 & 0.000 & 788.3 & 218.5 \\
+qwen2.5:1.5b & swe & summary & 16,384 & 0.191 & 0.000 & 788.3 & 214.9 \\
+qwen2.5:1.5b & swe & summary & 32,768 & 0.191 & 0.000 & 788.3 & 207.2 \\
+qwen2.5:1.5b & swe & truncation & 2,048 & 0.177 & 0.000 & 561.0 & 206.4 \\
+qwen2.5:1.5b & swe & truncation & 4,096 & 0.186 & 0.000 & 646.2 & 210.2 \\
+qwen2.5:1.5b & swe & truncation & 8,192 & 0.191 & 0.000 & 788.3 & 209.0 \\
+qwen2.5:1.5b & swe & truncation & 16,384 & 0.191 & 0.000 & 788.3 & 203.0 \\
+qwen2.5:1.5b & swe & truncation & 32,768 & 0.191 & 0.000 & 788.3 & 208.7 \\
 \bottomrule
 \end{longtable}
 
 \begin{figure}[p]
   \centering
   \includegraphics[width=\textwidth]{../results/figures/peak_budget_curves_qwen2_5_1_5b.png}
-  \caption{Maximum peak budget observed in each cell.}
+  \caption{Maximum peak budget observed in each cell. Blue circles denote truncation, orange squares denote summary, and green triangles denote retrieval-augmented generation (RAG).}
   \label{fig:peak_budget_89item}
 \end{figure}

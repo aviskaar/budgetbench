@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Usable nonzero rows from the additional small-model LongBench v2 transfer check.  The check used three LongBench v2 items, the 2K--8K budget tiers, temperature 0.0, and Ollama's OpenAI-compatible endpoint.  Zero-accuracy and endpoint-anomalous runs are omitted by design rather than promoted to benchmark evidence.}
+\caption{Usable nonzero rows from the additional small-model LongBench v2 transfer check.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The check used three LongBench v2 items, the 2K--8K budget tiers, temperature 0.0, and Ollama's OpenAI-compatible endpoint.  Zero-accuracy and endpoint-anomalous runs are omitted according to the artifact reporting policy rather than promoted to benchmark evidence.}
 \label{tab:model_transfer_gemma4}
 \begin{tabular}{llcccc}
 \toprule
@@ -14,7 +14,7 @@ Model & Strategy & 2K & 4K & 8K & Mean duration (s) \\
 
 \begin{table}[t]
 \centering
-\caption{Native multimodal probe result for a generated six-item image QA set.  Each item contains a simple rendered colored shape and a multiple-choice text question.  This is a modality-path check, not a benchmark-scale vision evaluation.}
+\caption{Native multimodal probe result for a generated six-item image question answering (QA) set.  Each item contains a simple rendered colored shape and a multiple-choice text question.  This is a modality-path check, not a benchmark-scale vision evaluation.}
 \label{tab:multimodal_probe}
 \begin{tabular}{llccc}
 \toprule
