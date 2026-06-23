@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+.env
 .mem0_db/
 .deps/
 logs/

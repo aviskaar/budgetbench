@@ -56,6 +56,7 @@ def get_llm_client(
     url: str = "http://localhost:11434/v1/chat/completions",
     model: Optional[str] = None,
     max_output_tokens: int = 512,
+    api_key_env: Optional[str] = None,
 ):
     def llm_client(messages: List[OpenAIMessage]) -> str:
         formatted_messages = []
@@ -72,8 +73,14 @@ def get_llm_client(
         }
         if model:
             payload["model"] = model
+        headers = {}
+        if api_key_env:
+            api_key = os.environ.get(api_key_env)
+            if not api_key:
+                raise RuntimeError(f"{api_key_env} is not set")
+            headers["Authorization"] = f"Bearer {api_key}"
         try:
-            response = requests.post(url, json=payload, timeout=300)
+            response = requests.post(url, json=payload, headers=headers, timeout=300)
             response.raise_for_status()
             data = response.json()
             return data["choices"][0]["message"]["content"]
@@ -224,6 +231,7 @@ def run_pilot(args):
         args.llm_url,
         model=args.model,
         max_output_tokens=args.max_output_tokens,
+        api_key_env=args.api_key_env,
     )
 
     budgets = resolve_budget_tiers(
@@ -451,6 +459,12 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="Model name to pass in the API payload (required for Ollama; omit for llama.cpp)",
+    )
+    parser.add_argument(
+        "--api-key-env",
+        type=str,
+        default=None,
+        help="Environment variable containing the API key for the LLM endpoint",
     )
     parser.add_argument(
         "--tokenizer",
