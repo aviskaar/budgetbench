@@ -15,6 +15,10 @@ from typing import List, Optional, Sequence, Tuple
 import pandas as pd
 
 
+def _collect_non_null(values: pd.Series) -> List[str]:
+    return [value for value in values if pd.notna(value)]
+
+
 def load_summary_files(log_dirs: List[str]) -> pd.DataFrame:
     """Read summary.jsonl from each log_dir and concatenate into a single DataFrame."""
     rows = []
@@ -100,11 +104,21 @@ def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _combo_file_for_row(row: pd.Series) -> str:
+    if row.get("combo_log_file"):
+        return str(row.get("combo_log_file"))
     log_dir = row.get("_log_dir", "")
     task = row.get("task", "")
     strategy = row.get("strategy", "")
     budget = row.get("budget", 0)
     return os.path.join(log_dir, f"{task}_{strategy}_{budget}.jsonl")
+
+
+def _combo_files_for_row(row: pd.Series) -> List[str]:
+    combo_files = row.get("combo_log_files")
+    if isinstance(combo_files, list):
+        return [str(path) for path in combo_files if path]
+    combo_file = _combo_file_for_row(row)
+    return [combo_file] if combo_file else []
 
 
 def _quality_rows_from_combo(combo_file: str) -> List[dict]:
@@ -141,6 +155,49 @@ def _quality_rows_from_combo(combo_file: str) -> List[dict]:
 
 def _quality_values_from_combo(combo_file: str) -> List[float]:
     return [row["quality"] for row in _quality_rows_from_combo(combo_file)]
+
+
+def _quality_rows_from_row(row: pd.Series) -> List[dict]:
+    combo_files = _combo_files_for_row(row)
+    if len(combo_files) <= 1:
+        combo_file = combo_files[0] if combo_files else ""
+        return _quality_rows_from_combo(combo_file)
+
+    grouped_rows = {}
+    for combo_file in combo_files:
+        for quality_row in _quality_rows_from_combo(combo_file):
+            item_id = quality_row.get("item_id")
+            if item_id is None:
+                continue
+            existing = grouped_rows.setdefault(
+                item_id,
+                {
+                    "item_id": item_id,
+                    "qualities": [],
+                    "natural_prompt_tokens": quality_row.get("natural_prompt_tokens"),
+                    "memory_category": quality_row.get("memory_category"),
+                },
+            )
+            existing["qualities"].append(float(quality_row["quality"]))
+            if existing.get("natural_prompt_tokens") is None:
+                existing["natural_prompt_tokens"] = quality_row.get("natural_prompt_tokens")
+            if existing.get("memory_category") is None:
+                existing["memory_category"] = quality_row.get("memory_category")
+
+    aggregated_rows = []
+    for item_id, values in grouped_rows.items():
+        qualities = values.pop("qualities", [])
+        if not qualities:
+            continue
+        aggregated_rows.append(
+            {
+                "item_id": item_id,
+                "quality": sum(qualities) / len(qualities),
+                "natural_prompt_tokens": values.get("natural_prompt_tokens"),
+                "memory_category": values.get("memory_category"),
+            }
+        )
+    return aggregated_rows
 
 
 def _bootstrap_mean_interval(
@@ -183,7 +240,7 @@ def compute_quality_intervals(
     counts = []
 
     for idx, (_, row) in enumerate(df.iterrows()):
-        values = _quality_values_from_combo(_combo_file_for_row(row))
+        values = [quality_row["quality"] for quality_row in _quality_rows_from_row(row)]
         low, high = _bootstrap_mean_interval(
             values,
             confidence=confidence,
@@ -208,6 +265,16 @@ def _quality_map_from_combo(combo_file: str) -> dict:
         if item_id is None:
             continue
         quality_map[item_id] = row["quality"]
+    return quality_map
+
+
+def _quality_map_from_row(row: pd.Series) -> dict:
+    quality_map = {}
+    for quality_row in _quality_rows_from_row(row):
+        item_id = quality_row.get("item_id")
+        if item_id is None:
+            continue
+        quality_map[item_id] = quality_row["quality"]
     return quality_map
 
 
@@ -237,14 +304,13 @@ def compute_paired_deltas(
         ]
         if baseline_rows.empty:
             continue
-
         baseline_row = baseline_rows.iloc[0]
-        baseline_map = _quality_map_from_combo(_combo_file_for_row(baseline_row))
+        baseline_map = _quality_map_from_row(baseline_row)
         if not baseline_map:
             continue
 
         for idx, candidate_row in group.iterrows():
-            candidate_map = _quality_map_from_combo(_combo_file_for_row(candidate_row))
+            candidate_map = _quality_map_from_row(candidate_row)
             paired_ids = sorted(set(candidate_map) & set(baseline_map))
             if not paired_ids:
                 continue
@@ -299,7 +365,7 @@ def compute_grouped_quality(
 
     for idx, (_, row) in enumerate(df.iterrows()):
         grouped_values = {}
-        for quality_row in _quality_rows_from_combo(_combo_file_for_row(row)):
+        for quality_row in _quality_rows_from_row(row):
             group_value = quality_row.get(group_column)
             if group_value is None:
                 continue
@@ -330,6 +396,55 @@ def compute_grouped_quality(
     return pd.DataFrame(rows)
 
 
+def summarize_repeats(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Aggregate repeated cell runs into one row per model/task/strategy/budget.
+
+    Accuracy and duration are summarized across repeat executions, while
+    confidence intervals and budget-use metrics are averaged over the repeated
+    rows already computed from item-level logs.
+    """
+    if df.empty:
+        return df.copy()
+
+    group_cols = ["_log_dir", "model", "task", "strategy", "budget"]
+    agg_map = {
+        "accuracy": ["mean", "std", "count"],
+        "duration_sec": ["mean", "std"],
+        "violation_rate": "mean",
+        "mean_used_budget": "mean",
+        "max_peak_budget": "mean",
+        "quality_ci_low": "mean",
+        "quality_ci_high": "mean",
+        "quality_n": "max",
+        "combo_log_file": _collect_non_null,
+    }
+
+    grouped = df.groupby(group_cols, dropna=False).agg(agg_map)
+    grouped.columns = [
+        "_".join(str(part) for part in col if part).rstrip("_")
+        for col in grouped.columns.to_flat_index()
+    ]
+    grouped = grouped.reset_index()
+
+    rename_map = {
+        "accuracy_mean": "accuracy",
+        "accuracy_std": "accuracy_std",
+        "accuracy_count": "repeat_count",
+        "duration_sec_mean": "duration_sec",
+        "duration_sec_std": "duration_sec_std",
+        "violation_rate_mean": "violation_rate",
+        "mean_used_budget_mean": "mean_used_budget",
+        "max_peak_budget_mean": "max_peak_budget",
+        "quality_ci_low_mean": "quality_ci_low",
+        "quality_ci_high_mean": "quality_ci_high",
+        "quality_n_max": "quality_n",
+        "combo_log_file__collect_non_null": "combo_log_files",
+    }
+    grouped = grouped.rename(columns=rename_map)
+    return grouped
+
+
 def main():
     parser = argparse.ArgumentParser(description="Aggregate BudgetBench summary.jsonl files into CSV")
     parser.add_argument("--log-dirs", nargs="+", required=True, help="Log directories containing summary.jsonl")
@@ -343,6 +458,11 @@ def main():
         action="append",
         default=[],
         help="Per-item metric metadata column to stratify quality by, e.g. memory_category",
+    )
+    parser.add_argument(
+        "--aggregate-repeats",
+        action="store_true",
+        help="Aggregate repeated cell runs into one row per model/task/strategy/budget",
     )
     args = parser.parse_args()
 
@@ -358,6 +478,8 @@ def main():
         confidence=args.confidence,
         n_bootstrap=args.bootstrap_samples,
     )
+    if args.aggregate_repeats:
+        df = summarize_repeats(df)
 
     out_cols = [
         "model",
@@ -372,6 +494,9 @@ def main():
         "quality_ci_high",
         "quality_n",
         "duration_sec",
+        "duration_sec_std",
+        "accuracy_std",
+        "repeat_count",
     ]
     for col in out_cols:
         if col not in df.columns:

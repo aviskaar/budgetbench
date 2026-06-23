@@ -1,13 +1,24 @@
 import pytest
 import json
+import sys
+import types
 from unittest.mock import MagicMock, patch
 from budgetbench.tasks.long import LongBenchV2Task
 from budgetbench.tasks.swe import SWEBenchTask
 
 @pytest.fixture
 def mock_datasets():
-    with patch("datasets.load_dataset") as mock:
-        yield mock
+    fake_module = types.ModuleType("datasets")
+    fake_module.load_dataset = MagicMock()
+    original = sys.modules.get("datasets")
+    sys.modules["datasets"] = fake_module
+    try:
+        yield fake_module.load_dataset
+    finally:
+        if original is None:
+            sys.modules.pop("datasets", None)
+        else:
+            sys.modules["datasets"] = original
 
 def test_longbench_wrapper(mock_datasets):
     # Mock dataset
@@ -95,6 +106,87 @@ def test_swe_run_extracts_patch(mock_datasets):
     assert llm_client.call_count == 1  # single-turn, not multi-turn
 
 
+def test_swe_run_trims_user_prompt_instead_of_dropping_it(mock_datasets):
+    mock_item = {
+        "instance_id": "test_id",
+        "problem_statement": "very long bug report " * 200,
+        "hints_text": "long hints " * 200,
+        "patch": GOLD_PATCH,
+    }
+    mock_ds = MagicMock()
+    mock_ds.__iter__.return_value = [mock_item]
+    mock_ds.__len__.return_value = 1
+    mock_datasets.return_value = mock_ds
+
+    task = SWEBenchTask()
+    items = task.get_dataset()
+
+    captured = {}
+
+    def llm_client(messages):
+        captured["messages"] = messages
+        return GOLD_PATCH
+
+    strategy = MagicMock(side_effect=lambda msgs, budget: msgs)
+
+    def tokenizer(text: str) -> int:
+        return len(text.split())
+
+    logger = MagicMock()
+    task.run(
+        item=items[0],
+        strategy=strategy,
+        llm_client=llm_client,
+        tokenizer_fn=tokenizer,
+        max_tokens=120,
+        logger=logger,
+    )
+
+    assert len(captured["messages"]) == 2
+    assert captured["messages"][1]["role"] == "user"
+    assert captured["messages"][1]["content"].startswith("Bug report:\n")
+    assert "very long bug report" in captured["messages"][1]["content"]
+
+
+def test_swe_extract_patch_discards_trailing_markdown_and_invalid_tail():
+    task = SWEBenchTask()
+    content = """diff --git a/src/foo.py b/src/foo.py
+index 123..456 100644
+--- a/src/foo.py
++++ b/src/foo.py
+@@ -10,7 +10,7 @@
+-    return x + 1
++    return x + 2
+```"""
+    patch = task._extract_patch(content)
+    assert patch.endswith("\n")
+    assert "```" not in patch
+    assert patch.startswith("diff --git")
+
+
+def test_swe_extract_patch_returns_empty_for_header_only_diff():
+    task = SWEBenchTask()
+    content = """diff --git a/src/foo.py b/src/foo.py
+index 123..456 100644
+--- a/src/foo.py
++++ b/src/foo.py
+"""
+    assert task._extract_patch(content) == ""
+
+
+def test_swe_extract_patch_rejects_mismatched_header_paths():
+    task = SWEBenchTask()
+    content = """diff --git a/src/foo.py b/src/foo.py
+index 123..456 100644
+--- a/src.bar.py
++++ b/src/foo.py
+@@ -1,1 +1,1 @@
+-x = 1
++x = 2
+"""
+    assert task._extract_patch(content) == ""
+
+
 def test_swe_grade_exact_match():
     task = SWEBenchTask()
     item = {"patch": GOLD_PATCH}
@@ -159,6 +251,21 @@ def test_longbench_chunking():
     small_msgs = task.format_message(small_item, budget=8192)
     assert len(small_msgs) == 3
     assert "Context:\n" in small_msgs[1]["content"]
+
+
+def test_longbench_chunking_respects_override():
+    task = LongBenchV2Task(context_chunk_tokens=100, context_char_per_token=1)
+    item = {
+        "context": "X" * 250,
+        "question": "What is X?",
+        "choice_A": "One",
+        "choice_B": "Two",
+        "choice_C": "Three",
+        "choice_D": "Four",
+        "answer": "A",
+    }
+    messages = task.format_message(item, budget=2048)
+    assert len(messages[1:-1]) == 3
 
 
 def test_longbench_natural_prompt_token_count():

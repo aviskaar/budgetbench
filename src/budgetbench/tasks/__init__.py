@@ -1,25 +1,33 @@
-from typing import Dict, Type
-from budgetbench.tasks.base import BaseTask
-from budgetbench.tasks.long import LongBenchV2Task
-from budgetbench.tasks.swe import SWEBenchTask
-from budgetbench.tasks.tau import TauBenchTask
-from budgetbench.tasks.memory import MemoryUpdateTask
-from budgetbench.tasks.longmem import LongMemEvalTask
+from importlib import import_module
+from typing import Dict, Tuple, Type
 
-_REGISTRY: Dict[str, Type[BaseTask]] = {
-    "long": LongBenchV2Task,
-    "swe": SWEBenchTask,
-    "tau": TauBenchTask,
-    "memory": MemoryUpdateTask,
-    "longmem": LongMemEvalTask,
+from budgetbench.tasks.base import BaseTask
+
+
+_REGISTRY: Dict[str, Tuple[str, str]] = {
+    "long": ("budgetbench.tasks.long", "LongBenchV2Task"),
+    "swe": ("budgetbench.tasks.swe", "SWEBenchTask"),
+    "tau": ("budgetbench.tasks.tau", "TauBenchTask"),
+    "memory": ("budgetbench.tasks.memory", "MemoryUpdateTask"),
+    "longmem": ("budgetbench.tasks.longmem", "LongMemEvalTask"),
 }
+
+
+def get_task_class(name: str) -> Type[BaseTask]:
+    if name not in _REGISTRY:
+        raise ValueError(f"Task '{name}' not found. Available tasks: {list(_REGISTRY.keys())}")
+
+    module_name, class_name = _REGISTRY[name]
+    module = import_module(module_name)
+    return getattr(module, class_name)
+
 
 def get_task(name: str, **kwargs) -> BaseTask:
     """
     Returns an instance of a task by name.
     """
-    if name not in _REGISTRY:
-        raise ValueError(f"Task '{name}' not found. Available tasks: {list(_REGISTRY.keys())}")
-    
-    task_class = _REGISTRY[name]
+    task_class = get_task_class(name)
     return task_class(**kwargs)
+
+
+__all__ = ["get_task", "get_task_class"]

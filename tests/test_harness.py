@@ -23,7 +23,7 @@ def test_run_evaluation_task_success():
     assert result == "mock response"
     strategy.assert_called_once()
     llm_client.assert_called_once()
-    logger.log_metrics.assert_called_once()
+    assert logger.log_metrics.call_count == 2
     
     # Check metrics logged — quality must NOT be here (runner logs it after grading)
     metrics = logger.log_metrics.call_args[0][0]
@@ -31,6 +31,16 @@ def test_run_evaluation_task_success():
     assert "used_budget" in metrics
     assert metrics["used_budget"] == 10
     assert metrics["violation_rate"] == 0.0
+    assert "processed_prompt_hash" in metrics
+    assert "processed_prompt_token_count" in metrics
+
+    audit_rows = [
+        c[0][0] for c in logger.log_metrics.call_args_list
+        if c[0][0].get("event") == "prompt_audit"
+    ]
+    assert len(audit_rows) == 1
+    assert audit_rows[0]["processed_prompt_messages"] == messages
+    assert audit_rows[0]["processed_prompt_within_budget"] is True
 
 def test_run_evaluation_task_retry_success():
     messages = [{"role": "user", "content": "hello"}]
@@ -66,6 +76,13 @@ def test_run_evaluation_task_retry_success():
     assert result == "mock response"
     assert strategy.call_count == 2
     assert logger.log_metrics.call_args[0][0]["violation_rate"] > 0
+    audit_rows = [
+        c[0][0] for c in logger.log_metrics.call_args_list
+        if c[0][0].get("event") == "prompt_audit"
+    ]
+    assert len(audit_rows) == 2
+    assert audit_rows[0]["processed_prompt_within_budget"] is False
+    assert audit_rows[1]["processed_prompt_within_budget"] is True
 
 def test_run_evaluation_task_max_retries_exceeded():
     messages = [{"role": "user", "content": "hello"}]

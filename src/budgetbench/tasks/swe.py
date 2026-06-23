@@ -46,9 +46,144 @@ class SWEBenchTask(BaseTask):
         # Fall back to finding "diff --git" and taking everything from there
         idx = content.find('diff --git')
         if idx != -1:
-            return content[idx:].strip()
+            return self._sanitize_patch(content[idx:].strip())
 
         return ""
+
+    def _sanitize_patch(self, patch: str) -> str:
+        """
+        Keep only complete diff sections with valid headers.
+
+        This avoids exporting markdown fences, truncated prose tails, or
+        half-finished diff fragments that the official SWE harness rejects
+        immediately as malformed patches.
+        """
+        patch = patch.replace("\r\n", "\n").strip()
+        if not patch.startswith("diff --git "):
+            return ""
+
+        lines = patch.splitlines()
+        sections: List[List[str]] = []
+        current: List[str] = []
+
+        for line in lines:
+            if line.startswith("```"):
+                break
+            if line.startswith("diff --git "):
+                if current:
+                    sections.append(current)
+                current = [line]
+            elif current:
+                current.append(line)
+        if current:
+            sections.append(current)
+
+        kept_sections: List[str] = []
+        seen_files = set()
+        for section in sections:
+            if len(section) < 3:
+                continue
+            diff_parts = section[0].split()
+            if len(diff_parts) < 4:
+                continue
+            diff_a = diff_parts[2]
+            diff_b = diff_parts[3]
+            header_start = 1
+            if section[1].startswith("index "):
+                header_start = 2
+            if len(section) <= header_start + 1:
+                continue
+            minus_line = section[header_start]
+            plus_line = section[header_start + 1]
+            if not minus_line.startswith("--- "):
+                continue
+            if not plus_line.startswith("+++ "):
+                continue
+            if minus_line.split(maxsplit=1)[1] != diff_a:
+                continue
+            if plus_line.split(maxsplit=1)[1] != diff_b:
+                continue
+            file_key = diff_b[2:] if diff_b.startswith("b/") else diff_b
+            if file_key in seen_files:
+                continue
+
+            last_safe_idx = header_start + 1
+            saw_hunk = False
+            for idx, line in enumerate(section[header_start + 2 :], start=header_start + 2):
+                if line.startswith("@@ " ) or line == "@@":
+                    saw_hunk = True
+                    last_safe_idx = idx
+                    continue
+                if not saw_hunk:
+                    # Allow metadata lines between file headers and first hunk.
+                    if line.startswith(("new file mode ", "deleted file mode ", "similarity index ", "rename from ", "rename to ")):
+                        last_safe_idx = idx
+                        continue
+                    continue
+                if (
+                    line.startswith((" ", "+", "-", "\\"))
+                    or line == ""
+                ):
+                    last_safe_idx = idx
+                    continue
+                # Stop at the first clearly invalid tail line.
+                break
+
+            trimmed = section[: last_safe_idx + 1]
+            if any(line.startswith("@@") for line in trimmed):
+                kept_sections.append("\n".join(trimmed).rstrip())
+                seen_files.add(file_key)
+
+        if not kept_sections:
+            return ""
+        return "\n".join(kept_sections).strip() + "\n"
+
+    def _fit_user_content(
+        self,
+        system_prompt: str,
+        user_content: str,
+        tokenizer_fn: Callable[[str], int],
+        max_tokens: int,
+    ) -> str:
+        system_tokens = tokenizer_fn(system_prompt)
+        if system_tokens >= max_tokens:
+            return ""
+
+        available = max_tokens - system_tokens
+        if tokenizer_fn(user_content) <= available:
+            return user_content
+
+        prefix = "Bug report:\n"
+        if user_content.startswith(prefix):
+            body = user_content[len(prefix):]
+            reserved = tokenizer_fn(prefix)
+            if reserved < available:
+                available_for_body = max(1, available - reserved)
+                lo, hi = 0, len(body)
+                best = ""
+                while lo <= hi:
+                    mid = (lo + hi) // 2
+                    candidate_body = body[:mid].rstrip()
+                    candidate = prefix + candidate_body
+                    if tokenizer_fn(candidate) <= available:
+                        best = candidate
+                        lo = mid + 1
+                    else:
+                        hi = mid - 1
+                if best:
+                    return best
+
+        lo, hi = 0, len(user_content)
+        best = ""
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            candidate = user_content[:mid].rstrip()
+            if tokenizer_fn(candidate) <= available:
+                best = candidate
+                lo = mid + 1
+            else:
+                hi = mid - 1
+        return best
 
     def _parse_patch(self, patch: str) -> Dict[str, List[str]]:
         """Return {filename: [changed_lines]} parsed from a unified diff."""
@@ -84,8 +219,16 @@ class SWEBenchTask(BaseTask):
             user_content += f"\n\nHints:\n{hints}"
         user_content += "\n\nProduce the patch now."
 
+        system_prompt = self._get_system_prompt()
+        user_content = self._fit_user_content(
+            system_prompt=system_prompt,
+            user_content=user_content,
+            tokenizer_fn=tokenizer_fn,
+            max_tokens=max_tokens,
+        )
+
         messages: List[OpenAIMessage] = [
-            {"role": "system", "content": self._get_system_prompt()},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_content},
         ]
 

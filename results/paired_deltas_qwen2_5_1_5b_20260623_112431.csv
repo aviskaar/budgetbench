@@ -1,0 +1,10 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen2.5:1.5b,long,full_context,2048,full_context,32768,10,0.0,0.4,-0.4,-0.7,-0.1,12.209558010101318,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,full_context,8192,full_context,32768,10,0.0,0.4,-0.4,-0.7,-0.1,11.69866156578064,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,full_context,32768,full_context,32768,10,0.4,0.4,0.0,0.0,0.0,15.841562986373901,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,rag,2048,full_context,32768,10,0.4,0.4,0.0,-0.3,0.3,16.27959442138672,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,rag,8192,full_context,32768,10,0.5,0.4,0.1,0.0,0.3,37.03318107128143,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,rag,32768,full_context,32768,10,0.4,0.4,0.0,0.0,0.0,16.129486441612244,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,truncation,2048,full_context,32768,10,0.5,0.4,0.1,0.0,0.3,14.475418090820312,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,truncation,8192,full_context,32768,10,0.5,0.4,0.1,0.0,0.3,32.749157428741455,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok
+qwen2.5:1.5b,long,truncation,32768,full_context,32768,10,0.4,0.4,0.0,0.0,0.0,74.08523845672607,15.841562986373901,,,logs/full_study/mustfix_long10_qwen15b_tok

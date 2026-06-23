@@ -30,7 +30,7 @@
 \newcommand{\RunId}{\texttt{final\_qwen25\_15b\_89items}}
 \newcommand{\OllamaEndpoint}{\url{http://localhost:11434/v1/chat/completions}}
 
-\title{\BudgetBench: A Budget-Tiered Protocol for Memory Strategy Evaluation in Local Large Language Model Agents}
+\title{\BudgetBench: A Budget-Tiered Protocol and Pilot Harness for Memory Strategy Evaluation in Local Large Language Model Agents}
 
 \author{%
   Aditya Karnam Gururaj Rao\\
@@ -69,7 +69,7 @@ expanded artifact also includes a 20-item LongBench v2 transfer check, a
 LongMemEval oracle-file pilot with an approximate deterministic scorer, and a
 six-item synthetic image question answering probe for \texttt{qwen3-vl:2b}.
 These results are pilot evidence, not final strategy rankings.  The
-contribution is a standardized active-budget protocol for local agents with
+contribution is a standardized active-budget protocol and pilot harness for local agents with
 swappable strategies, deterministic task graders, operational metrics,
 implementation details, limitations, a reproducibility checklist, and planned
 extensions required for a larger community benchmark.
@@ -151,7 +151,7 @@ Fourth, it adds a filtered small-model transfer check showing how the same
 protocol is compatible with additional local text and vision-capable model
 tags while keeping uninformative runs visible.  Fifth, it provides
 reproducibility requirements and planned extensions for scaling
-\BudgetBench{} from a local pilot to a public benchmark.
+\BudgetBench{} from a local pilot artifact to a public benchmark.
 
 \section{Protocol Definition}
 
@@ -211,7 +211,14 @@ formalizes context management under a budget and evaluates learned compression
 policies for long-horizon search agents~\citep{wu2026contextbudget}.  BudgetMem
 also treats cost as a controllable axis, but routes among memory-module budget
 tiers rather than exposing a raw per-call token budget and third-party strategy
-contract~\citep{zhang2026budgetmem}.  EvoMemBench benchmarks agent memory from
+contract~\citep{zhang2026budgetmem}.  MemoryArena shifts the focus toward
+multi-session memory-agent-environment loops where memorization and action are
+tightly coupled~\citep{he2026memoryarena}.  That benchmark is closer to the
+long-horizon agent setting we eventually want, but it does not expose a general
+fixed-token-tier protocol for third-party strategy plug-ins.  LongMemEval-V2
+pushes memory evaluation toward environment experience and very long
+multimodal trajectories, again without the present per-call budget sweep
+framing~\citep{wu2026longmemevalv2}.  EvoMemBench benchmarks agent memory from
 self-evolving in-episode and cross-episode perspectives, comparing many memory
 methods with long-context baselines, but it is not primarily a fixed
 active-budget harness for local deployments~\citep{wang2026evomembench}.
@@ -240,6 +247,8 @@ ContextBudget~\citep{wu2026contextbudget} & Learned context-management method & 
 BudgetMem~\citep{zhang2026budgetmem} & Query-aware memory-tier router & Tiered modules & No & Limited & Accuracy-cost frontiers \\
 EvoMemBench~\citep{wang2026evomembench} & Agent-memory benchmark & No fixed tier protocol & Method comparisons & No & Memory-task quality by category \\
 MemoryAgent\allowbreak Bench~\citep{hu2025memoryagentbench} & Incremental memory benchmark & No fixed tier protocol & Method comparisons & No & Memory competency scores \\
+MemoryArena~\citep{he2026memoryarena} & Multi-session memory-agent loop benchmark & No fixed tier protocol & Method comparisons & Partial & Session-level task success \\
+LongMemEval-V2~\citep{wu2026longmemevalv2} & Agent-environment memory benchmark & No fixed tier protocol & Method comparisons & Partial & Accuracy and query latency \\
 Engram~\citep{wang2026engram} & Bi-temporal memory engine & Lean vs full context & No & Partial & Accuracy, tokens, errors, reproducible logs \\
 RULER~\citep{hsieh2024ruler} & Long-context model capacity & Length sweep & No & No & Task accuracy by sequence length \\
 HELMET~\citep{yen2024helmet} & Long-context model evaluation & Length sweep & No & No & Application-category quality \\
@@ -278,7 +287,8 @@ on task families where memory strategies are expected to matter.
 SWE-bench grounds coding-agent evaluation in real repository issues and
 patches~\citep{jimenez2023swebench}.  SWE-bench Verified further filters the
 benchmark to a human-validated subset of 500 instances.  In a full
-\BudgetBench{} study, official containerized SWE-bench grading should be used.
+\BudgetBench{} benchmark study, official containerized SWE-bench grading should
+be used.
 The current pilot uses the public task data but replaces the official oracle
 with deterministic patch-similarity scoring so that the budget matrix can be
 run quickly on a single workstation.
@@ -308,9 +318,9 @@ explicit management of context and archival stores~\citep{packer2023memgpt}.
 Mem0 presents a production-oriented memory layer that extracts, consolidates,
 and retrieves salient conversational facts with substantial latency and token
 savings relative to full-context approaches~\citep{chhikara2025mem0}.  These
-systems are commonly evaluated on chat-memory substrates such as LongMemEval,
-which tests long-term interactive memory over timestamped conversation
-histories~\citep{wu2024longmemeval}.  Together, these systems motivate richer
+systems are commonly evaluated on chat-memory substrates such as LongMemEval
+and LoCoMo, which test long-term interactive memory over timestamped
+conversation histories or very long conversational traces~\citep{wu2024longmemeval,maharana2024locomo}.  Together, these systems motivate richer
 strategy families than the three baselines used in the
 pilot.  LLMLingua-2 represents a complementary compression family: rather than
 choosing which chunks to include, it compresses prompt content toward a target
@@ -380,7 +390,10 @@ For each item, the runner resets the strategy, applies it to the formatted
 messages, counts tokens, and raises a budget exception if the processed prompt
 exceeds the active tier.  The runner retries budget processing up to a fixed
 limit.  If all retries fail, it logs a failed metric row with violation rate
-1.0 for that item.  This design makes budget failures visible in the result
+1.0 for that item.  The current runner can be configured with an explicit
+tokenizer identifier and now logs prompt-audit artifacts for each processed
+prompt: tokenizer metadata, a prompt hash, the post-strategy prompt payload,
+and the counted input tokens before enforcement.  This design makes budget failures visible in the result
 tables instead of hiding them as missing predictions.
 
 \subsection{Logging and Analysis}
@@ -394,7 +407,10 @@ older boolean \texttt{violation} fields and the current runner's numeric
 table that reports all-zero violations while raw retry failures exist would
 understate one of the key outcomes of budget-tiered evaluation.  Newer logs
 also include item-level quality rows, allowing the analyzer to emit bootstrap
-quality intervals without changing the raw logging format.
+quality intervals without changing the raw logging format.  The execution
+driver additionally supports repeated cell runs and shuffled cell order so
+latency and stability measurements can be gathered without conflating them
+with a fixed warmup schedule.
 
 \subsection{Multimodal Boundary}
 
@@ -469,7 +485,7 @@ it is deterministic and natively multiple-choice.
 
 \subsection{Baselines}
 
-The pilot evaluates three baselines.  Truncation keeps the system prompt and
+The main 89-item pilot evaluates three baselines.  Truncation keeps the system prompt and
 the newest messages that fit.  Summary-buffer compression summarizes evicted
 context with the same local model and prepends that summary to the retained
 messages.  RAG embeds intermediate context messages with a sentence-transformer
@@ -517,6 +533,25 @@ appending an 8K \texttt{lean\_retrieval} row, the aggregate CSV is
 \path{results/full_study_qwen2_5_1_5b_20260618_155102.csv}, and the paired
 comparison table is
 \path{results/paired_deltas_qwen2_5_1_5b_20260618_155102.csv}.
+After the tokenizer-validity audit, we also reran a compact hardened slice on
+10 LongBench v2 items with the explicit
+\texttt{Qwen/Qwen2.5-1.5B-Instruct} tokenizer, shuffled cell order, and two
+repeats per cell.  Those raw logs are in
+\path{logs/full_study/mustfix_long10_qwen15b_tok/}; the repeat-aggregated CSV
+and paired-delta CSV are
+\path{results/full_study_qwen2_5_1_5b_20260623_112431.csv} and
+\path{results/paired_deltas_qwen2_5_1_5b_20260623_112431.csv}.  That hardened
+slice is too small to replace the 50-item exploratory table below, but it does
+remove the tokenizer-proxy ambiguity for the current harness path and adds
+repeated, order-randomized runtime measurements.
+We also ran two compact RAG-only ablations on the same 10-item slice: one swaps
+the default \texttt{all-MiniLM-L6-v2} retrieval embeddings for
+\texttt{sentence-transformers/all-mpnet-base-v2}, and one forces 256-token
+LongBench context chunks instead of the default adaptive chunking rule.  The
+comparison artifact is \path{results/ablation_rag_long10_20260623.csv}.  On
+this slice, the forced 256-token chunks improve the 8K RAG mean accuracy from
+0.50 to 0.60, while the heavier MPNet retrieval model does not improve
+accuracy and materially increases mean duration at every tier.
 
 \begin{table}[t]
 \centering
@@ -571,10 +606,17 @@ estimates and should not be used as a strategy-speed claim.  Full context is als
 categorically infeasible at 2K and 8K, whereas truncation and RAG produce
 budget-compliant prompts at those tiers.  The initial lean retrieval baseline
 succeeds operationally but does not improve over simple RAG on this slice.
-This supports the protocol claim that active-budget evaluation surfaces a
+This supports the core artifact motivation that active-budget evaluation
+surfaces a
 quality-compliance tradeoff that ordinary full-context evaluation
 hides, including negative baseline results that should be reported rather than
-silently discarded.
+silently discarded.  On the newer 10-item hardened slice, full context at 32K
+averages 0.40 exact-match accuracy, truncation at 2K and 8K averages 0.50,
+and RAG at 8K averages 0.50.  The paired deltas against full context at 32K
+are +0.10 with bootstrap CIs of [0.00, +0.30] for truncation at 2K,
+truncation at 8K, and RAG at 8K.  Those values should still be treated as
+artifact-hardening evidence rather than benchmark ranking claims because the
+slice is only 10 items wide.
 
 \subsection{Synthetic Memory-Agent Pilot}
 
@@ -943,10 +985,16 @@ budget enforcer, Qwen recounting would mark 14/89, 35/89, 53/89, 65/89, and
 50/89 prompts over budget at 2K, 4K, 8K, 16K, and 32K, respectively.  Thus the
 current violation-rate rows should be read as compliance with the benchmark
 tokenizer approximation, not compliance with the served model tokenizer.  This
-is not a full strategy-matrix recount because the current logs do not store
-strategy-processed prompts for retrieval or summary contents.  Final benchmark
-runs should log model-specific token counts, tokenizer identifiers, prompt
-hashes, and post-strategy prompt artifacts for auditability.  The
+is not a full strategy-matrix recount because the historical pilot logs do not store
+strategy-processed prompts for retrieval or summary contents.  The current
+runner has since been upgraded to log tokenizer identifiers, prompt hashes,
+post-strategy prompt artifacts, and explicit token counts, but the claim-bearing
+tables in this paper still come from the earlier pilot runs and therefore
+retain the tokenizer-validity limitation above.  A newer 10-item LongBench
+rerun in \path{logs/full_study/mustfix_long10_qwen15b_tok/} demonstrates the
+corrected harness path with explicit Qwen tokenization and repeated
+order-randomized trials, but it is still too small to replace the older
+exploratory matrix.  The
 summary strategy uses the same small model for compression; a stronger
 summarizer could change the results.  The RAG strategy uses generic embeddings
 and simple message-level retrieval rather than task-optimized chunking.
@@ -984,7 +1032,7 @@ containment-scored deltas should not be treated as strategy wins.  Future
 studies should use official task graders and report uncertainty.
 
 \paragraph{Multimodal validity.}
-The primary benchmark run does not contain image, video, chart, or
+The primary claim-bearing pilot run does not contain image, video, chart, or
 document-page inputs.  The added image QA probe verifies the native
 image-plus-text path on generated colored shapes, but it is too small and too
 simple to support claims about real multimodal memory.  Therefore, this paper
@@ -1000,7 +1048,8 @@ dependency is installed, because tool-use chains stress memory in ways that
 single-call QA does not.  Third, it should add richer strategy families:
 LLMLingua-2 compression, Mem0, Letta/MemGPT-style hierarchical memory, and
 hybrid retrieval-summary policies.  Fourth, it should report the analyzer's
-confidence intervals in every main quality table and add repeated trials so strategy crossovers can be
+confidence intervals in every main quality table and use the now-supported
+repeated-cell execution path so strategy crossovers can be
 distinguished from sampling noise.  Fifth, it should add multimodal tasks with
 native visual inputs and multimodal memory policies.  Examples include
 document-page QA where the active
@@ -1062,6 +1111,9 @@ Random seed & 42 \\
 Primary raw logs & \path{logs/full_study/final_qwen25_15b_89items/summary.jsonl} \\
 Primary aggregate CSV & \path{results/full_study_qwen2_5_1_5b_89items.csv} \\
 Full-context LongBench slice & \path{logs/full_study/feasibility_long50_fit32k/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_155102.csv} \\
+Tokenizer-aligned LongBench hardened slice & \path{logs/full_study/mustfix_long10_qwen15b_tok/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260623_112431.csv}; paired \path{results/paired_deltas_qwen2_5_1_5b_20260623_112431.csv} \\
+RAG ablation slice & \path{logs/full_study/ablate_long10_rag_mpnet/} and \path{logs/full_study/ablate_long10_rag_chunk256/}; comparison \path{results/ablation_rag_long10_20260623.csv} \\
+Official SWE harness rerun & \path{qwen2.5:1.5b.budgetbench_official2fix_20260623.json}; per-instance logs in \path{logs/run_evaluation/budgetbench_official2fix_20260623/} \\
 Synthetic memory pilot & \path{logs/full_study/memory_synthetic_qwen15b_30_categories_live/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_203210.csv}; categories \path{results/grouped_memory_category_qwen2_5_1_5b_20260618_203210.csv} \\
 LongMemEval oracle pilot & \path{logs/full_study/longmem_oracle_qwen15b_50_predictions/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_213603.csv}; paired \path{results/paired_deltas_qwen2_5_1_5b_20260618_213603.csv}; judge inputs \path{results/longmem_judge_inputs_qwen15b_50_predictions.jsonl} \\
 Qwen3.6-35B LongMemEval probe & \path{logs/full_study/longmem_oracle_qwen36_35b_probe5/}; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260618_212102.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260618_212102.csv} \\
@@ -1097,7 +1149,8 @@ Prediction format & Text response from which the first \texttt{diff --git} block
 Grader & Deterministic patch-similarity proxy using file recall and changed-line overlap. \\
 Strength & Low-cost, deterministic, and fast enough for repeated budget sweeps. \\
 Limitation & Does not execute tests; cannot be interpreted as official SWE-bench resolution. \\
-Scaling path & Replace proxy with official SWE-bench containerized oracle; stratify by repository, patch size, and issue type. \\
+Follow-up artifact & A focused official harness rerun is included in \path{qwen2.5:1.5b.budgetbench_official2fix_20260623.json}; one invalid patch is filtered before official evaluation, and the remaining two submitted patches still fail official patch application. \\
+Scaling path & Replace the proxy table with larger official SWE-bench reruns and stratify by repository, patch size, and issue type. \\
 \bottomrule
 \end{longtable}
 
@@ -1279,6 +1332,25 @@ defines a protocol and adapters for existing datasets.  The logs generated by
 the pilot are reproducibility artifacts for this paper.  Future benchmark
 submissions should preserve raw logs, model hashes, dependency versions, and
 hardware metadata so that budget-compliance failures can be audited.
+The current repository now also includes official-format export wrappers for
+both LongMemEval hypotheses and SWE-bench prediction JSONL files, but only the
+LongMemEval path can be exercised directly on the existing prediction-bearing
+pilot logs.  The older SWE pilot logs in this paper do not persist model patch
+outputs, so official SWE export requires a rerun under the current logger.
+That rerun path has now been executed through the official SWE-bench harness on
+a fresh three-item slice:
+\path{scripts/export_swebench_predictions.py} exports valid official-format
+prediction bundles from current logs, and the official SWE-bench harness
+wrapper runs once the upstream \texttt{swebench} package is installed.  The
+resulting official report is
+\path{qwen2.5:1.5b.budgetbench_official2fix_20260623.json}, with per-instance
+logs under \path{logs/run_evaluation/budgetbench_official2fix_20260623/}.  A
+first three-prediction smoke rerun established the harness path, after which a
+second focused rerun filtered out one structurally invalid patch before
+submission.  The remaining two submitted predictions still failed during
+official patch application, so this should be read as completed official
+evaluation infrastructure plus a negative patch quality result, not as SWE task
+success.  LongMemEval official judging is deferred in this revision.
 
 \subsection{External Judge Bridge Smoke Tests}
 \label{app:judge_bridge}
@@ -1628,6 +1700,64 @@ python scripts/analyze_results.py \
   --bootstrap-samples 2000 \
   --paired-baseline-strategy full_context \
   --paired-baseline-budget 32768
+\end{verbatim}
+
+The tokenizer-aligned LongBench hardening rerun was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id mustfix_long10_qwen15b_tok \
+  --model qwen2.5:1.5b \
+  --tokenizer Qwen/Qwen2.5-1.5B-Instruct \
+  --tasks long \
+  --strategies truncation rag full_context \
+  --budgets 2048 8192 32768 \
+  --limit-tasks 10 \
+  --max-natural-tokens 32768 \
+  --repeat-cells 2 \
+  --shuffle-cells
+\end{verbatim}
+
+Its repeat-aware analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/mustfix_long10_qwen15b_tok \
+  --model qwen2.5:1.5b \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 32768 \
+  --aggregate-repeats
+\end{verbatim}
+
+The compact RAG ablations were:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id ablate_long10_rag_mpnet \
+  --model qwen2.5:1.5b \
+  --tokenizer Qwen/Qwen2.5-1.5B-Instruct \
+  --tasks long \
+  --strategies rag \
+  --budgets 2048 8192 32768 \
+  --limit-tasks 10 \
+  --max-natural-tokens 32768 \
+  --repeat-cells 2 \
+  --shuffle-cells \
+  --retrieval-embedding-model sentence-transformers/all-mpnet-base-v2
+
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id ablate_long10_rag_chunk256 \
+  --model qwen2.5:1.5b \
+  --tokenizer Qwen/Qwen2.5-1.5B-Instruct \
+  --tasks long \
+  --strategies rag \
+  --budgets 2048 8192 32768 \
+  --limit-tasks 10 \
+  --max-natural-tokens 32768 \
+  --repeat-cells 2 \
+  --shuffle-cells \
+  --longbench-chunk-tokens 256
 \end{verbatim}
 
 The Gemma transfer check was:

@@ -1,10 +1,25 @@
 import time
+import hashlib
+import json
 from typing import List, Callable, Any, Optional
 from budgetbench.utils.types import OpenAIMessage
 from budgetbench.core.strategy import MemoryStrategy
 from budgetbench.core.budget import enforce_budget
 from budgetbench.core.exceptions import BudgetExceededError
 from budgetbench.evaluation.metrics import MetricsLogger
+
+
+def _tokenizer_metadata(tokenizer_fn: Callable[[str], int]) -> dict:
+    metadata = getattr(tokenizer_fn, "metadata", None)
+    if callable(metadata):
+        return dict(metadata())
+    return {}
+
+
+def _prompt_hash(messages: List[OpenAIMessage]) -> str:
+    payload = json.dumps(messages, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
 
 def run_evaluation_task(
     messages: List[OpenAIMessage],
@@ -23,11 +38,30 @@ def run_evaluation_task(
     start_time = time.time()
     last_error = None
     peak_budget = 0
+    last_prompt_hash = None
+    last_token_count = None
+    tokenizer_metadata = _tokenizer_metadata(tokenizer_fn)
     
     for attempt in range(max_retries):
         try:
             # 1. Apply memory strategy
             processed_messages = strategy(messages, max_tokens)
+            prompt_hash = _prompt_hash(processed_messages)
+            token_count = sum(tokenizer_fn(m.get("content", "")) for m in processed_messages)
+            last_prompt_hash = prompt_hash
+            last_token_count = token_count
+            logger.log_metrics(
+                {
+                    "event": "prompt_audit",
+                    "attempt": attempt,
+                    "budget": max_tokens,
+                    "processed_prompt_hash": prompt_hash,
+                    "processed_prompt_messages": processed_messages,
+                    "processed_prompt_token_count": token_count,
+                    "processed_prompt_within_budget": token_count <= max_tokens,
+                    **tokenizer_metadata,
+                }
+            )
             
             # 2. Enforce budget
             token_count = enforce_budget(processed_messages, tokenizer_fn, max_tokens)
@@ -44,7 +78,10 @@ def run_evaluation_task(
                 "violation_rate": violations / (attempt + 1),
                 "tokens_per_task": token_count,
                 "duration": duration,
-                "retries": attempt
+                "retries": attempt,
+                "processed_prompt_hash": prompt_hash,
+                "processed_prompt_token_count": token_count,
+                **tokenizer_metadata,
             }
             logger.log_metrics(metrics)
             
@@ -74,7 +111,10 @@ def run_evaluation_task(
         "tokens_per_task": 0,
         "duration": duration,
         "retries": max_retries,
-        "status": "failed"
+        "status": "failed",
+        "processed_prompt_hash": last_prompt_hash,
+        "processed_prompt_token_count": last_token_count,
+        **tokenizer_metadata,
     }
     logger.log_metrics(metrics)
     

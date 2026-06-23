@@ -1,0 +1,10 @@
+run_label,budget,accuracy_mean,accuracy_std,duration_mean_sec,duration_std_sec,repeat_count,retrieval_embedding_model,longbench_chunk_tokens,tokenizer_id
+baseline_default,2048,0.4,0.0,16.27959442138672,2.2633700587320313,2,all-MiniLM-L6-v2,,Qwen/Qwen2.5-1.5B-Instruct
+baseline_default,8192,0.5,0.0,37.03318107128143,1.5759898571099167,2,all-MiniLM-L6-v2,,Qwen/Qwen2.5-1.5B-Instruct
+baseline_default,32768,0.4,0.0,16.129486441612244,0.031062395939922945,2,all-MiniLM-L6-v2,,Qwen/Qwen2.5-1.5B-Instruct
+embed_mpnet,2048,0.3,0.0,84.73545157909393,83.08539694543676,2,sentence-transformers/all-mpnet-base-v2,,Qwen/Qwen2.5-1.5B-Instruct
+embed_mpnet,8192,0.5,0.0,88.41087293624878,28.296914627665593,2,sentence-transformers/all-mpnet-base-v2,,Qwen/Qwen2.5-1.5B-Instruct
+embed_mpnet,32768,0.4,0.0,153.80598402023315,26.666327237232483,2,sentence-transformers/all-mpnet-base-v2,,Qwen/Qwen2.5-1.5B-Instruct
+chunk_256,2048,0.4,0.0,66.94692599773407,61.92012020856862,2,all-MiniLM-L6-v2,256,Qwen/Qwen2.5-1.5B-Instruct
+chunk_256,8192,0.6,0.0,38.13263785839081,24.85441179762574,2,all-MiniLM-L6-v2,256,Qwen/Qwen2.5-1.5B-Instruct
+chunk_256,32768,0.4,0.0,158.0222568511963,13.76071372537791,2,all-MiniLM-L6-v2,256,Qwen/Qwen2.5-1.5B-Instruct

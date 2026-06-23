@@ -1,0 +1,4 @@
+model,task,strategy,budget,accuracy,violation_rate,mean_used_budget,max_peak_budget,quality_ci_low,quality_ci_high,quality_n,duration_sec,duration_sec_std,accuracy_std,repeat_count
+qwen2.5:1.5b,long,rag,2048,0.3,,,,0.0,0.6,10,84.73545157909393,83.08539694543676,0.0,2
+qwen2.5:1.5b,long,rag,8192,0.5,,,,0.2,0.8,10,88.41087293624878,28.296914627665593,0.0,2
+qwen2.5:1.5b,long,rag,32768,0.4,,,,0.1,0.7,10,153.80598402023315,26.666327237232483,0.0,2

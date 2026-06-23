@@ -1,4 +1,3 @@
-import datasets
 import re
 from typing import List, Callable, Any, Dict, Optional
 from budgetbench.utils.types import OpenAIMessage
@@ -10,14 +9,23 @@ from budgetbench.tasks.base import BaseTask
 class LongBenchV2Task(BaseTask):
     NATURAL_PROMPT_BUDGET = 32768
 
-    def __init__(self, dataset_name: str = "THUDM/LongBench-v2", split: str = "train"):
+    def __init__(
+        self,
+        dataset_name: str = "THUDM/LongBench-v2",
+        split: str = "train",
+        context_chunk_tokens: Optional[int] = None,
+        context_char_per_token: int = 4,
+    ):
         self.dataset_name = dataset_name
         self.split = split
+        self.context_chunk_tokens = context_chunk_tokens
+        self.context_char_per_token = context_char_per_token
         self._dataset = None
 
     @property
     def dataset(self):
         if self._dataset is None:
+            import datasets
             self._dataset = datasets.load_dataset(self.dataset_name, split=self.split)
         return self._dataset
     
@@ -49,8 +57,8 @@ class LongBenchV2Task(BaseTask):
         system_prompt = "You are a helpful assistant. Answer the following multiple choice question based on the provided context. Respond only with the letter of the correct answer (A, B, C, or D)."
         question_msg: OpenAIMessage = {"role": "user", "content": f"Question: {question}{choices_text}"}
 
-        chunk_size = min(budget // 4, 512)  # tokens
-        chunk_chars = chunk_size * 4  # chars (4-char/token heuristic)
+        chunk_size = self.context_chunk_tokens or min(budget // 4, 512)  # tokens
+        chunk_chars = chunk_size * self.context_char_per_token
 
         if len(context) <= chunk_chars:
             context_messages: List[OpenAIMessage] = [

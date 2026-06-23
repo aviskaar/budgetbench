@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import types
 
 import pytest
 
@@ -9,6 +10,7 @@ from scripts.run_pilot import (
     BUDGET_TIERS,
     DEFAULT_TASKS_CONFIG,
     FULL_STUDY_BUDGET_TIERS,
+    build_task_kwargs,
     build_strategies,
     get_tokenizer_fn,
     load_completed_combinations,
@@ -50,6 +52,9 @@ def test_resolve_budget_tiers_rejects_nonpositive_values():
 def test_default_tokenizer_counts_special_marker_as_text():
     tokenizer = get_tokenizer_fn()
     assert tokenizer("literal <|endoftext|> marker") > 0
+    metadata = tokenizer.metadata()
+    assert metadata["tokenizer_id"]
+    assert "tokenizer_backend" in metadata
 
 
 def test_full_study_default_tasks_cover_requirements():
@@ -78,9 +83,9 @@ def test_resume_skip(tmp_path):
     summary_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
 
     completed = load_completed_combinations(str(summary_file))
-    assert ("swe", "truncation", 2048) in completed
-    assert ("long", "rag", 8192) in completed
-    assert ("swe", "rag", 4096) not in completed
+    assert ("swe", "truncation", 2048, 0) in completed
+    assert ("long", "rag", 8192, 0) in completed
+    assert ("swe", "rag", 4096, 0) not in completed
 
 
 def test_resume_malformed_line(tmp_path):
@@ -90,7 +95,7 @@ def test_resume_malformed_line(tmp_path):
     summary_file.write_text(json.dumps(valid_row) + "\nnot-valid-json\n")
 
     completed = load_completed_combinations(str(summary_file))
-    assert ("swe", "summary", 4096) in completed
+    assert ("swe", "summary", 4096, 0) in completed
 
 
 def test_resume_missing_file(tmp_path):
@@ -103,7 +108,10 @@ def test_summary_schema():
     """Summary rows written by the runner include the 'model' field."""
     required_keys = {
         "timestamp", "model", "task", "strategy", "budget",
-        "accuracy", "total", "success", "duration_sec",
+        "accuracy", "total", "success", "duration_sec", "tokenizer_id",
+        "tokenizer_backend", "tokenizer_source", "tokenizer_is_approximate",
+        "repeat_index", "combo_log_file", "retrieval_embedding_model",
+        "longbench_chunk_tokens", "longbench_char_per_token",
     }
     summary = {
         "timestamp": "20260508_120000",
@@ -115,6 +123,15 @@ def test_summary_schema():
         "total": 20,
         "success": 0,
         "duration_sec": 120.0,
+        "tokenizer_id": "cl100k_base",
+        "tokenizer_backend": "tiktoken",
+        "tokenizer_source": "fallback_tiktoken",
+        "tokenizer_is_approximate": True,
+        "repeat_index": 0,
+        "combo_log_file": "logs/full_study/example/swe_truncation_2048.jsonl",
+        "retrieval_embedding_model": "all-MiniLM-L6-v2",
+        "longbench_chunk_tokens": None,
+        "longbench_char_per_token": 4,
     }
     assert required_keys.issubset(summary.keys()), (
         f"Missing keys: {required_keys - summary.keys()}"
@@ -122,21 +139,37 @@ def test_summary_schema():
 
 
 def test_build_strategies_exposes_full_context():
-    strategies = build_strategies(llm_client=lambda messages: "ok", selected_names=["full_context"])
+    strategies = build_strategies(
+        llm_client=lambda messages: "ok",
+        tokenizer_fn=get_tokenizer_fn(),
+        retrieval_model_name="all-MiniLM-L6-v2",
+        selected_names=["full_context"],
+    )
     assert list(strategies) == ["full_context"]
 
 
 def test_build_strategies_exposes_lean_retrieval(monkeypatch):
     class DummyLeanRetrievalStrategy:
-        pass
+        def __init__(self, *args, **kwargs):
+            pass
 
-    monkeypatch.setattr(
-        "scripts.run_pilot.LeanRetrievalStrategy",
-        DummyLeanRetrievalStrategy,
-    )
+    fake_module = types.ModuleType("budgetbench.strategies.lean_retrieval")
+    fake_module.LeanRetrievalStrategy = DummyLeanRetrievalStrategy
+    monkeypatch.setitem(sys.modules, "budgetbench.strategies.lean_retrieval", fake_module)
     strategies = build_strategies(
         llm_client=lambda messages: "ok",
+        tokenizer_fn=get_tokenizer_fn(),
+        retrieval_model_name="all-MiniLM-L6-v2",
         selected_names=["lean_retrieval"],
     )
     assert list(strategies) == ["lean_retrieval"]
     assert isinstance(strategies["lean_retrieval"], DummyLeanRetrievalStrategy)
+
+
+def test_build_task_kwargs_for_longbench_ablation():
+    class Args:
+        longbench_chunk_tokens = 256
+        longbench_char_per_token = 5
+
+    kwargs = build_task_kwargs(Args())
+    assert kwargs == {"long": {"context_chunk_tokens": 256, "context_char_per_token": 5}}

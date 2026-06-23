@@ -1,7 +1,7 @@
 [project]
 name = "budgetbench"
 version = "0.1.0"
-description = "A standardized community benchmark for local LLM agents to evaluate memory strategies across fixed active-context-budget tiers"
+description = "A pilot evaluation protocol and harness for comparing local-LLM memory strategies under fixed active-context budgets"
 requires-python = ">=3.10"
 dependencies = [
     "chromadb>=0.5.0",

@@ -1,6 +1,7 @@
-from typing import List, Callable
+from typing import Callable, List
 from budgetbench.utils.types import OpenAIMessage
 from budgetbench.core.exceptions import BudgetExceededError
+
 
 def enforce_budget(messages: List[OpenAIMessage], tokenizer_fn: Callable[[str], int], max_tokens: int) -> int:
     """

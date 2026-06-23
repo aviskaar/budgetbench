@@ -10,15 +10,8 @@ from typing import List, Dict, Any, Optional
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 import requests
+from budgetbench.core.tokenizer import build_token_counter
 from budgetbench.tasks import get_task
-from budgetbench.strategies import (
-    TruncationStrategy,
-    FullContextStrategy,
-    SummaryBufferStrategy,
-    RAGStrategy,
-    LeanRetrievalStrategy,
-    CheckpointContextStrategy,
-)
 from budgetbench.evaluation.runner import TaskRunner
 from budgetbench.evaluation.metrics import MetricsLogger
 from budgetbench.utils.types import OpenAIMessage
@@ -55,14 +48,8 @@ def resolve_budget_tiers(
     return budgets
 
 
-def get_tokenizer_fn():
-    try:
-        import tiktoken
-        enc = tiktoken.get_encoding("cl100k_base")
-        return lambda x: len(enc.encode(x, disallowed_special=()))
-    except ImportError:
-        # Fallback to simple 4-char-per-token approximation
-        return lambda x: len(x) // 4
+def get_tokenizer_fn(model: Optional[str] = None, tokenizer_name: Optional[str] = None):
+    return build_token_counter(model_name=model, tokenizer_name=tokenizer_name)
 
 
 def get_llm_client(
@@ -99,7 +86,7 @@ def get_llm_client(
 
 
 def load_completed_combinations(summary_file: str) -> set:
-    """Return set of (task, strategy, budget) tuples already logged in summary_file."""
+    """Return set of (task, strategy, budget, repeat_index) tuples already logged in summary_file."""
     completed = set()
     if not os.path.exists(summary_file):
         return completed
@@ -107,14 +94,19 @@ def load_completed_combinations(summary_file: str) -> set:
         for line in f:
             try:
                 row = json.loads(line)
-                key = (row["task"], row["strategy"], row["budget"])
+                key = (row["task"], row["strategy"], row["budget"], int(row.get("repeat_index", 0)))
                 completed.add(key)
             except (json.JSONDecodeError, KeyError):
                 pass
     return completed
 
 
-def build_strategies(llm_client, selected_names: Optional[List[str]] = None) -> Dict[str, Any]:
+def build_strategies(
+    llm_client,
+    tokenizer_fn,
+    retrieval_model_name: str,
+    selected_names: Optional[List[str]] = None,
+) -> Dict[str, Any]:
     """
     Build all strategy instances.  Strategies that depend on optional
     third-party packages (mem0, llmlingua, letta) are skipped gracefully
@@ -124,52 +116,82 @@ def build_strategies(llm_client, selected_names: Optional[List[str]] = None) -> 
     strategies: Dict[str, Any] = {}
 
     if requested is None or "truncation" in requested:
-        strategies["truncation"] = TruncationStrategy()
+        from budgetbench.strategies.truncation import TruncationStrategy
+        strategies["truncation"] = TruncationStrategy(tokenizer_fn=tokenizer_fn)
     if requested is None or "full_context" in requested:
+        from budgetbench.strategies.full_context import FullContextStrategy
         strategies["full_context"] = FullContextStrategy()
     if requested is None or "summary" in requested:
-        strategies["summary"] = SummaryBufferStrategy(llm_client=llm_client)
+        from budgetbench.strategies.summary import SummaryBufferStrategy
+        strategies["summary"] = SummaryBufferStrategy(
+            llm_client=llm_client,
+            tokenizer_fn=tokenizer_fn,
+        )
 
     if requested is None or "rag" in requested:
         try:
-            strategies["rag"] = RAGStrategy()
+            from budgetbench.strategies.rag import RAGStrategy
+            strategies["rag"] = RAGStrategy(
+                model_name=retrieval_model_name,
+                tokenizer_fn=tokenizer_fn,
+            )
         except Exception as e:
             print(f"  [skip] RAGStrategy not available: {e}")
 
     if requested is None or "lean_retrieval" in requested:
         try:
-            strategies["lean_retrieval"] = LeanRetrievalStrategy()
+            from budgetbench.strategies.lean_retrieval import LeanRetrievalStrategy
+            strategies["lean_retrieval"] = LeanRetrievalStrategy(
+                model_name=retrieval_model_name,
+                tokenizer_fn=tokenizer_fn,
+            )
         except Exception as e:
             print(f"  [skip] LeanRetrievalStrategy not available: {e}")
 
     if requested is None or "checkpoint_context" in requested:
         try:
-            strategies["checkpoint_context"] = CheckpointContextStrategy()
+            from budgetbench.strategies.checkpoint_context import CheckpointContextStrategy
+            strategies["checkpoint_context"] = CheckpointContextStrategy(tokenizer_fn=tokenizer_fn)
         except Exception as e:
             print(f"  [skip] CheckpointContextStrategy not available: {e}")
 
     if requested is None or "mem0" in requested:
         try:
             from budgetbench.strategies import Mem0Strategy
-            strategies["mem0"] = Mem0Strategy()
+            strategies["mem0"] = Mem0Strategy(tokenizer_fn=tokenizer_fn)
         except (ImportError, Exception) as e:
             print(f"  [skip] Mem0Strategy not available: {e}")
 
     if requested is None or "letta" in requested:
         try:
             from budgetbench.strategies import LettaStrategy
-            strategies["letta"] = LettaStrategy()
+            strategies["letta"] = LettaStrategy(
+                model_name=retrieval_model_name,
+                tokenizer_fn=tokenizer_fn,
+            )
         except (ImportError, Exception) as e:
             print(f"  [skip] LettaStrategy not available: {e}")
 
     if requested is None or "llmlingua" in requested:
         try:
             from budgetbench.strategies import LLMLinguaStrategy
-            strategies["llmlingua"] = LLMLinguaStrategy()
+            strategies["llmlingua"] = LLMLinguaStrategy(tokenizer_fn=tokenizer_fn)
         except (ImportError, Exception) as e:
             print(f"  [skip] LLMLinguaStrategy not available: {e}")
 
     return strategies
+
+
+def build_task_kwargs(args) -> Dict[str, Dict[str, Any]]:
+    kwargs: Dict[str, Dict[str, Any]] = {}
+    long_kwargs: Dict[str, Any] = {}
+    if args.longbench_chunk_tokens is not None:
+        long_kwargs["context_chunk_tokens"] = args.longbench_chunk_tokens
+    if args.longbench_char_per_token is not None:
+        long_kwargs["context_char_per_token"] = args.longbench_char_per_token
+    if long_kwargs:
+        kwargs["long"] = long_kwargs
+    return kwargs
 
 
 class JSONLMetricsLogger(MetricsLogger):
@@ -197,7 +219,7 @@ def run_pilot(args):
     print("--- BudgetBench Full Study Execution ---" if args.full_study else "--- BudgetBench Pilot Execution ---")
     print(f"Logs will be saved to: {log_dir}")
 
-    tokenizer_fn = get_tokenizer_fn()
+    tokenizer_fn = get_tokenizer_fn(model=args.model, tokenizer_name=args.tokenizer)
     llm_client = get_llm_client(
         args.llm_url,
         model=args.model,
@@ -210,7 +232,12 @@ def run_pilot(args):
         selected_budgets=args.budgets,
     )
 
-    all_strategies = build_strategies(llm_client, selected_names=args.strategies)
+    all_strategies = build_strategies(
+        llm_client,
+        tokenizer_fn=tokenizer_fn,
+        retrieval_model_name=args.retrieval_embedding_model,
+        selected_names=args.strategies,
+    )
     selected_strategies = (
         {k: all_strategies[k] for k in args.strategies if k in all_strategies}
         if args.strategies
@@ -236,96 +263,143 @@ def run_pilot(args):
 
     summary_file = os.path.join(log_dir, "summary.jsonl")
     completed = load_completed_combinations(summary_file)
+    task_kwargs_by_name = build_task_kwargs(args)
 
+    execution_plan = []
     for task_cfg in tasks_config:
         task_name = task_cfg["name"]
-        limit = task_cfg["default_limit"]
-        if args.limit_tasks:
-            limit = args.limit_tasks
-
-        print(f"\nProcessing Task: {task_name} (Limit: {limit})")
-
-        try:
-            task = get_task(task_name)
-        except Exception as e:
-            print(f"  Error loading task '{task_name}': {e}")
-            continue
-
+        limit = args.limit_tasks or task_cfg["default_limit"]
         for strategy_name, strategy in selected_strategies.items():
             for budget in budgets:
-                print(
-                    f"  > Strategy: {strategy_name:10} | Budget: {budget:5} | ",
-                    end="",
-                    flush=True,
+                for repeat_index in range(args.repeat_cells):
+                    execution_plan.append(
+                        {
+                            "task_name": task_name,
+                            "limit": limit,
+                            "strategy_name": strategy_name,
+                            "strategy": strategy,
+                            "budget": budget,
+                            "repeat_index": repeat_index,
+                        }
+                    )
+
+    if args.shuffle_cells:
+        random.shuffle(execution_plan)
+
+    loaded_tasks = {}
+    announced_tasks = set()
+    for plan in execution_plan:
+        task_name = plan["task_name"]
+        limit = plan["limit"]
+        strategy_name = plan["strategy_name"]
+        strategy = plan["strategy"]
+        budget = plan["budget"]
+        repeat_index = plan["repeat_index"]
+
+        if task_name not in announced_tasks:
+            print(f"\nProcessing Task: {task_name} (Limit: {limit})")
+            announced_tasks.add(task_name)
+
+        if task_name not in loaded_tasks:
+            try:
+                loaded_tasks[task_name] = get_task(
+                    task_name,
+                    **task_kwargs_by_name.get(task_name, {}),
                 )
+            except Exception as e:
+                print(f"  Error loading task '{task_name}': {e}")
+                loaded_tasks[task_name] = None
 
-                if (task_name, strategy_name, budget) in completed:
-                    print("SKIP (already done)")
-                    continue
+        task = loaded_tasks[task_name]
+        if task is None:
+            continue
 
-                if args.dry_run:
-                    print("DRY RUN")
-                    continue
+        print(
+            f"  > Strategy: {strategy_name:10} | Budget: {budget:5} | Repeat: {repeat_index + 1}/{args.repeat_cells} | ",
+            end="",
+            flush=True,
+        )
 
-                log_file = os.path.join(
-                    log_dir, f"{task_name}_{strategy_name}_{budget}.jsonl"
+        if (task_name, strategy_name, budget, repeat_index) in completed:
+            print("SKIP (already done)")
+            continue
+
+        if args.dry_run:
+            print("DRY RUN")
+            continue
+
+        log_suffix = f"_r{repeat_index + 1}" if args.repeat_cells > 1 else ""
+        log_file = os.path.join(
+            log_dir, f"{task_name}_{strategy_name}_{budget}{log_suffix}.jsonl"
+        )
+        logger = JSONLMetricsLogger(log_file)
+
+        runner = TaskRunner(
+            task=task,
+            strategy=strategy,
+            llm_client=llm_client,
+            tokenizer_fn=tokenizer_fn,
+            logger=logger,
+            max_natural_tokens=args.max_natural_tokens,
+        )
+
+        start_time = time.time()
+        try:
+            results = runner.run_evaluation(max_tokens=budget, limit=limit)
+            duration = time.time() - start_time
+
+            success_count = sum(float(r.get("is_correct", 0)) for r in results)
+            total_count = len(results)
+            accuracy = success_count / total_count if total_count > 0 else 0
+
+            print(f"Acc: {accuracy:.2f} | Time: {duration:.1f}s")
+
+            summary = {
+                "timestamp": timestamp,
+                "model": args.model or "unknown",
+                "task": task_name,
+                "strategy": strategy_name,
+                "budget": budget,
+                "accuracy": accuracy,
+                "total": total_count,
+                "success": success_count,
+                "duration_sec": duration,
+                "repeat_index": repeat_index,
+                "combo_log_file": log_file,
+                "retrieval_embedding_model": args.retrieval_embedding_model,
+                "longbench_chunk_tokens": args.longbench_chunk_tokens,
+                "longbench_char_per_token": args.longbench_char_per_token,
+                **tokenizer_fn.metadata(),
+            }
+            if args.max_natural_tokens:
+                summary["max_natural_tokens"] = args.max_natural_tokens
+            with open(summary_file, "a") as f:
+                f.write(json.dumps(summary) + "\n")
+
+        except Exception as e:
+            duration = time.time() - start_time
+            print(f"FAILED: {e}")
+            with open(summary_file, "a") as f:
+                f.write(
+                    json.dumps(
+                        {
+                            "timestamp": timestamp,
+                            "model": args.model or "unknown",
+                            "task": task_name,
+                            "strategy": strategy_name,
+                            "budget": budget,
+                            "error": str(e),
+                            "duration_sec": duration,
+                            "repeat_index": repeat_index,
+                            "combo_log_file": log_file,
+                            "retrieval_embedding_model": args.retrieval_embedding_model,
+                            "longbench_chunk_tokens": args.longbench_chunk_tokens,
+                            "longbench_char_per_token": args.longbench_char_per_token,
+                            **tokenizer_fn.metadata(),
+                        }
+                    )
+                    + "\n"
                 )
-                logger = JSONLMetricsLogger(log_file)
-
-                runner = TaskRunner(
-                    task=task,
-                    strategy=strategy,
-                    llm_client=llm_client,
-                    tokenizer_fn=tokenizer_fn,
-                    logger=logger,
-                    max_natural_tokens=args.max_natural_tokens,
-                )
-
-                start_time = time.time()
-                try:
-                    results = runner.run_evaluation(max_tokens=budget, limit=limit)
-                    duration = time.time() - start_time
-
-                    success_count = sum(float(r.get("is_correct", 0)) for r in results)
-                    total_count = len(results)
-                    accuracy = success_count / total_count if total_count > 0 else 0
-
-                    print(f"Acc: {accuracy:.2f} | Time: {duration:.1f}s")
-
-                    summary = {
-                        "timestamp": timestamp,
-                        "model": args.model or "unknown",
-                        "task": task_name,
-                        "strategy": strategy_name,
-                        "budget": budget,
-                        "accuracy": accuracy,
-                        "total": total_count,
-                        "success": success_count,
-                        "duration_sec": duration,
-                    }
-                    if args.max_natural_tokens:
-                        summary["max_natural_tokens"] = args.max_natural_tokens
-                    with open(summary_file, "a") as f:
-                        f.write(json.dumps(summary) + "\n")
-
-                except Exception as e:
-                    duration = time.time() - start_time
-                    print(f"FAILED: {e}")
-                    with open(summary_file, "a") as f:
-                        f.write(
-                            json.dumps(
-                                {
-                                    "timestamp": timestamp,
-                                    "model": args.model or "unknown",
-                                    "task": task_name,
-                                    "strategy": strategy_name,
-                                    "budget": budget,
-                                    "error": str(e),
-                                    "duration_sec": duration,
-                                }
-                            )
-                            + "\n"
-                        )
 
     print("\n--- Pilot Execution Finished ---")
     if not args.dry_run:
@@ -379,6 +453,30 @@ if __name__ == "__main__":
         help="Model name to pass in the API payload (required for Ollama; omit for llama.cpp)",
     )
     parser.add_argument(
+        "--tokenizer",
+        type=str,
+        default="auto",
+        help="Explicit tokenizer ID for budget enforcement, e.g. Qwen/Qwen2.5-1.5B-Instruct or tiktoken:cl100k_base",
+    )
+    parser.add_argument(
+        "--retrieval-embedding-model",
+        type=str,
+        default="all-MiniLM-L6-v2",
+        help="Embedding model name for RAG/lean_retrieval/Letta ablations",
+    )
+    parser.add_argument(
+        "--longbench-chunk-tokens",
+        type=int,
+        default=None,
+        help="Override LongBench context chunk size in tokens for chunking ablations",
+    )
+    parser.add_argument(
+        "--longbench-char-per-token",
+        type=int,
+        default=4,
+        help="Character-per-token heuristic used when chunking LongBench context",
+    )
+    parser.add_argument(
         "--max-output-tokens",
         type=int,
         default=512,
@@ -405,6 +503,17 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="Resume a previous run by its timestamp string (e.g. 20260508_120000)",
+    )
+    parser.add_argument(
+        "--repeat-cells",
+        type=int,
+        default=1,
+        help="Number of repeated runs per task/strategy/budget cell for latency and stability measurement",
+    )
+    parser.add_argument(
+        "--shuffle-cells",
+        action="store_true",
+        help="Shuffle task/strategy/budget execution order to reduce warmup and ordering bias",
     )
 
     args = parser.parse_args()
