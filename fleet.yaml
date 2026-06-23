@@ -20,14 +20,6 @@ nodes:
            - gpu
            - workhorse
            - m4-mini
-  m5-max-macbook:
-    endpoint: http://192.168.40.58:11434
-    tags:
-           - remote
-           - gpu
-           - laptop
-           - medium-memory
-           - m5-max
   m4-mini-16g:
     endpoint: http://192.168.40.59:11434
     tags:
@@ -37,7 +29,7 @@ nodes:
            - m4-mini
 
 models:
-   # Workhorse — largest coding model, 256k context
+     # Workhorse — largest coding model, 256k context
   heavy-coder:
     node: m4-mini-64g
     ollama_model: qwen3-coder:latest
@@ -46,16 +38,7 @@ models:
     timeout: 1800
     max_parallel: 1
 
-   # Heavy coding on M5 Max, 128k context
-  heavy-coder-m5max:
-    node: m5-max-macbook
-    ollama_model: qwen3.6:35b-mlx
-    litellm_alias: qwen3.6-35b-m5max
-    context: 131072
-    timeout: 900
-    max_parallel: 1
-
-   # Heavy coding fallback on local MacBook, 32k context
+     # Heavy coding fallback on local MacBook, 32k context
   heavy-coder-local:
     node: local-mac
     ollama_model: qwen3.6:35b-mlx
@@ -64,7 +47,7 @@ models:
     timeout: 600
     max_parallel: 1
 
-   # Planning — small model on M4 Mini (64GB), 128k context
+     # Planning — small model on M4 Mini (64GB), 128k context
   small-coder:
     node: m4-mini-64g
     ollama_model: qwen3.5:27b
@@ -73,7 +56,7 @@ models:
     timeout: 300
     max_parallel: 2
 
-   # Quick summaries — tiny model on M4 Mini (64GB)
+     # Quick summaries — tiny model on M4 Mini (64GB)
   tiny-coder:
     node: m4-mini-64g
     ollama_model: phi4-reasoning:latest
@@ -82,7 +65,7 @@ models:
     timeout: 120
     max_parallel: 3
 
-   # Gemma on M4 Mini (16GB), 8k context
+     # Gemma on M4 Mini (16GB), 32k context
   gemma-mac-mini:
     node: m4-mini-16g
     ollama_model: gemma4:12b-mlx
@@ -91,7 +74,7 @@ models:
     timeout: 300
     max_parallel: 2
 
-   # Gemma fallback on M4 Mini (16GB)
+     # Gemma fallback on M4 Mini (16GB)
   gemma-mac-mini-vanilla:
     node: m4-mini-16g
     ollama_model: gemma4:latest
@@ -101,36 +84,34 @@ models:
     max_parallel: 2
 
 agents:
-   # Planner → M5 Max MacBook (qwen3.6:35b-mlx, 128k)
-   # Qwen3.6 handles long context well; planner needs to read many files
+     # Planner → M4 Mini (64GB), qwen3.5:27b, 128k context
    planner:
-     model: heavy-coder-m5max
+     model: small-coder
      description: Use for planning, file discovery, task decomposition, and summarization.
      tools:
-        - Read
-        - Grep
-        - Glob
+         - Read
+         - Grep
+         - Glob
      prompt: |
-       You are a fast planning agent running on M5 Max MacBook (36GB).
+       You are a fast planning agent running on M4 Mac Mini (64GB).
        Do not edit files.
        Return a concise response with:
-          - plan
-          - relevant files
-          - risks
-          - next recommended agent
+           - plan
+           - relevant files
+           - risks
+           - next recommended agent
 
-   # Implementer → M4 Mini 64GB (qwen3-coder, 256k)
-   # Largest coding model on most capable node
+     # Implementer → M4 Mini (64GB), qwen3-coder, 256k context
    implementer:
      model: heavy-coder
      description: Use for implementation, bug fixes, refactors, and patch creation.
      tools:
-        - Read
-        - Grep
-        - Glob
-        - Edit
-        - MultiEdit
-        - Bash
+         - Read
+         - Grep
+         - Glob
+         - Edit
+         - MultiEdit
+         - Bash
      prompt: |
        You are a senior implementation agent running on M4 Mac Mini (64GB).
        Make minimal, correct changes.
@@ -138,16 +119,15 @@ agents:
        Run relevant checks when possible.
        Explain what changed and why.
 
-   # Reviewer → Local MacBook (qwen3.6:35b-mlx, 32k)
-   # Self-contained review; doesn't need huge context
+     # Reviewer → Local MacBook, qwen3.6:35b-mlx, 32k context
    reviewer:
      model: heavy-coder-local
      description: Use after implementation to review diffs, tests, regressions, and maintainability.
      tools:
-        - Read
-        - Grep
-        - Glob
-        - Bash
+         - Read
+         - Grep
+         - Glob
+         - Bash
      prompt: |
        You are a strict code reviewer running locally (MacBook).
        Focus on correctness, regressions, missing tests, security issues,
@@ -155,15 +135,14 @@ agents:
        Review the diff and test output.
        Return only actionable issues.
 
-   # Analyst → M4 Mini 16GB (gemma4:12b-mlx, 32k)
-   # Lightweight analysis on the smallest node
+     # Analyst → M4 Mini (16GB), gemma4:12b-mlx, 32k context
    analyst:
      model: gemma-mac-mini
      description: Use for lightweight analysis, summarization, and data extraction.
      tools:
-        - Read
-        - Grep
-        - Glob
+         - Read
+         - Grep
+         - Glob
      prompt: |
        You are a lightweight analyst agent running on M4 Mac Mini (16GB).
        Focus on concise summaries and structured outputs.
