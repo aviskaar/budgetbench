@@ -1,0 +1,2 @@
+candidate_model,judge_model,strategy,budget,judge_accuracy,judge_n,normalized_contains_accuracy,mean_judge_duration_sec,judge_prompt_version
+openai/gpt-4o-mini,openai/gpt-4o,truncation,2048,0.5,2,0.5,0.7635383605957031,budgetbench-longmem-judge-v2

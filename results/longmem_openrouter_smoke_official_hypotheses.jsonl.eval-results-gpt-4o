@@ -1,0 +1,2 @@
+{"question_id": "6a1eabeb", "hypothesis": "25:50", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_70e84552_abs", "hypothesis": "You completed fixing the fence first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
