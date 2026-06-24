@@ -27,7 +27,7 @@ The category split makes the pilot more useful: retrieval-based strategies recov
 
 > On a 50-item category-balanced LongMemEval oracle-file pilot with deterministic normalized-containment scoring, `lean_retrieval@2048` and `lean_retrieval@4096` reach 0.46 accuracy versus `full_context@8192` at 0.34. Both lean rows beat the 8K full-context baseline by +0.12 paired accuracy with bootstrap CIs above zero, while full context violates the active budget on 90% of 2K items, 70% of 4K items, and 16% of 8K items.
 
-This is now stronger than an integration smoke test, but still pilot evidence. It is not yet a final strategy ranking and not yet a standalone arXiv-quality result because it uses one small model, one public long-context slice, a synthetic memory task, and a LongMemEval oracle-file run with approximate scoring. The next novelty gate is to add official LongMemEval judge logs and to reproduce the full-context-matching/latency signal on a stronger local model.
+This is now stronger than an integration smoke test, but still pilot evidence. The artifact now includes a 500-item LongMemEval oracle-file study scored by the upstream GPT-4o evaluator and a 50-item, two-repeat LongBench replication with hosted Qwen3-30B-A3B, exact tokenization, and shuffled cell order. The remaining transfer gap is local rather than model-scale: the stronger-model run is API-hosted, and LongMemEval remains oracle-file rather than full-history.
 
 ## Current Evidence Snapshot
 
@@ -109,6 +109,10 @@ This is now stronger than an integration smoke test, but still pilot evidence. I
   - Qwen3.5-2B LongBench 5-item transfer CSV: `results/full_study_qwen3_5_2b_20260619_142423.csv`
   - Qwen3.5-2B LongBench 5-item transfer paired deltas: `results/paired_deltas_qwen3_5_2b_20260619_142423.csv`
   - Qwen3.5-2B LongBench 5-item transfer logs: `logs/full_study/feasibility_longbench_qwen35_2b_5/`
+  - Hosted Qwen3-30B-A3B LongBench 50-item, two-repeat aggregate: `results/full_study_qwen_qwen3-30b-a3b-instruct-2507_20260624_123733.csv`
+  - Hosted Qwen3-30B-A3B paired deltas: `results/paired_deltas_qwen_qwen3-30b-a3b-instruct-2507_20260624_123733.csv`
+  - Hosted Qwen3-30B-A3B run metadata and cost audit: `results/longbench_qwen3_30b_openrouter_50x2_20260624_run_metadata.json`
+  - Hosted Qwen3-30B-A3B raw logs: `logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624/`
   - Qwen3.6-35B partial 20-item transfer attempt: `logs/full_study/longmem_oracle_qwen36_35b_20/`
 
 ### 50-Item LongBench v2 Feasible-Slice Result
@@ -661,21 +665,16 @@ Recommended structure:
 
 ## Immediate Next Tasks
 
-1. Expand the LongMemEval-compatible judge sample and, if possible, move it toward independence:
-   - The bridge script exists and exports the full prediction bundle, but the current OpenRouter smoke hit `401 Unauthorized` because no usable API key is available in the workspace.
-   - The local `gemma3:1b` judge smoke was rejected as unreliable because it accepted obviously wrong answers.
-   - The local `qwen2.5:1.5b` judge smoke parsed cleanly but is same-model sanity only, not independent evidence.
-   - The local `gemma4:31b-mlx` judge now produces parseable JSON on a 20-row key-row LongMemEval sample, with 13 parseable rows aggregated in `results/longmem_external_judge_gemma31b_key20.csv`; that is the current judge bridge proof, not yet a full independent official judge.
-   - A broader 24-row prediction-only balanced sample has now gone through the same bridge in `results/longmem_external_judge_gemma31b_balanced24_predonly.csv`; 12 rows parsed cleanly and, on that tiny slice, `full_context@2048`/`@4096` were judged correct while the other judged buckets were not. This is stronger cross-bucket evidence, but still not official LongMemEval judging.
-   - A compact-prompt retry path was tested on the same balanced sample, but it did not improve parseable yield on `gemma4:31b-mlx`; keep it as an opt-in debugging knob only, not as the default bridge behavior.
-   - The stronger-looking `qwen3.6:35b-mlx` local judge was also tested on a 12-row one-per-bucket balanced slice, but it produced zero parseable JSON rows. For this bridge, `gemma4:31b-mlx` remains the only local judge that has produced usable evidence.
-   - Next step if compute allows: extend the 31B judge to the key-row bundle or obtain an external judge with an actual API key.
-2. The second-model LongBench story is now closed as a negative transfer result:
-   - `qwen3.6:35b-mlx` on 10-item and 5-item slices showed the 32K/full-context cells are too slow for this hardware, even though the LongMemEval transfer was strong.
-   - `qwen3.5:2b` on a 5-item LongBench slice completed quickly but stayed at 0.00 across truncation, RAG, lean retrieval, and full context.
-   - Current claim boundary: BudgetBench can expose when a model/task pair yields a real transfer win on public memory data and when the same harness collapses to a flat ceiling on long-context QA.
-3. Decide whether to keep `lean_retrieval` as a mixed baseline or tune it separately for LongBench and memory. Current evidence: it is slightly worse than simple RAG on the LongBench slice but strongest on the public and synthetic memory slices.
-4. Decide whether SWE official evaluation is feasible now; otherwise pivot the agentic task to TRAIL-style trace debugging.
+1. Close the remaining local-serving transfer gap:
+   - The hosted Qwen3-30B-A3B LongBench replication is complete: 50 items, four strategies, 8K/32K budgets, exact tokenizer, shuffled order, and two repeats.
+   - `rag@8192` averages 0.46 versus `full_context@32768` at 0.53, with paired delta -0.07 and 95% bootstrap CI [-0.17, +0.02]; mean end-to-end cell time is 27.5% lower.
+   - `truncation@8192` averages 0.33 and is significantly worse than 32K full context (delta -0.20, CI [-0.34, -0.07]).
+   - This closes model-scale transfer but not local deployment. The next model task is a fully specified local 7B--14B run, or a local 30B-class run only if throughput makes the same 50-item repeated matrix practical.
+2. Move public memory evidence beyond the oracle-file setting:
+   - The complete 500-item oracle study now has 5,122/5,122 parseable upstream GPT-4o judge labels; the old `401 Unauthorized` note is obsolete.
+   - Next: run LongMemEval_S/full-history or another public full-history memory setting, preserving explicit budget eligibility and official judge provenance.
+3. Decide whether to keep `lean_retrieval` as a mixed baseline or tune it separately for LongBench and memory. Current evidence: at 8K on hosted Qwen3 it averages 0.44 versus RAG at 0.46, while it remains strongest or tied on the public and synthetic memory slices.
+4. Upgrade the agentic task: run official SWE-bench evaluation at a meaningful sample size or pivot to deterministic TRAIL-style trace debugging.
 
 ## Kill Criteria
 

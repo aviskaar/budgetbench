@@ -5,12 +5,18 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from scripts.analyze_results import (
+    _model_slug,
     compute_paired_deltas,
     compute_quality_intervals,
     compute_violation_rates,
     load_summary_files,
     summarize_repeats,
 )
+
+
+def test_model_slug_handles_provider_model_ids():
+    assert _model_slug("qwen/qwen3-30b-a3b-instruct-2507") == "qwen_qwen3-30b-a3b-instruct-2507"
+    assert _model_slug("qwen2.5:1.5b") == "qwen2_5_1_5b"
 
 
 def _write_jsonl(path, rows):
@@ -79,15 +85,15 @@ def test_aggregate_repeats_preserves_pairwise_analysis(tmp_path):
     _write_jsonl(
         log_dir / "long_full_context_32768_r1.jsonl",
         [
-            {"item_id": "a", "quality": 1.0},
-            {"item_id": "b", "quality": 0.0},
+            {"item_id": "a", "quality": 1.0, "violation_rate": 0.0, "used_budget": 100},
+            {"item_id": "b", "quality": 0.0, "violation_rate": 0.0, "used_budget": 200},
         ],
     )
     _write_jsonl(
         log_dir / "long_full_context_32768_r2.jsonl",
         [
-            {"item_id": "a", "quality": 0.0},
-            {"item_id": "b", "quality": 1.0},
+            {"item_id": "a", "quality": 0.0, "violation_rate": 1.0, "used_budget": 300},
+            {"item_id": "b", "quality": 1.0, "violation_rate": 0.0, "used_budget": 400},
         ],
     )
     _write_jsonl(
@@ -113,6 +119,10 @@ def test_aggregate_repeats_preserves_pairwise_analysis(tmp_path):
     assert "combo_log_files" in aggregated.columns
     assert "repeat_count" in aggregated.columns
     assert list(aggregated["repeat_count"]) == [2, 2]
+
+    full_context_row = aggregated[aggregated["strategy"] == "full_context"].iloc[0]
+    assert full_context_row["violation_rate"] == 0.25
+    assert full_context_row["mean_used_budget"] == 250.0
 
     paired = compute_paired_deltas(
         aggregated,

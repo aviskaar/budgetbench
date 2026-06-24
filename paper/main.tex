@@ -73,6 +73,13 @@ at 2K to 0.686 for RAG and lean retrieval at 4K; full-context results are
 reported separately on the smaller subsets that fit each active budget.  The
 artifact also includes a six-item synthetic image question answering probe for
 \texttt{qwen3-vl:2b}.
+Finally, a stronger-model LongBench replication uses the hosted open-weight
+\texttt{qwen/qwen3-30b-a3b-instruct-2507} endpoint, its exact tokenizer, 50
+items, shuffled cell order, and two repeats.  RAG at 8K averages 0.46 accuracy
+versus 0.53 for full context at 32K (paired delta $-0.07$, 95\% bootstrap
+confidence interval $[-0.17,0.02]$) while reducing mean end-to-end cell time
+by 27.5\%; truncation at 8K is significantly worse at 0.33.  This hosted run
+tests model-scale transfer, not local-serving transfer.
 These results are pilot evidence, not final strategy rankings.  The
 contribution is a standardized active-budget protocol and pilot harness for local agents with
 swappable strategies, versioned task graders, operational metrics,
@@ -625,6 +632,81 @@ truncation at 8K, and RAG at 8K.  Those values should still be treated as
 artifact-hardening evidence rather than benchmark ranking claims because the
 slice is only 10 items wide.
 
+\subsection{Hosted Stronger-Model LongBench Replication}
+
+The local 35B feasibility attempts were too slow to complete the full
+LongBench matrix on the available workstation.  We therefore separated model-
+scale transfer from local-serving transfer and ran a hosted replication through
+OpenRouter on June 24, 2026.  The candidate was
+\path{qwen/qwen3-30b-a3b-instruct-2507}; token accounting used the explicit
+\path{Qwen/Qwen3-30B-A3B-Instruct-2507} Hugging Face tokenizer rather than a
+proxy.  The study reused the same 50-item, 32K-feasible selection rule and
+evaluated four strategies at 8K and 32K.  Cell order was shuffled and each cell
+was repeated twice at temperature zero with a 16-token output cap.  The 800
+evaluations comprised 700 admitted model calls and 100 expected pre-inference
+rejections from the two 8K full-context cells.  All admitted outputs were
+parseable; the audit found no unexpected errors or approximate-tokenizer rows.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrr}
+\toprule
+Strategy & Budget & Accuracy & 95\% CI & Violation & Duration (s) \\
+\midrule
+Truncation & 8K & 0.33 & [0.21, 0.46] & 0.00 & $157.8 \pm 17.5$ \\
+Truncation & 32K & 0.53 & [0.39, 0.67] & 0.00 & $209.7 \pm 0.3$ \\
+RAG & 8K & 0.46 & [0.32, 0.60] & 0.00 & $163.4 \pm 14.9$ \\
+RAG & 32K & 0.52 & [0.38, 0.66] & 0.00 & $220.9 \pm 21.1$ \\
+Lean retrieval & 8K & 0.44 & [0.30, 0.58] & 0.00 & $181.5 \pm 3.5$ \\
+Lean retrieval & 32K & 0.51 & [0.37, 0.65] & 0.00 & $225.9 \pm 0.3$ \\
+Full context & 8K & 0.00 & [0.00, 0.00] & 1.00 & $47.3 \pm 0.5$ \\
+Full context & 32K & 0.53 & [0.39, 0.67] & 0.00 & $225.5 \pm 1.1$ \\
+\bottomrule
+\end{tabular}
+\caption{Repeat-aggregated stronger-model LongBench replication.  Accuracy is
+the mean over two shuffled repeats; confidence intervals bootstrap the 50
+item-level repeat means.  Duration is mean end-to-end cell time plus or minus
+the sample standard deviation across two repeats.  The 8K full-context row
+contains budget-gate time and no hosted model calls.}
+\label{tab:hosted_stronger_longbench}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Candidate versus full context at 32K & Paired $N$ & Mean delta & 95\% bootstrap CI \\
+\midrule
+Truncation at 8K & 50 & -0.20 & [-0.34, -0.07] \\
+RAG at 8K & 50 & -0.07 & [-0.17, +0.02] \\
+Lean retrieval at 8K & 50 & -0.09 & [-0.20, +0.02] \\
+Truncation at 32K & 50 & 0.00 & [0.00, 0.00] \\
+RAG at 32K & 50 & -0.01 & [-0.04, +0.02] \\
+Lean retrieval at 32K & 50 & -0.02 & [-0.05, 0.00] \\
+\bottomrule
+\end{tabular}
+\caption{Paired item-level deltas for the hosted stronger-model replication,
+after averaging each item's outcome across two repeats.  Intervals that include
+zero do not establish equivalence; they indicate that this 50-item study does
+not resolve a difference at the stated confidence level.}
+\label{tab:hosted_stronger_longbench_deltas}
+\end{table}
+
+The stronger model preserves the central compliance tradeoff but sharpens the
+quality result.  Truncation at 8K is 0.20 below 32K full context and its paired
+interval excludes zero.  RAG at 8K narrows the point difference to 0.07 and
+reduces mean end-to-end cell time from 225.5 to 163.4 seconds (27.5\%), but its
+$[-0.17,+0.02]$ interval is too wide for either a no-loss or an equivalence
+claim.  At 32K, truncation reconstructs the same natural prompts as full
+context and matches it item-for-item after repeat aggregation; the two
+retrieval variants are within two percentage points.  Hosted inference for the
+full matrix cost \$0.9095.  Provider scheduling and network time are included
+in duration, so this table is evidence for repeated operational latency under
+this hosted setup, not a local-hardware speed benchmark.
+
 \subsection{Synthetic Memory-Agent Pilot}
 
 We also added a deterministic memory-shaped task to test whether the harness
@@ -944,7 +1026,10 @@ The current runs are intentionally small.  They exercise the measurement
 surface, not final strategy rankings.  The 50-item
 feasible-slice result is enough to justify scaling because it includes a
 paired full-context comparison and shows a compliance tradeoff at
-similar quality.  A benchmark-scale study should use stronger local models,
+similar quality.  The hosted Qwen3 30B-A3B replication now shows that the same
+RAG/full-context pattern survives a stronger-model check with exact tokenization
+and repeated shuffled cells, but it does not establish local-serving transfer.
+A benchmark-scale study should still use stronger fully specified local models,
 extend the new 500-question LongMemEval oracle study to LongMemEval\_S or other
 full-history settings, add official SWE-bench resolution or a deterministic trace-debugging
 alternative, include richer strategy families, and add multimodal task
@@ -972,7 +1057,9 @@ strategy-processed prompts for retrieval or summary contents.  The current
 runner has since been upgraded to log tokenizer identifiers, prompt hashes,
 post-strategy prompt artifacts, and explicit token counts, but the claim-bearing
 tables in this paper still come from the earlier pilot runs and therefore
-retain the tokenizer-validity limitation above.  A newer 10-item LongBench
+retain the tokenizer-validity limitation above.  The hosted stronger-model
+table is an exception: it uses the exact Qwen3 tokenizer for selection,
+strategy processing, enforcement, and logged prompt audits.  A newer 10-item LongBench
 rerun in \path{logs/full_study/mustfix_long10_qwen15b_tok/} demonstrates the
 corrected harness path with explicit Qwen tokenization and repeated
 order-randomized trials, but it is still too small to replace the older
@@ -980,10 +1067,13 @@ exploratory matrix.  The
 summary strategy uses the same small model for compression; a stronger
 summarizer could change the results.  The RAG strategy uses generic embeddings
 and simple message-level retrieval rather than task-optimized chunking.
-The reported latency values are single-run wall-clock measurements.  They were
+Most reported local latency values are single-run wall-clock measurements.  They were
 not produced with repeated warmup-controlled trials or randomized cell order,
 so they should be read as operational diagnostics rather than stable latency
-benchmarks.  LLM serving latency also depends on request scheduling and
+benchmarks.  The hosted stronger-model cells use two shuffled repeats and
+report across-repeat standard deviations, but two trials remain insufficient
+for a stable provider-latency estimate and include network and queue time.
+LLM serving latency also depends on request scheduling and
 key-value cache management, especially for long prompts~\citep{kwon2023pagedattention}.
 
 \paragraph{External validity.}
@@ -1000,6 +1090,10 @@ using the reset-per-item pilot timings alone.
 The additional \texttt{gemma4:e2b} sweep is also narrow: it is a 20-item
 LongBench transfer check and should be read only as evidence that the protocol
 can expose model-dependent prompt and serving behavior.
+The stronger LongBench replication uses an API-hosted open-weight model.  It
+reduces the small-model external-validity concern for task quality, but does
+not validate local memory pressure, key-value-cache behavior, energy use, or
+latency on a 30B-class local serving stack.
 
 \paragraph{Construct validity.}
 The SWE patch-similarity proxy measures overlap with the reference patch, not
@@ -1034,7 +1128,8 @@ LLMLingua-2 compression, Mem0, Letta/MemGPT-style hierarchical memory, and
 hybrid retrieval-summary policies.  Fourth, it should report the analyzer's
 confidence intervals in every main quality table and use the now-supported
 repeated-cell execution path so strategy crossovers can be
-distinguished from sampling noise.  Fifth, it should add multimodal tasks with
+distinguished from sampling noise beyond the current two-repeat hosted study.
+Fifth, it should add multimodal tasks with
 native visual inputs and multimodal memory policies.  Examples include
 document-page QA where the active
 budget controls optical character recognition (OCR) text plus image references, chart QA where retrieval
@@ -1061,8 +1156,13 @@ temporal, and abstention behavior.  In the official-judge oracle results, RAG
 and lean retrieval reach 0.686 at 4K, compared with 0.570 for truncation,
 while their overlapping intervals do not support a ranking between the two
 retrieval variants.  Despite these encouraging results, there is further
-space for improvement.  The next step is to test whether these signals
-transfer to stronger local models and LongMemEval full-history settings.
+space for improvement.  A 50-item hosted Qwen3 30B-A3B replication with exact
+tokenization and two shuffled repeats finds RAG at 8K at 0.46 versus 0.53 for
+32K full context (paired delta $-0.07$, 95\% confidence interval
+$[-0.17,+0.02]$) with 27.5\% lower mean end-to-end cell time; truncation at 8K
+is significantly worse.  This closes the immediate stronger-model quality
+check while leaving stronger local serving and LongMemEval full-history
+settings as the next transfer tests.
 
 \clearpage
 \appendix
@@ -1097,6 +1197,7 @@ Primary raw logs & \path{logs/full_study/final_qwen25_15b_89items/summary.jsonl}
 Primary aggregate CSV & \path{results/full_study_qwen2_5_1_5b_89items.csv} \\
 Full-context LongBench slice & \path{logs/full_study/feasibility_long50_fit32k/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_155102.csv} \\
 Tokenizer-aligned LongBench hardened slice & \path{logs/full_study/mustfix_long10_qwen15b_tok/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260623_112431.csv}; paired \path{results/paired_deltas_qwen2_5_1_5b_20260623_112431.csv} \\
+Hosted stronger-model LongBench replication & 50 items; two shuffled repeats; \texttt{qwen/qwen3-30b-a3b-instruct-2507} through OpenRouter; exact \texttt{Qwen/Qwen3-30B-A3B-Instruct-2507} tokenizer; raw logs in \path{logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624/}; aggregate \path{results/full_study_qwen_qwen3-30b-a3b-instruct-2507_20260624_123733.csv}; paired \path{results/paired_deltas_qwen_qwen3-30b-a3b-instruct-2507_20260624_123733.csv}; metadata \path{results/longbench_qwen3_30b_openrouter_50x2_20260624_run_metadata.json} \\
 RAG ablation slice & \path{logs/full_study/ablate_long10_rag_mpnet/} and \path{logs/full_study/ablate_long10_rag_chunk256/}; comparison \path{results/ablation_rag_long10_20260623.csv} \\
 Official SWE harness rerun & \path{qwen2.5:1.5b.budgetbench_official2fix_20260623.json}; per-instance logs in \path{logs/run_evaluation/budgetbench_official2fix_20260623/} \\
 Synthetic memory pilot & \path{logs/full_study/memory_synthetic_qwen15b_30_categories_live/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_203210.csv}; categories \path{results/grouped_memory_category_qwen2_5_1_5b_20260618_203210.csv} \\
@@ -1705,6 +1806,37 @@ Its repeat-aware analysis command was:
 python scripts/analyze_results.py \
   --log-dirs logs/full_study/mustfix_long10_qwen15b_tok \
   --model qwen2.5:1.5b \
+  --bootstrap-samples 2000 \
+  --paired-baseline-strategy full_context \
+  --paired-baseline-budget 32768 \
+  --aggregate-repeats
+\end{verbatim}
+
+The hosted stronger-model LongBench replication was:
+\begin{verbatim}
+python scripts/run_pilot.py \
+  --full-study \
+  --run-id longbench_qwen3_30b_openrouter_50x2_20260624 \
+  --tasks long \
+  --strategies truncation rag lean_retrieval full_context \
+  --budgets 8192 32768 \
+  --limit-tasks 50 \
+  --max-natural-tokens 32768 \
+  --model qwen/qwen3-30b-a3b-instruct-2507 \
+  --tokenizer Qwen/Qwen3-30B-A3B-Instruct-2507 \
+  --llm-url https://openrouter.ai/api/v1/chat/completions \
+  --api-key-env OPENROUTER_API_KEY \
+  --max-output-tokens 16 \
+  --repeat-cells 2 \
+  --shuffle-cells
+\end{verbatim}
+
+Its repeat-aware paired analysis command was:
+\begin{verbatim}
+python scripts/analyze_results.py \
+  --log-dirs logs/full_study/\
+longbench_qwen3_30b_openrouter_50x2_20260624 \
+  --model qwen/qwen3-30b-a3b-instruct-2507 \
   --bootstrap-samples 2000 \
   --paired-baseline-strategy full_context \
   --paired-baseline-budget 32768 \

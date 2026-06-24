@@ -1,0 +1,9 @@
+model,task,strategy,budget,baseline_strategy,baseline_budget,paired_n,candidate_accuracy,baseline_accuracy,mean_delta,delta_ci_low,delta_ci_high,candidate_duration_sec,baseline_duration_sec,candidate_violation_rate,baseline_violation_rate,_log_dir
+qwen/qwen3-30b-a3b-instruct-2507,long,full_context,8192,full_context,32768,50,0.0,0.53,-0.53,-0.67,-0.4,47.335017919540405,225.47995698451996,1.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,full_context,32768,full_context,32768,50,0.53,0.53,0.0,0.0,0.0,225.47995698451996,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,lean_retrieval,8192,full_context,32768,50,0.44,0.53,-0.09,-0.2,0.02,181.504301071167,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,lean_retrieval,32768,full_context,32768,50,0.51,0.53,-0.02,-0.05,0.0,225.86895394325256,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,rag,8192,full_context,32768,50,0.46,0.53,-0.07,-0.17,0.02,163.43220901489258,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,rag,32768,full_context,32768,50,0.52,0.53,-0.01,-0.04,0.02,220.93390679359436,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,truncation,8192,full_context,32768,50,0.33,0.53,-0.2,-0.34,-0.07,157.79335761070251,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624
+qwen/qwen3-30b-a3b-instruct-2507,long,truncation,32768,full_context,32768,50,0.53,0.53,0.0,0.0,0.0,209.7431503534317,225.47995698451996,0.0,0.0,logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624

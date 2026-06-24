@@ -1,0 +1,56 @@
+{
+  "run_id": "longbench_qwen3_30b_openrouter_50x2_20260624",
+  "run_date": "2026-06-24",
+  "task": "LongBench v2 multiple-choice, first 50 training items with exact-tokenizer natural prompts at or below 32768 tokens",
+  "provider": "OpenRouter",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "model": "qwen/qwen3-30b-a3b-instruct-2507",
+  "tokenizer": {
+    "id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+    "backend": "huggingface",
+    "source": "explicit_huggingface",
+    "is_approximate": false
+  },
+  "strategies": [
+    "truncation",
+    "rag",
+    "lean_retrieval",
+    "full_context"
+  ],
+  "budgets": [8192, 32768],
+  "items_per_cell": 50,
+  "repeat_cells": 2,
+  "shuffle_cells": true,
+  "temperature": 0.0,
+  "max_output_tokens": 16,
+  "audit": {
+    "summary_rows": 16,
+    "unique_strategy_budget_repeat_cells": 16,
+    "declared_evaluation_rows": 800,
+    "quality_rows": 800,
+    "admitted_prediction_rows": 700,
+    "leading_letter_parseable_predictions": 700,
+    "strict_single_letter_predictions": 643,
+    "expected_budget_rejections": 100,
+    "unexpected_errors": 0,
+    "approximate_tokenizer_rows": 0
+  },
+  "openrouter_credit": {
+    "usage_before_full_matrix_usd": 5.071087862,
+    "usage_after_full_matrix_usd": 5.980618742,
+    "incremental_full_matrix_cost_usd": 0.90953088,
+    "credit_limit_usd": 8.0,
+    "remaining_credit_usd": 2.019381258
+  },
+  "artifacts": {
+    "raw_log_directory": "logs/full_study/longbench_qwen3_30b_openrouter_50x2_20260624",
+    "aggregate_csv": "results/full_study_qwen_qwen3-30b-a3b-instruct-2507_20260624_123733.csv",
+    "paired_delta_csv": "results/paired_deltas_qwen_qwen3-30b-a3b-instruct-2507_20260624_123733.csv"
+  },
+  "analysis": {
+    "bootstrap_samples": 2000,
+    "paired_baseline_strategy": "full_context",
+    "paired_baseline_budget": 32768,
+    "aggregate_repeats": true
+  }
+}

@@ -9,10 +9,16 @@ import argparse
 import json
 import os
 import random
+import re
 from datetime import datetime
 from typing import List, Optional, Sequence, Tuple
 
 import pandas as pd
+
+
+def _model_slug(model: str) -> str:
+    """Return a filesystem-safe flat slug for local and provider model IDs."""
+    return re.sub(r"[^A-Za-z0-9_-]+", "_", model).strip("_")
 
 
 def _collect_non_null(values: pd.Series) -> List[str]:
@@ -54,7 +60,11 @@ def compute_violation_rates(df: pd.DataFrame) -> pd.DataFrame:
         task = row.get("task", "")
         strategy = row.get("strategy", "")
         budget = row.get("budget", 0)
-        combo_file = os.path.join(log_dir, f"{task}_{strategy}_{budget}.jsonl")
+        recorded_combo_file = row.get("combo_log_file")
+        if isinstance(recorded_combo_file, str) and recorded_combo_file:
+            combo_file = recorded_combo_file
+        else:
+            combo_file = os.path.join(log_dir, f"{task}_{strategy}_{budget}.jsonl")
         if not os.path.exists(combo_file):
             violation_rates.append(None)
             mean_used_budgets.append(None)
@@ -505,7 +515,7 @@ def main():
 
     os.makedirs("results", exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    model_slug = args.model.replace(":", "_").replace(".", "_")
+    model_slug = _model_slug(args.model)
     out_path = os.path.join("results", f"full_study_{model_slug}_{timestamp}.csv")
     df_out.to_csv(out_path, index=False)
     print(f"Results written to: {out_path}")
