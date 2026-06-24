@@ -1,0 +1,13 @@
+strategy,budget,evaluated_rows,prediction_rows,budget_violation_rows,local_contains_accuracy,official_gpt4o_accuracy,candidate_duration_sec
+truncation,2048,500,500,0,0.3160,0.3800,553.8
+truncation,4096,500,500,0,0.4300,0.5700,675.2
+truncation,8192,500,500,0,0.4880,0.6500,952.0
+rag,2048,500,500,0,0.4920,0.6460,648.5
+rag,4096,500,500,0,0.5060,0.6860,839.9
+rag,8192,500,500,0,0.5080,0.6860,895.0
+lean_retrieval,2048,500,500,0,0.4940,0.6640,593.0
+lean_retrieval,4096,500,500,0,0.5020,0.6860,763.4
+lean_retrieval,8192,500,500,0,0.4960,0.6820,944.6
+full_context,2048,500,48,452,0.0700,0.9792,52.1
+full_context,4096,500,157,343,0.2180,0.8854,190.1
+full_context,8192,500,417,83,0.4580,0.7338,659.7

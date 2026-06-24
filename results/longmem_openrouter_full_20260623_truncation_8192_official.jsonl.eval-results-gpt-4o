@@ -1,0 +1,500 @@
+{"question_id": "001be529", "hypothesis": "Over a year.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "00ca467f", "hypothesis": "You had two doctor's appointments in March: one with your orthopedic surgeon, Dr. Thompson, on March 20th, and another with your primary care physician regarding your cough and symptoms. Additionally, you have an EMG test scheduled with your neurologist, Dr. Johnson, on April 1st.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0100672e", "hypothesis": "You spent $60 on coffee mugs for your coworkers, and if you purchased 5 mugs, that would be $12 per mug.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "01493427", "hypothesis": "25 new postcards.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "031748ae", "hypothesis": "You led a team of 4 engineers when you just started your new role as Senior Software Engineer, and you still lead the same team of 4 engineers now.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "031748ae_abs", "hypothesis": "You lead a team of 4 engineers.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "06878be2", "hypothesis": "[2023/05/30 (Tue) 05:04] Here are some accessories that would complement your current photography setup:\n\n1. **ND Filters**: Neutral density filters help control exposure and allow for longer shutter speeds, especially useful for landscape photography.\n2. **Polarizing Filter**: This filter reduces", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "06db6396", "hypothesis": "Five projects.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "06f04340", "hypothesis": "[2023/05/24 (Wed) 10:29] How about a delicious dish that highlights your homegrown ingredients? Here are a few ideas:\n\n1. **Caprese Salad with Grilled Chicken**: Use your fresh basil and cherry tomatoes to make a Caprese salad. Serve it alongside grilled chicken", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "07741c44", "hypothesis": "Under your bed.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "07741c45", "hypothesis": "Under your bed.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "078150f1", "hypothesis": "$50", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "07b6f563", "hypothesis": "[2023/05/28 (Sun) 00:20] Here are some useful accessories for your phone:\n\n1. **Screen Protector**: Protects your screen from scratches and cracks.\n2. **Phone Case**: Provides protection against drops and impacts.\n3. **Portable Power Bank**: Keeps your", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "0862e8bf", "hypothesis": "Luna", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0862e8bf_abs", "hypothesis": "[2023/05/20 (Sat) 03:02] The name of your hamster has not been mentioned in the chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "08e075c7", "hypothesis": "You have been using your Fitbit Charge 3 for 9 months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "08f4fc43", "hypothesis": "32 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0977f2af", "hypothesis": "[2023/05/21 (Sun) 00:05] You invested in an Instant Pot before getting the Air Fryer.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "099778bb", "hypothesis": "20 leadership positions.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "09ba9854", "hypothesis": "[2023/05/26 (Fri) 00:54] You could save approximately $60-$100 by taking the train instead of a taxi, depending on the taxi fare (around $60-$180) compared to the train fare (around $20-$30).", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "09ba9854_abs", "hypothesis": "[2023/05/28 (Sun) 06:58] If a taxi costs around $60 and the bus costs approximately $10-$20, you could save about $40-$50 by taking the bus instead of a taxi.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "09d032c9", "hypothesis": "[2023/05/21 (Sun) 23:36] Here are some tips to help improve your phone's battery life:\n\n1. **Reduce screen brightness**: Lower the brightness or enable adaptive brightness to save battery.\n2. **Limit background apps**: Close apps running in the background that you don't", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "0a34ad58", "hypothesis": "[2023/05/27 (Sat) 16:05] Here are some helpful tips for getting around Tokyo:\n\n1. **Use Public Transportation:** Tokyo has an extensive and efficient public transportation system, including trains and subways. The JR Yamanote Line is a convenient loop line connecting major districts.\n\n2", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "0a995998", "hypothesis": "You need to pick up one pair of boots from Zara and return the previous pair that was too small.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "0bb5a684", "hypothesis": "You attended the workshop on January 10th, and the team meeting is on January 17th, which is 7 days before the meeting.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0bc8ad92", "hypothesis": "Five months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0bc8ad93", "hypothesis": "You visited with your dad.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "0db4c65d", "hypothesis": "44 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "0ddfec37", "hypothesis": "You have added 15 autographed baseballs to your collection in the first three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0ddfec37_abs", "hypothesis": "You have not mentioned adding any autographed footballs to your collection in the provided chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0e4e4c46", "hypothesis": "132 points.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0e5e2d1a", "hypothesis": "38 subjects.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0ea62687", "hypothesis": "Your car was getting 30 miles per gallon a few months ago, and it's currently getting 28 miles per gallon. Therefore, it was getting 2 more miles per gallon compared to now.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0edc2aef", "hypothesis": "[2023/05/29 (Mon) 16:40] For your upcoming trip to Miami, I recommend considering the following hotels:\n\n1. **The Fontainebleau Miami Beach**: A luxurious beachfront hotel with stunning ocean views, multiple pools, and a vibrant nightlife scene.\n2. **The Setai", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0f05491a", "hypothesis": "[2023/08/01 (Tue) 14:49] You need **120 stars** to reach the Gold level on your Starbucks Rewards app.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "10d9b85a", "hypothesis": "You attended a workshop on the 17th and 18th of April and a lecture on the 10th of April, totaling 3 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "10e09553", "hypothesis": "You caught 7 largemouth bass on your trip to Lake Michigan with Alex on 7/10.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "118b2229", "hypothesis": "45 minutes each way.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1192316e", "hypothesis": "[2023/05/23 (Tue) 08:07] It takes you about 1 hour to get ready (including a 20-minute meditation session and a 30-minute workout). If your commute to work is 30 minutes, the total time to get ready and commute is 1 hour and", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "129d1232", "hypothesis": "$5,600", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1568498a", "hypothesis": "29. Kg3", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "15745da0", "hypothesis": "Three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "15745da0_abs", "hypothesis": "You have been collecting vintage films for three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "157a136e", "hypothesis": "[Question date: 2024/02/05 (Mon) 08:25] Your grandma is 75 years old, and since you mentioned being in your 30s, she is at least 42 years older than you.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "16c90bf4", "hypothesis": "Pilsner or lager.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "184da446", "hypothesis": "You have read up to page 220 of \"A Short History of Nearly Everything.\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "18bc8abd", "hypothesis": "Kansas City Masterpiece BBQ sauce.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "18dcd5a5", "hypothesis": "Four mummies.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1903aded", "hypothesis": "Transcriptionist", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "195a1a1b", "hypothesis": "[2023/05/24 (Wed) 05:51] Here are some activities you can do in the evening:\n\n1. **Reading**: Enjoy a book or listen to an audiobook.\n2. **Gentle Yoga or Stretching**: Practice some light yoga or stretching to relax your body.\n3", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "19b5f2b3", "hypothesis": "Two weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "19b5f2b3_abs", "hypothesis": "Two weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1a1907b4", "hypothesis": "[2023/05/26 (Fri) 02:34] How about making a classic **Mojito**? It's refreshing, easy to make, and perfect for gatherings. You'll need white rum, fresh mint, lime juice, sugar, and soda water. Muddle the mint and sugar, add lime", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1a8a66a6", "hypothesis": "You currently have two magazine subscriptions: The New York Times and National Geographic.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1b9b7252", "hypothesis": "Mindful.org", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1c0ddc50", "hypothesis": "[2023/05/28 (Sun) 21:56] Here are some activities you can do during your commute to work:\n\n1. **Listen to podcasts** - Explore various genres, including history, science, or true crime.\n2. **Read books or e-books** - Bring a physical book or", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1c549ce4", "hypothesis": "$140", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1cea1afa", "hypothesis": "600 followers.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1d4da289", "hypothesis": "[2023/05/23 (Tue) 18:45] Biometric authentication, one-time passwords (OTP), and security tokens.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1d4e3b97", "hypothesis": "[2024/02/20 (Tue) 21:35] Yes, there could be several reasons why your bike is performing better during your Sunday group rides:\n\n1. **Improved fitness**: Regular group rides can enhance your overall fitness and cycling skills, leading to better performance.\n2. **Drafting", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1da05512", "hypothesis": "[2023/05/27 (Sat) 13:54] It depends on your current storage needs and budget. If you need more storage and backup solutions now, buying a NAS device is a good choice. However, if you can wait, consider monitoring for new models or sales that may offer better features or", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1de5cff2", "hypothesis": "Veja", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1e043500", "hypothesis": "Summer Vibes", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1f2b8d4f", "hypothesis": "$750", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1faac195", "hypothesis": "Denver", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2133c1b5", "hypothesis": "Three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2133c1b5_abs", "hypothesis": "You have been living in your current apartment in Shinjuku for 3 months.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "21436231", "hypothesis": "12 largemouth bass.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "21d02d0d", "hypothesis": "You missed one fun run in March due to work commitments.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "22d2cb42", "hypothesis": "Rhythm Central on Main St.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2311e44b", "hypothesis": "[Question date: 2023/05/25 (Thu) 10:43] You have 190 pages left to read in 'The Nightingale' (440 total pages - 250 pages read).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2311e44b_abs", "hypothesis": "[2023/05/30 (Tue) 14:10] You have 100 pages left to read in 'Sapiens'.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "2318644b", "hypothesis": "You spent over $300 per night on accommodations in Hawaii, while you stayed in a hostel in Tokyo that cost around $30 per night. Therefore, you spent $270 more per night in Hawaii compared to Tokyo.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "25e5aa4f", "hypothesis": "UCLA", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2698e78f", "hypothesis": "You see Dr. Smith every week.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2698e78f_abs", "hypothesis": "You see Dr. Smith every week.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "26bdc477", "hypothesis": "Five trips.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "27016adc", "hypothesis": "To determine the percentage of the countryside property's price that the cost of your renovations represents, you would need to know the price of the countryside property. Once you have that figure, you can use the following formula:\n\n**Percentage = (Cost of Renovations / Price of Countryside Property) x 100**\n\nFor example,", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "2788b940", "hypothesis": "You typically attend three fitness classes in a week: Zumba on Tuesdays and Thursdays, and Hip Hop Abs on Saturdays.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "28bcfaac", "hypothesis": "MusicTheory.net", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "28dc39ac", "hypothesis": "You have mentioned specific playtimes for the following games:\n\n1. God of War: Not specified.\n2. Hyper Light Drifter: Completed in 5 hours.\n3. Celeste: Completed in 10 hours.\n4. Ori and the Blind Forest: Not specified.\n5. The Last of Us Part II:", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "29f2956b", "hypothesis": "30 minutes daily.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "29f2956b_abs", "hypothesis": "[2023/05/22 (Mon) 16:01] You haven't mentioned practicing the violin in our previous conversations.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2a1811e2", "hypothesis": "26 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "2b8f3739", "hypothesis": "You earned a total of $240 from selling your products at the markets: $120 from selling 12 bunches of fresh organic herbs on May 15th and $150 from selling 20 potted herb plants at the Summer Solstice Market ($7.5 each).", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "2bf43736", "hypothesis": "[2023/05/26 (Fri) 14:58] Chapter 4 of Book 1 in the second part discusses vocal prayer and meditation.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2c63a862", "hypothesis": "It took you 16 days to find a house you loved after starting to work with Rachel on February 15th and seeing the house on March 1st.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2ce6a0f2", "hypothesis": "You attended two art-related events in the past month: the \"Art Afternoon\" event at the Children's Museum on February 17th and the \"Women in Art\" exhibition on February 10th.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "2e6d26dc", "hypothesis": "In the last few months, the following babies were born to friends and family members:\n\n1. Rachel's son, Max (born in March).\n2. Mike and Emma's daughter, Charlotte (born a few weeks after Rachel's baby shower).\n3. David's son, Jasper (born a few weeks ago).\n\nSo", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "2ebe6c90", "hypothesis": "[2023/01/31 (Tue) 07:19] You finished \"The Nightingale\" on January 31, 2023, and you mentioned starting it on January 10, 2023. It took you 21 days to finish the book.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2ebe6c92", "hypothesis": "\"The Nightingale\" by Kristin Hannah.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "311778f1", "hypothesis": "10 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "32260d93", "hypothesis": "[2023/05/27 (Sat) 18:09] \"The Good Place\" - a clever and funny series that explores ethics and morality in a unique way.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "3249768e", "hypothesis": "Absinthe", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "352ab8bd", "hypothesis": "Approximately 20%.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "35a27287", "hypothesis": "[2023/05/24 (Wed) 18:12] I'm unable to provide specific events happening around you, but I recommend checking local event calendars, community boards, or social media platforms for cultural events in your area this weekend. Websites like Eventbrite, Meetup, or local cultural centers can also be great", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "36580ce8", "hypothesis": "Bronchitis.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "36b9f61e", "hypothesis": "[Question date: 2023/05/30 (Tue) 23:17] You mentioned purchasing a Gucci handbag for $1,200 and indicated that you tend to splurge on luxury items every few months. However, you haven't provided specific amounts for other luxury items you've purchased in the past few months.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "370a8ff4", "hypothesis": "Approximately 12 weeks had passed since you recovered from the flu when you went on your 10th jog outdoors.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "37d43f65", "hypothesis": "16GB", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "37f165cf", "hypothesis": "You finished \"The Power\" by Naomi Alderman in December, which had 341 pages, and \"The Nightingale\" by Kristin Hannah in May, which had 440 pages.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "38146c39", "hypothesis": "[2023/05/30 (Tue) 02:48] Consider adding a pinch of sea salt to enhance the chocolate flavor, using brown butter for a nutty taste, or incorporating nuts like walnuts or pecans for added texture. You could also try adding a splash of vanilla extract or a sprinkle of cinnamon", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "3a704032", "hypothesis": "You acquired one plant, a snake plant, from your sister last month.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "3b6f954b", "hypothesis": "University of Melbourne", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3ba21379", "hypothesis": "Ford F-150 pickup truck model.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3c1045c8", "hypothesis": "[2023/05/29 (Mon) 10:06] I don't have information about the average age of employees in your department. Please provide that information for an accurate comparison.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "3d86fd0a", "hypothesis": "Coffee Shop (City)", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3e321797", "hypothesis": "[2023/05/26 (Fri) 11:47] Leave it on for about 10 minutes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3f1e9474", "hypothesis": "Sarah", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3fdac837", "hypothesis": "You spent 7 days in Japan (April 15th to 22nd) and 4 days in Chicago (previous trip). The total is 11 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3fe836c9", "hypothesis": "$25,000", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4100d0a0", "hypothesis": "Irish and Italian.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "41275add", "hypothesis": "\"How to Sit Properly at a Desk to Avoid Back Pain\" by the Mayo Clinic.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "41698283", "hypothesis": "[2023/03/11 (Sat) 22:01] You recently got a new 50mm prime lens.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "42ec0761", "hypothesis": "[2023/08/15 (Tue) 13:26] Yes, you mentioned that you have a spare screwdriver that you picked up when you organized your computer desk.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4388e9dd", "hypothesis": "Andy was wearing an untidy, stained white shirt.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "45dc21b6", "hypothesis": "Three of Emma's recipes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "46a3abf7", "hypothesis": "You currently have two tanks: your main 20-gallon community tank (Amazonia) and the 1-gallon tank for your friend's kid.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "488d3006", "hypothesis": "GR-90", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4adc0475", "hypothesis": "You have scored several goals and had two assists in the league. The total number of goals is not specified, but you mentioned having \"several\" goals. Therefore, the total number of goals and assists is at least two assists plus the unspecified number of goals.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "4b24c848", "hypothesis": "Five tops.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4baee567", "hypothesis": "12 times.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4bc144e2", "hypothesis": "$65 ($15 for the car wash and $50 for the parking ticket).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4c36ccef", "hypothesis": "Roscioli", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4d6b87c8", "hypothesis": "25 titles.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4dfccbf7", "hypothesis": "58 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "4dfccbf8", "hypothesis": "You started taking ukulele lessons with Rachel.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4f54b7c9", "hypothesis": "You inherited or acquired three antique items: your grandmother's vintage diamond necklace, an antique music box from your great-aunt, and a set of depression-era glassware from your mom.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "4fd1909e", "hypothesis": "Xfinity Center", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5025383b", "hypothesis": "Cooking and photography.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "505af2f5", "hypothesis": "[2023/05/25 (Thu) 15:08] Try making a homemade vanilla almond milk creamer! Combine 1 cup of unsweetened almond milk, 1 tablespoon of vanilla extract, and 1-2 tablespoons of your preferred sweetener (like honey or maple syrup). Blend until smooth", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "50635ada", "hypothesis": "[2023/06/19 (Mon) 14:41] Your previous frequent flyer status on United Airlines was Premier Silver before you reached Premier Gold status.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "51a45a95", "hypothesis": "You redeemed a $5 coupon on coffee creamer at Target.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "51b23612", "hypothesis": "[2023/05/29 (Mon) 17:03] \"Nu, pogodi!\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "51c32626", "hypothesis": "[2023/05/23 (Tue) 10:58] You submitted your research paper on sentiment analysis to ACL.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "54026fce", "hypothesis": "[2023/05/30 (Tue) 14:01] Here are some suggestions to stay connected with your colleagues:\n\n1. **Virtual Coffee Breaks**: Schedule regular informal video calls for casual chats.\n2. **Online Team Activities**: Organize virtual games or team-building exercises.\n3. **", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "545bd2b5", "hypothesis": "2 hours per day.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "55241a1f", "hypothesis": "The total number of comments on your recent Facebook Live session is 12, and your most popular YouTube video has 21 comments. Therefore, the total number of comments is 12 + 21 = 33 comments.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "561fabcd", "hypothesis": "Fissionator", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "577d4d32", "hypothesis": "7 pm", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "57f827a0", "hypothesis": "[2023/05/27 (Sat) 13:23] Here are some tips for rearranging your bedroom furniture:\n\n1. **Measure Your Space**: Before moving anything, measure your room and furniture to ensure everything fits well in the new layout.\n2. **Create a Floor Plan**: Sketch a", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "5809eb10", "hypothesis": "The construction of the house began in 2014.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5831f84d", "hypothesis": "15 Crash Course videos.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "58470ed2", "hypothesis": "Borges said, \"The Library is a sphere whose exact center is any one of its hexagons and whose circumference is inaccessible.\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "58bf7951", "hypothesis": "The Glass Menagerie", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "58ef2f1c", "hypothesis": "[2023/04/02 (Sun) 00:23] You volunteered at the \"Love is in the Air\" fundraising dinner back on Valentine's Day.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "59524333", "hypothesis": "You usually go to the gym at 7:00 pm on Mondays, Wednesdays, and Fridays.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "5a4f22c0", "hypothesis": "Rachel is currently working at TechCorp.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5a7937c8", "hypothesis": "You participated in faith-related activities on December 17th (Bible study) and December 24th (midnight mass). Therefore, you spent 2 days participating in faith-related activities in December.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "5c40ec5b", "hypothesis": "Twice.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5d3d2817", "hypothesis": "Marketing specialist at a small startup.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5e1b23de", "hypothesis": "You attended the photography workshop on 2023/11/01, which was 3 months ago from 2024/02/01.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60036106", "hypothesis": "The total number of people reached by your Facebook ad campaign was around 2,000, and your Instagram influencer collaboration promoted your product to her 10,000 followers. Therefore, the total number of people reached was approximately 12,000.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60159905", "hypothesis": "You have attended two dinner parties in the past month: one at Sarah's place and one at Mike's place.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "603deb26", "hypothesis": "10 times", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60472f9c", "hypothesis": "You have been working on two projects simultaneously, excluding your thesis: a Data Mining project and a Database Systems project.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6071bd76", "hypothesis": "Less. You switched from 1 tablespoon of coffee for every 6 ounces of water to 1 tablespoon for every 5 ounces of water.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60bf93ed", "hypothesis": "It took 5 days for your laptop backpack to arrive after you bought it on January 15th.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60bf93ed_abs", "hypothesis": "[Question date: 2023/01/24 (Tue) 10:05] You did not mention the purchase date of your iPad case in the provided chat history, so I cannot determine how many days it took for it to arrive. Please provide the purchase date for an accurate answer.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60d45044", "hypothesis": "Japanese short-grain rice.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "618f13b2", "hypothesis": "Six times.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "61f8c8f8", "hypothesis": "10 minutes faster.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6222b6eb", "hypothesis": "6S is implemented in the SIAC_GEE tool.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6456829e", "hypothesis": "You initially planted 5 tomato plants and 3 cucumber plants.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6456829e_abs", "hypothesis": "You initially planted 5 tomato plants.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "65240037", "hypothesis": "[2023/05/24 (Wed) 08:42] The recommended dilution ratio for tea tree oil is 1 part tea tree oil to 10 parts carrier oil.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6613b389", "hypothesis": "Rachel got engaged on June 10th, and your anniversary is on July 22nd. That is 1 month and 12 days before your anniversary.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "66f24dbb", "hypothesis": "Yellow dress and a pair of earrings (matching the dress).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "67e0d0f2", "hypothesis": "12 courses", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "681a1674", "hypothesis": "You re-watched one Marvel movie, Avengers: Endgame.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "69fee5aa", "hypothesis": "37 coins.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "6a1eabeb", "hypothesis": "25:50", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6a27ffc2", "hypothesis": "30 videos.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6ade9755", "hypothesis": "[2023/05/20 (Sat) 19:19] You take yoga classes at Serenity Yoga.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6ae235be", "hypothesis": "[2023/05/22 (Mon) 10:13] The refining processes used at the Lake Charles Refinery include:\n\n1. Atmospheric distillation\n2. Fluid catalytic cracking (FCC)\n3. Alkylation\n4. Hydrotreating", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6aeb4375", "hypothesis": "Four different ones.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6aeb4375_abs", "hypothesis": "[2023/06/24 (Sat) 09:01] You haven't mentioned trying any Italian restaurants in your city in the previous conversations.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6b168ec8", "hypothesis": "Three bikes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6b7dfb22", "hypothesis": "[2023/05/27 (Sat) 01:37] Feeling stuck is a common experience for artists, but there are many ways to find new inspiration! Here are some ideas to help you reignite your creativity:\n\n1. **Explore Nature**: Spend time outdoors, observing the colors, shapes, and", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "6c49646a", "hypothesis": "[2023/05/26 (Fri) 11:56] You covered a total of 1,800 miles in your four road trips.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "6cb6f249", "hypothesis": "You took a week-long break in mid-January and a 10-day break in mid-February, totaling 17 days of social media breaks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6d550036", "hypothesis": "You have led the data analysis team for a project in your Marketing Research class, and you are currently working on a project that involves analyzing customer data.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6e984301", "hypothesis": "You had been taking sculpting classes for about 6 weeks when you invested in your own set of sculpting tools.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "6e984302", "hypothesis": "You bought your own set of sculpting tools, including a modeling tool set, a wire cutter, and a sculpting mat.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6f9b354f", "hypothesis": "Lighter shade of gray.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7024f17c", "hypothesis": "[2023/05/30 (Tue) 11:44] Last week, you went for a 30-minute jog on Saturday and practiced yoga three times for 2 hours each session. \n\n**Total:**\n- Jogging: 0.5 hours\n- Yoga: 3 sessions x 2", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "70b3e69b", "hypothesis": "[2023/05/30 (Tue) 10:04] Manolo Garc\u00eda.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "71017276", "hypothesis": "3 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "71017277", "hypothesis": "[2023/03/04 (Sat) 22:47] You did not mention receiving a piece of jewelry in the provided chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "71315a70", "hypothesis": "10-12 hours.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7161e7e2", "hypothesis": "Admon was scheduled for the 8 am - 4 pm shift on Sunday.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "71a3fd6b", "hypothesis": "+49 (0) 62 32 / 14 23 - 0", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "720133ac", "hypothesis": "$75", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "726462e0", "hypothesis": "10% discount", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "72e3ee87", "hypothesis": "50 episodes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "73d42213", "hypothesis": "1:00 PM", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "7401057b", "hypothesis": "[2023/06/23 (Fri) 07:47] You can redeem two free night's stays at any Hilton property with your accumulated points.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7405e8b1", "hypothesis": "Yes, you received a 40% discount on your first order from HelloFresh, while you mentioned a 20% discount on your first UberEats order.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7527f7e2", "hypothesis": "$800", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "75499fd8", "hypothesis": "Golden Retriever", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "75832dbd", "hypothesis": "[2023/05/22 (Mon) 14:25] Here are some recent publications and conferences that you might find interesting:\n\n**Recent Publications:**\n\n1. **\"Deep Learning in Medical Image Analysis: A Review\"** - A comprehensive review of recent advancements in deep learning techniques applied to medical image analysis", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "75f70248", "hypothesis": "[2023/05/27 (Sat) 20:51] Yes, sneezing could be related to your living room environment. Common causes include dust, pet dander (especially with a shedding cat), mold, or allergens from plants. Consider cleaning your living room, using an air purifier, and ensuring good", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "76d63226", "hypothesis": "55-inch", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "778164c6", "hypothesis": "[2023/05/22 (Mon) 02:17] Grilled Snapper with Mango Salsa.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "77eafa52", "hypothesis": "$300", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7a87bd0c", "hypothesis": "4 weeks", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7a8d0b71", "hypothesis": "$2,000", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7e00a6cb", "hypothesis": "International Budget Hostel", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7e974930", "hypothesis": "$420", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8077ef71", "hypothesis": "26 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "80ec1f4f", "hypothesis": "You visited two different places: The Art Cube on February 15 and the Natural History Museum on February 8.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "80ec1f4f_abs", "hypothesis": "You did not mention visiting any museums or galleries in December.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "81507db6", "hypothesis": "You have attended one graduation ceremony in the past three months, which was your best friend Rachel's master's degree graduation ceremony a couple of weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "830ce83f", "hypothesis": "Rachel moved back to the suburbs.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8464fc84", "hypothesis": "Roscioli", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "852ce960", "hypothesis": "$400,000", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "853b0a1d", "hypothesis": "18 years old.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8550ddae", "hypothesis": "Lavender gin fizz.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "85fa3a3f", "hypothesis": "[Question date: 2023/05/26 (Fri) 21:10] The total cost is:\n\n- Stainless steel food bowl: $15\n- Measuring cup: $5\n- Dental chews: $10/month\n- Flea and tick collar: $20\n\nTotal cost = $15", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "86b68151", "hypothesis": "IKEA", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "86f00804", "hypothesis": "\"The Seven Husbands of Evelyn Hugo\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8752c811", "hypothesis": "Sound effects (e.g., ambient, diegetic, non-diegetic, etc.)", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "87f22b4a", "hypothesis": "[2023/05/24 (Wed) 22:39] You mentioned selling eggs to your neighbor for $3 a dozen and that you sold a total of 40 dozen eggs so far. \n\nTo calculate your earnings for this month:\n\n40 dozen eggs x $3 per dozen = $120\n\nYou have", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "88432d0a", "hypothesis": "You baked something three times in the past two weeks: a batch of cookies on May 18, a whole wheat baguette on May 20, and a new bread recipe using sourdough starter on May 23.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "88432d0a_abs", "hypothesis": "You haven't mentioned baking egg tarts in the past two weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "89527b6b", "hypothesis": "Blue", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8979f9ec", "hypothesis": "The total number of lunch meals you got from the chicken fajitas is 3, and from the lentil soup, you got 5 meals. \n\nSo, the total is 3 + 5 = **8 lunch meals**.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "89941a93", "hypothesis": "Four bikes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "89941a94", "hypothesis": "Yes, you also had a road bike and a hybrid bike.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8a137a7f", "hypothesis": "Philips LED bulb.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8a2466db", "hypothesis": "[2023/05/24 (Wed) 22:03] Here are some resources where you can learn more about video editing:\n\n1. **Online Courses**: Platforms like Udemy, Coursera, and LinkedIn Learning offer a variety of video editing courses, including specific courses on Adobe Premiere Pro and other", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "8aef76bc", "hypothesis": "[2023/05/21 (Sun) 12:33] Mod Podge or another sealant.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8b9d4367", "hypothesis": "Jaipur Rugs", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8c18457d", "hypothesis": "21 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "8cf4d046", "hypothesis": "[Question date: 2023/05/30 (Tue) 10:38] Your undergraduate GPA is 3.86 out of 4.0, and while you haven't provided your graduate GPA, if we assume it is similar or higher, the average GPA would be calculated as follows:\n\nIf your graduate", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "8cf51dda", "hypothesis": "1. To identify molecular subtypes of endometrial cancer using genomic and transcriptomic approaches.\n2. To investigate the clinical and biological significance of the identified molecular subtypes.\n3. To develop biomarkers for early detection and prognosis of endometrial cancer based on the identified molecular subtypes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8e91e7d9", "hypothesis": "You have three sisters, so the total number of siblings you have is three.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "8e9d538c", "hypothesis": "17 skeins", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8ebdbe50", "hypothesis": "Data Science certification.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8fb83627", "hypothesis": "Five issues.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "91b15a6e", "hypothesis": "[2023/05/26 (Fri) 13:56] The minimum amount you could get if you sold the vintage diamond necklace and the antique vanity would be:\n\n- **Vintage diamond necklace**: At least $5,000 (based on its appraised value).\n- **Antique vanity**: At", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "92a0aa75", "hypothesis": "3 years and 9 months.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "945e3d21", "hypothesis": "Three times a week.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "94f70d80", "hypothesis": "4 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "95228167", "hypothesis": "[2023/05/28 (Sun) 01:56] When visiting the music store to look for a new guitar, here are some tips to keep in mind:\n\n1. **Playability:** Ensure the guitar feels comfortable in your hands. Check the neck profile, action, and overall weight.\n2.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "95bcc1c8", "hypothesis": "10 amateur comedians.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "982b5123", "hypothesis": "Three months ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "982b5123_abs", "hypothesis": "[2023/05/25 (Thu) 14:37] The timestamped chat history does not contain information about booking an Airbnb in Sacramento.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "993da5e2", "hypothesis": "Three weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "9a707b81", "hypothesis": "You attended the baking class on 2022/03/20, and you made your friend's birthday cake on 2022/04/10. That is 21 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "9a707b82", "hypothesis": "You baked a chocolate cake for your friend's birthday party.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "9aaed6a3", "hypothesis": "$0.75", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "9bbe84a2", "hypothesis": "Your previous goal for your Apex Legends level was to reach level 100 before the end of the year.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "9d25d4e0", "hypothesis": "You acquired one piece of jewelry in the last two months, which is the emerald earrings you got at the flea market last weekend.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "9ea5eabc", "hypothesis": "Hawaii.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "9ee3ecd6", "hypothesis": "300 points.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a06e4cfe", "hypothesis": "3:1 ratio", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a08a253f", "hypothesis": "You attend fitness classes three days a week: Zumba on Tuesdays and Thursdays, and weightlifting on Saturdays.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a11281a2", "hypothesis": "Approximately 100 followers.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a1cc6108", "hypothesis": "You were 32 years old when Alex was born.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a1eacc2a", "hypothesis": "Seven short stories.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a2f3aa27", "hypothesis": "[2023/06/03 (Sat) 09:01] You mentioned you were close to 1300 followers, but the exact count was not specified.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a3045048", "hypothesis": "25 days before her birthday party.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a3332713", "hypothesis": "$200", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a346bb18", "hypothesis": "You exceeded your target time of 4 hours and 10 minutes by 12 minutes, finishing in 4 hours and 22 minutes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a3838d2b", "hypothesis": "You participated in two charity events before the 'Run for the Cure' event: the \"Food for Thought\" charity gala on September 25th and the \"Bike-a-Thon\" charity event in November.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a40e080f", "hypothesis": "Patagonia and Southwest Airlines.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a4996e51", "hypothesis": "You typically work up to 50 hours a week during peak campaign seasons.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a82c026e", "hypothesis": "Dark Souls 3 DLC", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a89d7624", "hypothesis": "[2023/05/26 (Fri) 02:11] Explore the Denver Art Museum, visit the Denver Botanic Gardens, check out the Denver Museum of Nature & Science, stroll through the historic Larimer Square, and enjoy the vibrant food scene in neighborhoods like RiNo and LoDo. Don't forget to", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a96c20ee", "hypothesis": "Harvard University", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a96c20ee_abs", "hypothesis": "Harvard University.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "a9f6b44c", "hypothesis": "You planned to service one bike in March, your road bike, which you had serviced at Pedal Power on March 10th.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "aae3761f", "hypothesis": "You drove for six hours to Washington D.C. and approximately 18 hours to Grand Teton National Park (based on the earlier conversation). The total driving time to your three road trip destinations is 6 + 18 = 24 hours.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "ac031881", "hypothesis": "LIV", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ad7109d1", "hypothesis": "500 Mbps", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "af082822", "hypothesis": "2 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "af8d2e46", "hypothesis": "7 shirts", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "afdc33df", "hypothesis": "[2023/05/28 (Sun) 12:29] To keep your kitchen clean and organized, consider these tips:\n\n1. **Clean as You Go:** Tidy up while cooking by washing dishes and wiping surfaces as you use them.\n2. **Establish a Cleaning Routine:** Set a daily or", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "affe2881", "hypothesis": "32 species.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b01defab", "hypothesis": "Yes, you finished reading \"The Nightingale\" by Kristin Hannah.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b0479f84", "hypothesis": "[2023/05/22 (Mon) 01:48] Here are some documentary recommendations for your free time tonight:\n\n1. **My Octopus Teacher** (Netflix) - A touching story about a filmmaker who forms a bond with an octopus in a South African kelp forest.\n2. **13", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b29f3365", "hypothesis": "You had been taking guitar lessons for six weeks when you bought the new guitar amp two weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "b320f3f8", "hypothesis": "A rare blue Snaggletooth action figure.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b3c15d39", "hypothesis": "24 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "b46e15ed", "hypothesis": "Two months have passed since you participated in two charity events in a row on consecutive days (March 19, 2023, to April 18, 2023).", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "b46e15ee", "hypothesis": "You participated in the \"Walk for Hunger\" charity event.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b5ef892d", "hypothesis": "You spent 5 days camping in Yellowstone National Park in April 2023.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "b6019101", "hypothesis": "5 MCU films.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b6025781", "hypothesis": "[2023/05/29 (Mon) 10:41] Here are some new recipe ideas for your meal prep:\n\n1. **Chickpea Salad**: Combine canned chickpeas, diced cucumbers, cherry tomatoes, red onion, parsley, and a lemon-tahini dressing.\n2. **Stuff", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "b759caee", "hypothesis": "@jessica_poole_jewellery", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b86304ba", "hypothesis": "Triple the amount you paid for it.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b9cfe692", "hypothesis": "You took two and a half weeks to finish \"The Seven Husbands of Evelyn Hugo\" and three weeks to finish \"The Nightingale,\" which totals five and a half weeks combined.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ba358f49", "hypothesis": "[2022/09/01 (Thu) 21:32] You will be 33 years old when Rachel gets married next year.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ba358f49_abs", "hypothesis": "[2023/05/21 (Sun) 12:08] Rachel is getting married next year, so she will be the same age she is now plus one year at that time.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "ba61f0b9", "hypothesis": "6 women.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bb7c3b45", "hypothesis": "You saved $300 on the Jimmy Choo heels, which originally retailed for $500 and you purchased for $200.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bbf86515", "hypothesis": "10 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "bc149d6b", "hypothesis": "[2023/05/30 (Tue) 12:23] The total weight of the new feed you purchased in the past two months is 70 pounds (50 pounds of layer feed and 20 pounds of organic scratch grains).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bc8a6e93", "hypothesis": "A lemon blueberry cake.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bc8a6e93_abs", "hypothesis": "You haven't mentioned baking anything for your uncle's birthday party.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bcbe585f", "hypothesis": "About 2 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "bf659f65", "hypothesis": "You mentioned purchasing \"Midnight Sky\" by \"The Whiskey Wanderers\" at a festival, and you downloaded Billie Eilish's album \"Happier Than Ever\" on Spotify. So, you've purchased or downloaded 2 music albums or EPs.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "c14c00dd", "hypothesis": "Lavender scented shampoo from Trader Joe's.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c18a7dc8", "hypothesis": "You are 7 years older than when you graduated from college.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c19f7a0b", "hypothesis": "6:30 pm", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c2ac3c61", "hypothesis": "Five online courses.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c4a1ceb8", "hypothesis": "You have mentioned using the following citrus fruits in your cocktail recipes: lime, lemon, and orange. So, you have used three different types of citrus fruits.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c4ea545c", "hypothesis": "Yes, you mentioned going to the gym four times a week, which indicates an increase in frequency compared to your previous routine.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c4f10528", "hypothesis": "Miss Bee Providore.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c5e8278d", "hypothesis": "Johnson", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c6853660", "hypothesis": "Increase.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c7cf7dfd", "hypothesis": "Nostalgia", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c7dc5443", "hypothesis": "5-2", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c8090214", "hypothesis": "You attended the Holiday Market a week before Black Friday, which was on November 24, 2023. You bought the iPhone 13 Pro on Black Friday, November 24, 2023. Therefore, you attended the Holiday Market on November 17, 2023, which is 7 days before", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c8090214_abs", "hypothesis": "You attended the Holiday Market a week before Black Friday, which is on November 24, 2023. Since you bought your iPhone 13 Pro on Black Friday (November 24), the Holiday Market was on November 17, 2023. \n\nYou mentioned buying your iPhone 13 Pro on May", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "c8c3f81d", "hypothesis": "Nike", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c8f1aeed", "hypothesis": "Pennsylvania.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c960da58", "hypothesis": "20 playlists.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c9f37c46", "hypothesis": "About 3 months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "caf03d32", "hypothesis": "[2023/05/21 (Sun) 02:23] Here are some tips to help you get better results with your slow cooker recipes:\n\n1. **Layering Ingredients**: Place denser ingredients like root vegetables at the bottom and lighter ingredients on top to ensure even cooking.\n2. **Avoid Over", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "caf9ead2", "hypothesis": "5 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "cc06de0d", "hypothesis": "$6 more expensive.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "cc539528", "hypothesis": "[2023/05/23 (Tue) 01:20] Ruby, Python, or PHP.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "cc5ded98", "hypothesis": "You dedicate about two hours each day to coding exercises.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "cc6d1ec1", "hypothesis": "Three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ccb36322", "hypothesis": "Spotify", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ce6d2d27", "hypothesis": "Friday", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ceb54acb", "hypothesis": "1. Sexual fixations\n2. Problematic sexual behaviors\n3. Sexual impulsivity\n4. Compulsive sexuality", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "cf22b7bf", "hypothesis": "You have lost 10 pounds since you started going to the gym consistently.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d01c6aa8", "hypothesis": "27 years old.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d23cf73b", "hypothesis": "You have learned to cook or tried out Indian, vegan, and Korean cuisines in the past few months.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "d24813b1", "hypothesis": "[2023/05/27 (Sat) 23:31] Consider baking a variety of treats to please different tastes. Here are some ideas:\n\n1. **Chocolate Chip Cookies:** A classic favorite that everyone loves.\n2. **Lemon Lavender Pound Cake:** A unique and refreshing option.\n3. **Brown", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "d3ab962e", "hypothesis": "[Question date: 2022/09/24 (Sat) 19:30] The total distance of the hikes you did on two consecutive weekends is 8 miles (3 miles at Valley of Fire State Park + 5 miles at Red Rock Canyon).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d52b4f67", "hypothesis": "Grand Ballroom", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d596882b", "hypothesis": "By Chloe", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d6062bb9", "hypothesis": "[2023/05/29 (Mon) 09:49] Your most popular YouTube video has 542 views, and your TikTok video of Luna chasing a laser pointer has 1,456 views. The total number of views is 542 + 1,456 = 1,998 views.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d6233ab6", "hypothesis": "[2023/05/27 (Sat) 22:13] Attending your high school reunion can be a great opportunity to reconnect with old friends, reflect on your past experiences, and see how everyone has changed. If you're feeling nostalgic, it might be a good idea to go!", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "d682f1a2", "hypothesis": "You have mentioned using Uber Eats recently.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "d7c942c3", "hypothesis": "Yes, your mom is using the same grocery list app as you now.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d851d5ba", "hypothesis": "$1,500", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "d905b33f", "hypothesis": "[2023/05/20 (Sat) 02:52] The book was originally priced at $30, and you bought it for $24. \n\nTo find the percentage discount:\n\n1. Calculate the discount amount: $30 - $24 = $6\n2. Calculate the percentage discount: ($6", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "dad224aa", "hypothesis": "You wake up at 7:30 am on Saturday mornings.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "db467c8c", "hypothesis": "Nine months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "dc439ea3", "hypothesis": "Hoop Dance", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "dccbc061", "hypothesis": "You were a staunch atheist.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "dcfa8644", "hypothesis": "24 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "dd2973ad", "hypothesis": "2 AM", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "dfde3500", "hypothesis": "Wednesday evening.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e01b8e2f", "hypothesis": "Hawaii", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e25c3b8d", "hypothesis": "$300", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e3038f8c", "hypothesis": "You have a total of 57 rare records and 25 rare coins, which adds up to 82 rare items.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "e3fc4d6e", "hypothesis": "Dr. Arati Prabhakar", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e47becba", "hypothesis": "Business Administration", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e48988bc", "hypothesis": "Patagonia.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e493bb7c", "hypothesis": "Above your bed in your bedroom.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e4e14d04", "hypothesis": "Three weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e56a43b9", "hypothesis": "$5 discount", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e5ba910e_abs", "hypothesis": "[2023/05/26 (Fri) 23:25] The cost of your Sony WH-1000XM4 headphones is $378. However, there is no mention of the cost of the iPad in the provided chat history. Therefore, I cannot calculate the total cost without that information. Please provide", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e6041065", "hypothesis": "40%", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e61a7584", "hypothesis": "About 9 months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e66b632c", "hypothesis": "26 minutes and 30 seconds.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "e831120c", "hypothesis": "It took you about two weeks to watch all 22 Marvel Cinematic Universe movies and a week and a half to watch all the main Star Wars films.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e8a79c70", "hypothesis": "2-3 eggs", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e9327a54", "hypothesis": "The Sugar Factory.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e982271f", "hypothesis": "Revolution Hall", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "eac54adc", "hypothesis": "You launched your website on February 10, 2023, and signed a contract with your first client on March 1, 2023. That is 19 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "eac54add", "hypothesis": "You mentioned that you signed a contract with your first client.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "eaca4986", "hypothesis": "C D E F G A B A G F E D C", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "eace081b", "hypothesis": "You are planning to stay on Oahu for your birthday trip to Hawaii.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ec81a493", "hypothesis": "500 copies.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ed4ddc30", "hypothesis": "20 dozen eggs.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "edced276", "hypothesis": "You spent 10 days in Hawaii and 5 days in New York City, totaling 15 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "edced276_abs", "hypothesis": "[Question date: 2023/05/28 (Sun) 06:00] You spent 10 days traveling in Hawaii with your family. There is no mention of the number of days spent in Seattle in the provided chat history, so I cannot provide that information.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "eeda8a6d", "hypothesis": "[Question date: 2023/05/27 (Sat) 17:21] In your 20-gallon tank, you have 10 neon tetras, 5 golden honey gouramis, and a small pleco catfish, totaling 16 fish. In your 10-gallon tank, you", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "eeda8a6d_abs", "hypothesis": "[2023/05/28 (Sun) 08:12] You mentioned having a 20-gallon tank with 10 neon tetras, 5 golden honey gouramis, and a small pleco catfish, but there was no mention of a 30-gallon tank. Therefore, I don't have", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ef66a6e5", "hypothesis": "Two sports: swimming and tennis.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ef9cf60a", "hypothesis": "$200", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "efc3f7c2", "hypothesis": "You wake up 30 minutes earlier on Fridays compared to other weekdays.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f0853d11", "hypothesis": "22 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "f0e564bc", "hypothesis": "$1,300", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f35224e0", "hypothesis": "You have finished around 15 episodes of \"How I Built This\" and 12 episodes of \"My Favorite Murder.\" The total number of episodes you've listened to from both podcasts is 27.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f4f1d8a4", "hypothesis": "Your sister.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f4f1d8a4_abs", "hypothesis": "[2023/05/20 (Sat) 01:42] Your sister gave you a new stand mixer as a birthday gift.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "f523d9fe", "hypothesis": "\"Doc Martin.\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f685340e", "hypothesis": "You previously played tennis with your friends at the local park every other week. There is no updated information on how often you play now.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "f685340e_abs", "hypothesis": "You haven't mentioned playing table tennis with your friends at the local park in the previous conversations. You primarily discussed playing tennis.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f8c5f88b", "hypothesis": "From a sports store downtown.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f9e8c073", "hypothesis": "Five sessions.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "faba32e5", "hypothesis": "24 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "fca70973", "hypothesis": "[2023/08/15 (Tue) 16:25] Consider visiting Disneyland for its magical atmosphere and attractions, Universal Studios Hollywood for thrilling rides and movie-themed experiences, or Knott's Berry Farm for a mix of rides and unique food offerings. If you're looking for more thrills, Six Flags Magic Mountain is", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "fca762bc", "hypothesis": "Memrise", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "fea54f57", "hypothesis": "\"Evolution\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_0a05b494", "hypothesis": "You met the tourist from Australia first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_0b2f1d21", "hypothesis": "The purchase of the coffee maker happened first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_15e38248", "hypothesis": "You bought one coffee table, fixed one kitchen table, and you mentioned considering new throw pillows, but there was no mention of selling or assembling furniture. So, you have bought and fixed two pieces of furniture.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_18c2b244", "hypothesis": "1. I signed up for the rewards program at ShopRite.\n2. I redeemed $12 cashback for a $10 Amazon gift card from Ibotta.\n3. I used a Buy One Get One Free coupon on Luvs diapers at Walmart.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_1916e0ea", "hypothesis": "72 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_194be4b3", "hypothesis": "[2023/05/22 (Mon) 13:29] You currently own a Yamaha FG800 acoustic guitar and a black Fender Stratocaster electric guitar. You also mentioned a Korg B1 digital piano. So, you own three musical instruments.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_1a1dc16d", "hypothesis": "The pride parade happened first on May 1st, while the meeting with Rachel was on April 10th.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_1d4ab0c9", "hypothesis": "27 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_1d80365e", "hypothesis": "[2023/05/15 (Mon) 19:56] You started your solo camping trip to Yosemite National Park on May 15, 2023, but the duration of your trip was not specified in the chat history. Therefore, I cannot determine how many days you spent there.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_1e4a8aeb", "hypothesis": "23 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_1e4a8aec", "hypothesis": "You planted 12 new tomato saplings.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_213fd887", "hypothesis": "The charity 5K run to raise money for a local children's hospital.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_21adecb5", "hypothesis": "[2023/07/01 (Sat) 13:31] Approximately 12 months passed between the completion of your undergraduate degree and the submission of your master's thesis on May 15, 2023.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_2312f94c", "hypothesis": "The Samsung Galaxy S22.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_2487a7cb", "hypothesis": "The 'Effective Time Management' workshop.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_2655b836", "hypothesis": "[2023/04/10 (Mon) 23:07] You had an issue with your car's GPS system on 3/22, which required you to take it back to the dealership for a fix.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_2ba83207", "hypothesis": "Thrive Market, where you spent around $150 on organic and sustainable products.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_2c50253f", "hypothesis": "7:00 AM", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_2d58bcd6", "hypothesis": "'The Hate U Give'", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_2f56ae70", "hypothesis": "[Question date: 2023/05/22 (Mon) 04:35] Disney+", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_2f584639", "hypothesis": "The necklace for your sister.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_2f8be40d", "hypothesis": "One wedding.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_2f91af09", "hypothesis": "You have completed a total of five short stories and additional pieces for the writing challenge, but the exact number of poems and writing challenge pieces is not specified. Therefore, the total number of completed pieces is at least five, plus any additional poems and writing challenge submissions you've written.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_31ff4165", "hypothesis": "[Question date: 2023/05/27 (Sat) 06:53] You use at least two health-related devices daily: your nebulizer machine for inhalation treatments and your Fitbit Versa 3 to track your activity levels and sleep patterns.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_372c3eed", "hypothesis": "[Question date: 2021/08/20 (Fri) 19:01] You spent a total of 16 years in formal education from high school to the completion of your Bachelor's degree (4 years of high school + 4 years of college).", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_372c3eed_abs", "hypothesis": "You spent a total of 8 years in formal education from high school to the completion of your Master's degree. \n\n- High School: 4 years (2010 to 2014)\n- Associate's Degree: 2 years (2014 to 2016)\n- Bachelor's Degree: 2 years (2016", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_385a5000", "hypothesis": "The marigolds were started first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_45189cb4", "hypothesis": "1. College Football National Championship (Georgia vs. Alabama) on January 9.\n2. NFL Divisional Round (Kansas City Chiefs vs. Buffalo Bills) on January 22.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_468eb063", "hypothesis": "8 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_468eb064", "hypothesis": "Emma, a freelance writer.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_483dd43c", "hypothesis": "You started watching \"The Crown\" first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_4929293a", "hypothesis": "Michael's engagement party happened first.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_4929293b", "hypothesis": "You participated in your cousin's wedding as a bridesmaid.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_4cd9eba1", "hypothesis": "You were accepted into the exchange program on March 20, and you started attending pre-departure orientation sessions on March 27. Therefore, you have been accepted for 3 weeks by the time you started the orientation sessions.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_4edbafa2", "hypothesis": "2023/06/03", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_4ef30696", "hypothesis": "105 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_4fc4f797", "hypothesis": "46 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_5438fa52", "hypothesis": "Your attendance at a cultural festival happened first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_5501fe77", "hypothesis": "TikTok, where you gained around 200 followers over the past three weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_59149c77", "hypothesis": "[Question date: 2023/02/01 (Wed) 13:01] 23 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_59149c78", "hypothesis": "The art-related event you participated in two weeks ago was held at the Metropolitan Museum of Art.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_59c863d7", "hypothesis": "You have mentioned working on or buying at least two model kits: a 1/72 scale B-29 bomber and a 1/24 scale '69 Camaro.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_5dcc0aab", "hypothesis": "You didn't mention cleaning any specific pair of shoes last month in the provided chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_61e13b3c", "hypothesis": "5 weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_65aabe59", "hypothesis": "You set up the smart thermostat first.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_68e94287", "hypothesis": "Your post about the vegan chili recipe happened first.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_68e94288", "hypothesis": "You participated in the #PlankChallenge.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_6dc9b45b", "hypothesis": "4 months ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_6ed717ea", "hypothesis": "The training pads for Luna.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_70e84552", "hypothesis": "You fixed the fence first, as you mentioned trimming the goats' hooves two weeks ago and fixing the fence three weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_70e84552_abs", "hypothesis": "Fixing the fence.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_731e37d7", "hypothesis": "You mentioned attending five workshops in the last three months, with the most recent digital marketing workshop costing $500. If we assume the other workshops had similar costs, the total spent would be approximately $2,500. However, if the costs varied, please provide the amounts for each workshop to calculate the exact total.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_74aed68e", "hypothesis": "45 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_76048e76", "hypothesis": "The bike.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_78cf46a3", "hypothesis": "The narrator received their new phone case first.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_7a0daae1", "hypothesis": "5 weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_7abb270c", "hypothesis": "1. Natural History Museum (Dinosaur Fossils exhibition)\n2. Metropolitan Museum of Art (Ancient Egyptian Artifacts exhibition)\n3. Modern Art Museum (The Evolution of Abstract Expressionism installation)\n4. Museum of Contemporary Art (lecture series by Dr. Maria Rodriguez on feminist art in the 1970s)", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_7bc6cf22", "hypothesis": "17 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_7ca326fa", "hypothesis": "Emma graduated first, followed by Rachel, and then Alex graduated last.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_7ddcf75f", "hypothesis": "3 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_7de946e7", "hypothesis": "The persistent cough.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_7f6b06db", "hypothesis": "1. Solo camping trip to Yosemite National Park (May 15, 2023)\n2. Road trip to Big Sur and Monterey (April 20, 2023)\n3. Trip to the Eastern Sierra (March 10, 2023)", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_7fce9456", "hypothesis": "You viewed several properties before making an offer on the townhouse in the Brookside neighborhood, but the exact number is not specified in the chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_8279ba02", "hypothesis": "10 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_8279ba03", "hypothesis": "A smoker.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_85da3956", "hypothesis": "Three weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_88806d6e", "hypothesis": "You met Tom first at a charity event a few months ago, before meeting Mark and Sarah on a beach trip about a month ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_8c8961ae", "hypothesis": "The trip to Europe with family.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_8e165409", "hypothesis": "22 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_93159ced", "hypothesis": "[Question date: 2023/05/22 (Mon) 03:09] You have been working for about 4 years and 3 months at NovaTech, but the exact duration before starting there is not specified in the provided information.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_93159ced_abs", "hypothesis": "[2023/05/23 (Tue) 10:34] You have been working professionally for 9 years before starting your current job at Google.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_93f6379c", "hypothesis": "'Marketing Professionals'", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_98f46fc6", "hypothesis": "The charity bake sale.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_9a159967", "hypothesis": "You flew with United Airlines the most in March and April.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_a1b77f9c", "hypothesis": "[Question date: 2022/04/30 (Sat) 03:21] To calculate the total weeks spent on reading \"The Nightingale\" and listening to \"Sapiens: A Brief History of Humankind\" and \"The Power,\" I would need the specific duration (in weeks) that you", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_a2d1d1f6", "hypothesis": "3 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_a56e767c", "hypothesis": "You attended at least two film festivals: AFI Fest and the Austin Film Festival.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_ab202e7f", "hypothesis": "You replaced your old coffee maker with a fancy new espresso machine and fixed your kitchen shelves.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_af6db32f", "hypothesis": "19 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b0863698", "hypothesis": "7 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b4a80587", "hypothesis": "The arrival of the new prime lens happened first.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b5700ca0", "hypothesis": "Episcopal Church", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b5700ca9", "hypothesis": "3 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_c27434e8", "hypothesis": "You started the Ferrari model first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_c27434e8_abs", "hypothesis": "You started the Ferrari model first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_cd90e484", "hypothesis": "Three weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_d12ceb0e", "hypothesis": "To calculate the average age, we need the ages of you, your parents, and your grandparents:\n\n- You: (age not provided)\n- Mom: 55\n- Dad: 58\n- Grandma: 75\n- Grandpa: 78\n\nAssuming your age is not provided, let's denote it as", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_d31cdae3", "hypothesis": "The family road trip across the American Southwest.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_d6585ce8", "hypothesis": "1. Music festival in Brooklyn (exact date not specified)\n2. Billie Eilish show in Philly (exact date not specified)\n3. Jazz night at a local bar (April 8, 2023)\n4. Panorama Music Festival (upcoming, April 2023)", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_d6585ce9", "hypothesis": "You went with your parents to the music event last Saturday.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_d84a3211", "hypothesis": "You have spent a total of $185 on bike-related expenses since the start of the year. This includes:\n\n- $25 for the new chain (April 20)\n- $40 for the new bike lights (April 20)\n- $120 for the Bell Zephyr helmet (April 10)\n\nTotal: $", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_d9af6064", "hypothesis": "The smart thermostat.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_e05b82a6", "hypothesis": "You rode the Xcelerator rollercoaster at Knott's Berry Farm on October 8th and the Revenge of the Mummy rollercoaster at Universal Studios Hollywood three times on October 15th. Therefore, you rode rollercoasters a total of 4 times across the events you attended from July to October", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_e061b84f", "hypothesis": "1. Midsummer 5K Run (June 10, 2023)\n2. Charity soccer tournament (June 17, 2023)\n3. (No specific event mentioned for July)", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_e061b84g", "hypothesis": "The event was the company's annual charity soccer tournament.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_e072b769", "hypothesis": "About 3 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_e414231e", "hypothesis": "26 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_e414231f", "hypothesis": "You fixed or serviced your road bike by upgrading the pedals to Shimano Ultegra clipless pedals.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_ec93e27f", "hypothesis": "Train", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_f2262a51", "hypothesis": "You visited two different doctors: Dr. Smith (your primary care physician) and Dr. Patel (the ENT specialist).", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_f420262c", "hypothesis": "1. United Airlines (Boston to Chicago)\n2. American Airlines (LAX to JFK)\n3. JetBlue (BOS to FLL)", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_f420262d", "hypothesis": "JetBlue", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_f49edff3", "hypothesis": "1. The day you helped your friend prepare the nursery (2023/02/05).\n2. The day you helped your cousin pick out stuff for her baby shower (2023/02/10).\n3. The day you ordered a customized phone case for your friend's birthday (2023/02/20).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_fa19884c", "hypothesis": "11 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_fa19884d", "hypothesis": "You started listening to a bluegrass band that features a banjo player.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_fe651585", "hypothesis": "Rachel became a parent first.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_fe651585_abs", "hypothesis": "Alex.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}

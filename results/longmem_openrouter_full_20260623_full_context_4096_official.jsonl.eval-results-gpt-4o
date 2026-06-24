@@ -1,0 +1,157 @@
+{"question_id": "001be529", "hypothesis": "Over a year.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0862e8bf", "hypothesis": "Luna", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0862e8bf_abs", "hypothesis": "[2023/05/20 (Sat) 03:02] The name of your hamster has not been mentioned in the chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "0e5e2d1a", "hypothesis": "38 subjects.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "118b2229", "hypothesis": "45 minutes each way.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1568498a", "hypothesis": "28. Kg3", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "15745da0", "hypothesis": "Three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "15745da0_abs", "hypothesis": "Three months.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "16c90bf4", "hypothesis": "Pilsner or lager.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "18dcd5a5", "hypothesis": "Four mummies.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1903aded", "hypothesis": "Transcriptionist", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "19b5f2b3", "hypothesis": "Two weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "19b5f2b3_abs", "hypothesis": "Two weeks.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1a1907b4", "hypothesis": "[2023/05/26 (Fri) 02:34] How about trying a **Mojito**? It's refreshing, easy to make, and perfect for gatherings. Just muddle fresh mint leaves with lime juice and sugar, add white rum, top with soda water, and garnish with mint and lime", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1b9b7252", "hypothesis": "Mindful.org", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1c0ddc50", "hypothesis": "[2023/05/28 (Sun) 21:56] Here are some activities you can do during your commute to work:\n\n1. **Listen to podcasts** - Explore various genres, including history, science, or true crime.\n2. **Read books or e-books** - Bring a physical book or", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1d4da289", "hypothesis": "[2023/05/23 (Tue) 18:45] Two-factor authentication methods include biometric authentication (like fingerprint or facial recognition) and one-time passwords (OTP) sent via SMS or email.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1d4e3b97", "hypothesis": "[2024/02/20 (Tue) 21:35] Yes, there could be several reasons why your bike is performing better during your Sunday group rides:\n\n1. **Recent upgrades**: You replaced the old bike's chain and cassette on February 1st, which can significantly improve shifting performance and overall", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "1de5cff2", "hypothesis": "Veja", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1e043500", "hypothesis": "Summer Vibes", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "1faac195", "hypothesis": "Denver", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "21436231", "hypothesis": "12 largemouth bass.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "28bcfaac", "hypothesis": "MusicTheory.net", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "2bf43736", "hypothesis": "[2023/05/26 (Fri) 14:58] Chapter 4 of Book 1 in the second part discusses vocal prayer and meditation.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "311778f1", "hypothesis": "10 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "32260d93", "hypothesis": "[2023/05/27 (Sat) 18:09] \"The Good Place\" - a clever and funny series that explores ethics and morality in a unique way.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "3249768e", "hypothesis": "Absinthe", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "352ab8bd", "hypothesis": "Approximately 20%.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "36580ce8", "hypothesis": "Bronchitis.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "37d43f65", "hypothesis": "16GB", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3b6f954b", "hypothesis": "University of Melbourne", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3d86fd0a", "hypothesis": "Coffee Shop (City)", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3e321797", "hypothesis": "[2023/05/26 (Fri) 11:47] You should leave the tomato juice mixed with lemon juice on your under-eye area for about 10 minutes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "3fdac837", "hypothesis": "You spent 4 days in Chicago (from your trip mentioned on 2023/05/24) and 7 days in Japan (from April 15th to 22nd). \n\nTotal: 4 + 7 = 11 days.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4100d0a0", "hypothesis": "Irish and Italian.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "41275add", "hypothesis": "\"How to Sit Properly at a Desk to Avoid Back Pain\" by the Mayo Clinic.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4388e9dd", "hypothesis": "Andy was wearing an untidy, stained white shirt.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "488d3006", "hypothesis": "GR-90", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4baee567", "hypothesis": "12 times.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4c36ccef", "hypothesis": "Roscioli", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "4fd1909e", "hypothesis": "Xfinity Center", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "505af2f5", "hypothesis": "[2023/05/25 (Thu) 15:08] Try a homemade vanilla almond milk creamer! Blend unsweetened almond milk with vanilla extract and a touch of maple syrup or honey for sweetness. Adjust the flavors to your liking!", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "51a45a95", "hypothesis": "You redeemed a $5 coupon on coffee creamer at Target.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "51b23612", "hypothesis": "[2023/05/29 (Mon) 23:18] \"Nu, pogodi!\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "54026fce", "hypothesis": "[2023/05/30 (Tue) 14:01] Here are some suggestions to stay connected with your colleagues:\n\n1. **Virtual Coffee Breaks**: Schedule regular informal video calls for casual chats.\n2. **Online Team Activities**: Organize virtual games or team-building exercises.\n3. **", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "545bd2b5", "hypothesis": "2 hours per day.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "561fabcd", "hypothesis": "Fissionator", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "577d4d32", "hypothesis": "7 pm", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "57f827a0", "hypothesis": "[2023/05/27 (Sat) 13:23] Here are some tips for rearranging your bedroom furniture:\n\n1. **Measure Your Space**: Before moving anything, measure your room dimensions and the furniture to ensure everything fits well.\n2. **Create a Floor Plan**: Sketch a layout on", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "5809eb10", "hypothesis": "The construction of the house began in 2014.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "58470ed2", "hypothesis": "Borges said, \"The Library is a sphere whose exact center is any one of its hexagons and whose circumference is inaccessible.\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "58bf7951", "hypothesis": "The Glass Menagerie", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "58ef2f1c", "hypothesis": "[2023/04/02 (Sun) 00:23] You volunteered at the \"Love is in the Air\" fundraising dinner on Valentine's Day.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5d3d2817", "hypothesis": "Marketing specialist at a small startup.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "5e1b23de", "hypothesis": "You attended the photography workshop on 2023/11/01, which was 3 months ago from 2024/02/01.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "60d45044", "hypothesis": "Japanese short-grain rice.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6222b6eb", "hypothesis": "6S is implemented in the SIAC_GEE tool.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "65240037", "hypothesis": "[2023/05/24 (Wed) 08:42] The recommended dilution ratio for tea tree oil is 1 part tea tree oil to 10 parts carrier oil.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "66f24dbb", "hypothesis": "Yellow dress and a pair of earrings (matching the dress).", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6ade9755", "hypothesis": "Serenity Yoga.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6ae235be", "hypothesis": "[2023/05/22 (Mon) 10:13] The refining processes used at the Lake Charles Refinery include:\n\n1. Atmospheric distillation\n2. Fluid catalytic cracking (FCC)\n3. Alkylation\n4. Hydrotreating", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6b168ec8", "hypothesis": "Three bikes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "6f9b354f", "hypothesis": "Lighter shade of gray.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "70b3e69b", "hypothesis": "[2023/05/30 (Tue) 10:04] Manolo Garc\u00eda.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "71017276", "hypothesis": "3 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "71017277", "hypothesis": "[2023/03/04 (Sat) 22:47] You did not mention receiving a piece of jewelry in the provided chat history.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "7161e7e2", "hypothesis": "Admon was scheduled for the 8 am - 4 pm shift on Sunday.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "71a3fd6b", "hypothesis": "+49 (0) 62 32 / 14 23 - 0", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "726462e0", "hypothesis": "10% discount", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7527f7e2", "hypothesis": "$800", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "75499fd8", "hypothesis": "Golden Retriever.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "75f70248", "hypothesis": "[2023/05/27 (Sat) 20:51] Yes, sneezing can be a sign of allergies, and your living room could be a contributing factor. Common allergens include dust, pet dander (especially with a shedding cat), mold, and pollen. Consider cleaning your living room, using an", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "76d63226", "hypothesis": "55-inch", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "778164c6", "hypothesis": "Grilled Snapper with Mango Salsa", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7a8d0b71", "hypothesis": "$2,000", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "7e00a6cb", "hypothesis": "International Budget Hostel", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8077ef71", "hypothesis": "24 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "8464fc84", "hypothesis": "Roscioli", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "853b0a1d", "hypothesis": "18 years old.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8550ddae", "hypothesis": "Lavender gin fizz.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "86b68151", "hypothesis": "IKEA", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "86f00804", "hypothesis": "\"The Seven Husbands of Evelyn Hugo\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8752c811", "hypothesis": "Sound effects (e.g., ambient, diegetic, non-diegetic, etc.)", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "89527b6b", "hypothesis": "Blue", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8a137a7f", "hypothesis": "Philips LED bulb.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8aef76bc", "hypothesis": "[2023/05/21 (Sun) 12:33] Mod Podge.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8b9d4367", "hypothesis": "Jaipur Rugs", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8cf51dda", "hypothesis": "1. To identify molecular subtypes of endometrial cancer using genomic and transcriptomic approaches.\n2. To investigate the clinical and biological significance of the identified molecular subtypes.\n3. To develop biomarkers for early detection and prognosis of endometrial cancer based on the identified molecular subtypes.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8e9d538c", "hypothesis": "17 skeins", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "8ebdbe50", "hypothesis": "Data Science certification.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "94f70d80", "hypothesis": "4 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "95228167", "hypothesis": "[2023/05/28 (Sun) 01:56] When visiting the music store to look for a new guitar, here are some tips to keep in mind:\n\n1. **Playability:** Ensure the guitar feels comfortable in your hands. Check the neck profile, action, and overall weight.\n2.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "95bcc1c8", "hypothesis": "10 amateur comedians.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "9aaed6a3", "hypothesis": "$0.75", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a06e4cfe", "hypothesis": "3:1 ratio", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a3332713", "hypothesis": "$200", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a40e080f", "hypothesis": "Patagonia and Southwest Airlines.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a82c026e", "hypothesis": "Dark Souls 3 DLC", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "a89d7624", "hypothesis": "[2023/05/26 (Fri) 02:11] Explore the Denver Art Museum, visit the Denver Botanic Gardens, check out the Denver Museum of Nature & Science, stroll through the historic Larimer Square, and enjoy the vibrant food scene in neighborhoods like RiNo and LoDo. Don't miss a", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "ac031881", "hypothesis": "LIV", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ad7109d1", "hypothesis": "500 Mbps", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "af082822", "hypothesis": "2 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "af8d2e46", "hypothesis": "7 shirts", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b0479f84", "hypothesis": "[2023/05/22 (Mon) 01:48] Here are some documentary recommendations for your free time tonight:\n\n1. **My Octopus Teacher** (Netflix) - A touching story about a filmmaker who forms a bond with an octopus in a South African kelp forest.\n2. **13", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b320f3f8", "hypothesis": "A rare blue Snaggletooth action figure.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b6025781", "hypothesis": "[2023/05/29 (Mon) 10:41] Here are some new recipe ideas for your meal prep:\n\n1. **Chickpea Salad**: Combine canned chickpeas, diced cucumbers, cherry tomatoes, red onion, parsley, and a lemon-tahini dressing.\n2. **Stuff", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "b759caee", "hypothesis": "@jessica_poole_jewellery", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "b86304ba", "hypothesis": "Triple the amount you paid for it.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bc8a6e93", "hypothesis": "A lemon blueberry cake.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bc8a6e93_abs", "hypothesis": "You haven't mentioned what you baked for your uncle's birthday party.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "bcbe585f", "hypothesis": "About 2 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "c14c00dd", "hypothesis": "Lavender scented shampoo from Trader Joe's.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c19f7a0b", "hypothesis": "6:30 pm", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c4f10528", "hypothesis": "Miss Bee Providore.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c5e8278d", "hypothesis": "Johnson", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c7cf7dfd", "hypothesis": "Nostalgia", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c8c3f81d", "hypothesis": "Nike", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c8f1aeed", "hypothesis": "Pennsylvania.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "c960da58", "hypothesis": "20 playlists.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "caf9ead2", "hypothesis": "5 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "cc539528", "hypothesis": "[2023/05/23 (Tue) 01:20] Ruby, Python, or PHP.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ccb36322", "hypothesis": "Spotify", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ceb54acb", "hypothesis": "1. Sexual fixations\n2. Problematic sexual behaviors\n3. Sexual impulsivity\n4. Compulsive sexuality", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d52b4f67", "hypothesis": "Grand Ballroom", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d596882b", "hypothesis": "By Chloe", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "d6233ab6", "hypothesis": "[2023/05/27 (Sat) 22:13] Attending your high school reunion can be a great opportunity to reconnect with old friends, reflect on your past experiences, and see how everyone has changed. If you're feeling nostalgic, it might be a positive experience for you!", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "dc439ea3", "hypothesis": "Hoop Dance", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e01b8e2f", "hypothesis": "Hawaii", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e3fc4d6e", "hypothesis": "Dr. Arati Prabhakar", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e47becba", "hypothesis": "Business Administration", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e48988bc", "hypothesis": "Patagonia.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e8a79c70", "hypothesis": "2-3 eggs", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e9327a54", "hypothesis": "The Sugar Factory.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "e982271f", "hypothesis": "Revolution Hall", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "eaca4986", "hypothesis": "C D E F G A B A G F E D C", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "ec81a493", "hypothesis": "500 copies.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "efc3f7c2", "hypothesis": "You wake up 30 minutes earlier on Fridays compared to other weekdays.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f4f1d8a4", "hypothesis": "Your sister.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f4f1d8a4_abs", "hypothesis": "[2023/05/20 (Sat) 01:42] Your sister gave you a new stand mixer as a birthday gift.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "f523d9fe", "hypothesis": "\"Doc Martin.\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "f8c5f88b", "hypothesis": "From a sports store downtown.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "faba32e5", "hypothesis": "24 hours", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "fca70973", "hypothesis": "[2023/08/15 (Tue) 16:25] Consider visiting **Disneyland** for its Halloween festivities, **Knott's Berry Farm** for Knott's Scary Farm, or **Universal Studios Hollywood** for Halloween Horror Nights. Each park offers unique experiences, thrilling rides, and special events", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "fca762bc", "hypothesis": "Memrise", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "fea54f57", "hypothesis": "\"Evolution\"", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_468eb063", "hypothesis": "8 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": false}}
+{"question_id": "gpt4_468eb064", "hypothesis": "Emma, a freelance writer.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_7ddcf75f", "hypothesis": "3 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_8279ba02", "hypothesis": "10 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_8279ba03", "hypothesis": "A smoker.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_85da3956", "hypothesis": "Three weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_a2d1d1f6", "hypothesis": "3 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_af6db32f", "hypothesis": "19 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b0863698", "hypothesis": "7 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b5700ca0", "hypothesis": "Episcopal Church", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_b5700ca9", "hypothesis": "3 days ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}
+{"question_id": "gpt4_e072b769", "hypothesis": "You started using the cashback app 'Ibotta' on April 16, 2023. As of May 6, 2023, that is 3 weeks ago.", "autoeval_label": {"model": "openai/gpt-4o", "label": true}}

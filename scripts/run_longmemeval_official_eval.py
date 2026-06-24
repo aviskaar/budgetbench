@@ -22,8 +22,8 @@ def build_command(
         "python3",
         evaluation_script,
         judge_model,
-        hypothesis_file,
-        data_file,
+        str(Path(hypothesis_file).resolve()),
+        str(Path(data_file).resolve()),
     ]
 
 
@@ -53,6 +53,8 @@ def maybe_prepare_patched_eval_script(
         return str(evaluation_script)
 
     source = evaluation_script.read_text(encoding="utf-8")
+    source = source.replace("verbose = True", "verbose = False")
+    source = source.replace("for entry in tqdm(hypotheses):", "for entry in hypotheses:")
     if openai_base_url:
         source = source.replace(
             "        openai_api_base = None\n",
