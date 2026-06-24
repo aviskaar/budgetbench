@@ -1,0 +1,18 @@
+{
+  "run_id": "longmem_openrouter_full_20260623",
+  "dataset": "xiaowu0162/longmemeval-cleaned/longmemeval_oracle.json",
+  "dataset_items": 500,
+  "candidate_provider": "OpenRouter",
+  "candidate_model": "openai/gpt-4o-mini",
+  "judge_provider": "OpenRouter",
+  "judge_model": "openai/gpt-4o",
+  "candidate_rows": 6000,
+  "prediction_rows": 5122,
+  "judge_rows": 5122,
+  "openrouter_usage_before_study_usd": 0.002575732,
+  "openrouter_usage_after_candidates_usd": 2.811136089,
+  "openrouter_usage_after_judging_usd": 5.014515724,
+  "candidate_cost_usd": 2.808560357,
+  "judge_cost_usd": 2.203379635,
+  "total_study_cost_usd": 5.011939992
+}

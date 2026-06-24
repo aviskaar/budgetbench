@@ -65,12 +65,17 @@ that slice, we detect no paired accuracy difference between RAG at 8K and the
 single-run latency values should be read as preliminary diagnostics.  Full
 context is infeasible at 2K and 8K by budget enforcement.  The
 expanded artifact also includes a 20-item LongBench v2 transfer check, a
-30-item deterministic synthetic memory-agent pilot, a 50-item public
-LongMemEval oracle-file pilot with an approximate deterministic scorer, and a
-six-item synthetic image question answering probe for \texttt{qwen3-vl:2b}.
+30-item deterministic synthetic memory-agent pilot, and a 500-item public
+LongMemEval oracle-file study generated with \texttt{openai/gpt-4o-mini} and
+scored by the upstream evaluator with \texttt{openai/gpt-4o}.  Across complete
+500-question cells, official-judge accuracy ranges from 0.380 for truncation
+at 2K to 0.686 for RAG and lean retrieval at 4K; full-context results are
+reported separately on the smaller subsets that fit each active budget.  The
+artifact also includes a six-item synthetic image question answering probe for
+\texttt{qwen3-vl:2b}.
 These results are pilot evidence, not final strategy rankings.  The
 contribution is a standardized active-budget protocol and pilot harness for local agents with
-swappable strategies, deterministic task graders, operational metrics,
+swappable strategies, versioned task graders, operational metrics,
 implementation details, limitations, a reproducibility checklist, and planned
 extensions required for a larger community benchmark.
 \end{abstract}
@@ -124,7 +129,7 @@ tokens~\citep{wang2026engram}.  These papers raise the evidentiary bar: a benchm
 paper must compare against full context, report operational metrics, and make
 its harness reusable.  The novelty claimed here is the conjunction of local
 large language model (LLM) serving, fixed per-call active budgets, swappable
-strategy implementations, deterministic task graders, and comparable
+strategy implementations, versioned task graders, and comparable
 quality-latency-compliance logs.
 
 This paper contributes a budget-tiered protocol and a pilot implementation.
@@ -149,18 +154,18 @@ modifying task logic.  Third, it reports an 89-item-per-task local pilot with co
 five-tier tables for quality, violation rate, budget usage, and duration.
 Fourth, it adds a filtered small-model transfer check showing how the same
 protocol is compatible with additional local text and vision-capable model
-tags while keeping uninformative runs visible.  Fifth, it provides
-reproducibility requirements and planned extensions for scaling
-\BudgetBench{} from a local pilot artifact to a public benchmark.
+tags while keeping uninformative runs visible.  Fifth, it reports a complete
+500-question LongMemEval oracle-file matrix with 5,122 upstream GPT-4o judge
+labels and auditable per-cell artifacts.
 
 \section{Protocol Definition}
 
 \subsection{Objects and Notation}
 
-Let $M$ denote a fixed local language model exposed through a chat-completion
+Let $M$ denote a fixed language model exposed through a chat-completion
 application programming interface (API).  Let $T$ denote a task distribution
-with items $x \sim T$ and deterministic
-grader $g(\hat{y}, x) \in [0,1]$.  Let $B$ be an active context budget measured
+with items $x \sim T$ and a versioned grader
+$g(\hat{y}, x) \in [0,1]$, which may be deterministic or model-based.  Let $B$ be an active context budget measured
 in tokens.  Let $\mathcal{S}$ be a set of memory strategies.  A strategy
 $s \in \mathcal{S}$ maps an input message history $H = (m_1,\ldots,m_n)$ and
 budget $B$ to a budget-constrained message list:
@@ -356,10 +361,12 @@ cross-item memory.
 A task provides three methods: dataset loading, task execution, and grading.
 Execution is responsible for formatting a benchmark item as messages, invoking
 the shared evaluation runner, extracting a prediction, and returning it to the
-grader.  Grading must be deterministic.  This constraint is strict because
-\BudgetBench{} is meant to compare small differences across budget tiers.  An
-LLM-as-judge component could easily add variance larger than the effects under
-study.
+grader.  Deterministic graders are preferred when they faithfully implement
+the task metric.  When a public benchmark specifies a model-based evaluator,
+the harness exports every prediction and records the exact judge model,
+evaluator version, and row-level labels.  All cells in a comparison must use
+the same grader configuration because judge variation can exceed the effects
+under study.
 
 \subsection{Metric Contract}
 
@@ -733,103 +740,78 @@ memory scoring, paired comparisons, and category-level diagnostics.  It should
 not be used as a public benchmark claim until corroborated with an external
 memory-agent dataset.
 
-\subsection{Public LongMemEval Oracle Pilot}
+\subsection{Public LongMemEval Oracle Study}
 
 To corroborate the synthetic result on public data, we added an adapter for
 the official LongMemEval JSON format~\citep{wu2024longmemeval}.  The adapter
 loads \path{longmemeval_oracle.json}, formats timestamped user-assistant
 sessions as a budgeted chat history, and records LongMemEval question type as
-the memory category.  This is not official LongMemEval scoring: the official
-evaluation uses an LLM judge, while this pilot uses a deterministic normalized
-containment scorer so that the budget sweep remains local and reproducible.
-The primary prediction-enabled run uses 50 category-balanced oracle-file items, \RunModel{}, and the
-2K, 4K, and 8K active budgets.  Raw logs are in
-\path{logs/full_study/longmem_oracle_qwen15b_50_predictions/}; the aggregate, paired, and
-category CSV files are
-\path{results/full_study_qwen2_5_1_5b_20260618_213603.csv},
-\path{results/paired_deltas_qwen2_5_1_5b_20260618_213603.csv}, and
-\path{results/grouped_memory_category_qwen2_5_1_5b_20260618_213603.csv}.
-Table~\ref{tab:longmem_oracle_pilot} reports aggregate accuracy, violation,
-used-budget, and duration metrics.  Table~\ref{tab:longmem_oracle_deltas}
-reports paired deltas against full context at 8K.  The same run also logs raw predictions and exports
-\path{results/longmem_judge_inputs_qwen15b_50_predictions.jsonl}, a
-600-row bundle joining question IDs, reference answers, predictions when
-available, normalized-containment scores, and BudgetBench provenance for
-external LongMemEval-style judging.  Of these rows, 512 contain model
-predictions; rows that violate the active budget before a model prediction are
-explicitly marked as not judgeable budget violations.
-The external-judge bridge is implemented in
-\path{scripts/run_longmem_external_judge.py}; Appendix~\ref{app:judge_bridge}
-summarizes smoke tests for that bridge.  These judge runs check serialization
-and endpoint behavior, but they are not counted as official LongMemEval
-evidence.
+the memory category.  On June 23, 2026, we evaluated all 500 oracle-file
+questions with \texttt{openai/gpt-4o-mini} through OpenRouter at temperature
+0, using a 64-token output cap.  The matrix covers truncation, RAG, lean
+retrieval, and full context at 2K, 4K, and 8K active-input budgets, for 6,000
+item--strategy--budget rows.
+
+The budget enforcer admitted 5,122 prompts and rejected 878 full-context
+prompts before inference.  Every admitted prediction was exported to the
+upstream LongMemEval hypothesis format and scored with the upstream
+\path{evaluate_qa.py} evaluator using \texttt{openai/gpt-4o}; all 5,122
+predictions received a parseable judge label.  The deterministic normalized-
+containment metric remains in the raw BudgetBench logs as a diagnostic, but
+the claim-bearing accuracies in Table~\ref{tab:longmem_oracle_pilot} are the
+GPT-4o evaluator labels.  Raw candidate logs are in
+\path{logs/full_study/longmem_openrouter_full_20260623/}; per-cell hypotheses
+and evaluator outputs use the prefix
+\path{results/longmem_openrouter_full_20260623_}, and the consolidated table is
+\path{results/longmem_openrouter_full_20260623_official_summary.csv}.  Model,
+provider, row-count, and cost metadata are in
+\path{results/longmem_openrouter_full_20260623_run_metadata.json}.
 
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrrl}
 \toprule
-Strategy & Budget & Accuracy & Violation & Used tokens & Duration (s) \\
+Strategy & Budget & Judge $N$ & Violations & Accuracy & 95\% Wilson CI \\
 \midrule
-Truncation & 2K & 0.34 & 0.00 & 1,769 & 30.5 \\
-Truncation & 4K & 0.48 & 0.00 & 3,390 & 50.0 \\
-Truncation & 8K & 0.38 & 0.00 & 5,331 & 76.8 \\
-RAG & 2K & 0.38 & 0.00 & 1,891 & 41.4 \\
-RAG & 4K & 0.40 & 0.00 & 3,488 & 56.0 \\
-RAG & 8K & 0.36 & 0.00 & 5,365 & 75.7 \\
-Lean retrieval & 2K & 0.46 & 0.00 & 1,918 & 37.0 \\
-Lean retrieval & 4K & 0.46 & 0.00 & 3,479 & 53.2 \\
-Lean retrieval & 8K & 0.36 & 0.00 & 5,356 & 78.3 \\
-Full context & 2K & 0.08 & 0.90 & 126 & 1.4 \\
-Full context & 4K & 0.22 & 0.70 & 705 & 3.2 \\
-Full context & 8K & 0.34 & 0.16 & 4,063 & 14.2 \\
+Truncation & 2K & 500 & 0 & 0.380 & [0.339, 0.423] \\
+Truncation & 4K & 500 & 0 & 0.570 & [0.526, 0.613] \\
+Truncation & 8K & 500 & 0 & 0.650 & [0.607, 0.691] \\
+RAG & 2K & 500 & 0 & 0.646 & [0.603, 0.687] \\
+RAG & 4K & 500 & 0 & 0.686 & [0.644, 0.725] \\
+RAG & 8K & 500 & 0 & 0.686 & [0.644, 0.725] \\
+Lean retrieval & 2K & 500 & 0 & 0.664 & [0.621, 0.704] \\
+Lean retrieval & 4K & 500 & 0 & 0.686 & [0.644, 0.725] \\
+Lean retrieval & 8K & 500 & 0 & 0.682 & [0.640, 0.721] \\
+Full context & 2K & 48 & 452 & 0.979 & [0.891, 0.996] \\
+Full context & 4K & 157 & 343 & 0.885 & [0.826, 0.926] \\
+Full context & 8K & 417 & 83 & 0.734 & [0.689, 0.774] \\
 \bottomrule
 \end{tabular}
-\caption{Fifty-item public LongMemEval oracle-file pilot.  The scorer is
-deterministic normalized containment, and retrieval-augmented generation (RAG)
-denotes the episodic retrieval baseline.  High full-context violation rates
-indicate oracle histories that exceed the active tier.}
+\caption{Five-hundred-item public LongMemEval oracle-file study scored by the
+upstream evaluator with \texttt{openai/gpt-4o}.  Retrieval-augmented generation
+(RAG) denotes the episodic retrieval baseline.  Full-context accuracy is
+conditional on the budget-eligible subset shown by Judge $N$ and must not be
+compared directly with the complete 500-question strategy cells.}
 \label{tab:longmem_oracle_pilot}
 \end{table}
 
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrrr}
-\toprule
-Candidate versus full context at 8K & Paired $N$ & Mean delta & 95\% bootstrap CI \\
-\midrule
-Truncation at 2K & 50 & 0.00 & [-0.12, +0.12] \\
-Truncation at 4K & 50 & +0.14 & [+0.06, +0.24] \\
-Truncation at 8K & 50 & +0.04 & [0.00, +0.10] \\
-RAG at 2K & 50 & +0.04 & [-0.08, +0.16] \\
-RAG at 4K & 50 & +0.06 & [-0.02, +0.14] \\
-RAG at 8K & 50 & +0.02 & [0.00, +0.06] \\
-Lean retrieval at 2K & 50 & +0.12 & [+0.02, +0.22] \\
-Lean retrieval at 4K & 50 & +0.12 & [+0.02, +0.24] \\
-Lean retrieval at 8K & 50 & +0.02 & [0.00, +0.06] \\
-\bottomrule
-\end{tabular}
-\caption{Paired deltas against 8K full context on the public LongMemEval
-oracle pilot.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  Positive values mean the candidate answered more items correctly than full context on the same item set under the deterministic pilot scorer.  These values are not official LongMemEval accuracy and should not be used as strategy-ranking evidence until validated against the official judge.}
-\label{tab:longmem_oracle_deltas}
-\end{table}
+The complete cells show a clear budget sensitivity for truncation, rising from
+0.380 at 2K to 0.650 at 8K.  RAG and lean retrieval are substantially stronger
+at 2K (0.646 and 0.664) and converge at 4K (both 0.686); their 4K and 8K Wilson
+intervals overlap, so the study does not support a ranking between those two
+retrieval variants.  The apparently higher full-context values are selection-
+conditioned: only short/easy-enough histories survive the active-budget gate,
+especially at 2K, and therefore those rows are feasibility diagnostics rather
+than comparable baselines.  Candidate inference cost \$2.8086 and GPT-4o
+judging cost \$2.2034 through OpenRouter, for \$5.0119 total.
 
-This public-memory pilot extends the integration case in a limited but useful
-way.  It shows that the same harness can run an external long-term memory
-benchmark, expose full-context infeasibility as a measured violation rate, and
-produce category metadata for memory-specific diagnostics.  The category split
-is descriptive only: under the deterministic containment scorer, lean retrieval
-has higher measured values in knowledge-update and multi-session questions,
-while single-session preferences remain at zero accuracy for all strategies
-under this local prompt.  It does not yet replace official LongMemEval results,
-including stronger official-judge LongMemEval\_S evidence reported by
-Engram~\citep{wang2026engram}: the oracle-file scorer is approximate, the sample is still a pilot subset, and
-the judge-smoke tests in Appendix~\ref{app:judge_bridge} show enough
-disagreement that the containment deltas should be treated as an
-infrastructure-path diagnostic rather than accuracy evidence.  The next
-required upgrade is to add official or external LongMemEval judge decisions
-over the exported prediction bundle before making benchmark-quality claims.
+This study supplies official-evaluator evidence for the oracle-file adapter,
+but it is not a LongMemEval\_S full-history leaderboard result.  The oracle file
+contains the evidence-focused histories used by this integration, and the
+candidate model is API-hosted rather than local.  Accordingly, the result
+strengthens the protocol and strategy-comparison evidence while leaving local
+large-model and full-history validation as separate future work.
 
 \subsection{Supplementary Model and Infrastructure-Only Multimodal Checks}
 
@@ -963,8 +945,8 @@ surface, not final strategy rankings.  The 50-item
 feasible-slice result is enough to justify scaling because it includes a
 paired full-context comparison and shows a compliance tradeoff at
 similar quality.  A benchmark-scale study should use stronger local models,
-expand the public memory-agent run beyond the current LongMemEval oracle
-pilot with official judge logs, add official SWE-bench resolution or a deterministic trace-debugging
+extend the new 500-question LongMemEval oracle study to LongMemEval\_S or other
+full-history settings, add official SWE-bench resolution or a deterministic trace-debugging
 alternative, include richer strategy families, and add multimodal task
 families before making claims about vision-language memory.  The pilot
 establishes the path from local serving to budget-constrained logs, analysis,
@@ -1024,12 +1006,14 @@ The SWE patch-similarity proxy measures overlap with the reference patch, not
 actual repository repair.  It can reward patches that touch the right file or
 line without being executable fixes.  LongBench v2 exact-match scoring is more
 direct, but 89 questions are still too few for definitive estimates.  The
-LongMemEval oracle pilot uses normalized-containment scoring rather than the
-official judge, so its numbers exercise the integration and expose budget behavior
-rather than official LongMemEval accuracy.  The judge-bridge smoke tests show
-that this approximation may be miscalibrated relative to judge decisions, so
-containment-scored deltas should not be treated as strategy wins.  Future
-studies should use official task graders and report uncertainty.
+LongMemEval oracle study uses the upstream evaluator with GPT-4o, eliminating
+the earlier normalized-containment grading proxy for its main accuracy table.
+It remains an oracle-file rather than LongMemEval\_S full-history evaluation,
+and GPT-4o judgment is itself a model-based construct that can vary across
+judge versions.  Full-context rows are additionally conditioned on passing
+the budget gate and therefore measure a selected subset.  We report Wilson
+intervals and avoid comparing those selected rows with complete 500-question
+cells.
 
 \paragraph{Multimodal validity.}
 The primary claim-bearing pilot run does not contain image, video, chart, or
@@ -1071,13 +1055,14 @@ hide.  In the current evidence, full context is infeasible at tight tiers, and
 a budgeted RAG prompt at 8K has no detectable paired accuracy difference from
 the 32K full-context baseline at this sample size.  This is not an equivalence
 claim, and the accompanying latency measurements remain preliminary single-run
-diagnostics.  The synthetic and
-LongMemEval oracle pilots show that the same protocol can expose
-memory-specific update, preference, temporal, and abstention behavior, but the
-public-memory result still uses an approximate scorer.  Despite these
-encouraging results, there is further space for improvement.  The next step is
-to test whether these signals transfer to stronger local models and to add
-official public-memory judge logs.
+diagnostics.  The synthetic pilot and 500-question LongMemEval oracle study
+show that the same protocol can expose memory-specific update, preference,
+temporal, and abstention behavior.  In the official-judge oracle results, RAG
+and lean retrieval reach 0.686 at 4K, compared with 0.570 for truncation,
+while their overlapping intervals do not support a ranking between the two
+retrieval variants.  Despite these encouraging results, there is further
+space for improvement.  The next step is to test whether these signals
+transfer to stronger local models and LongMemEval full-history settings.
 
 \clearpage
 \appendix
@@ -1115,7 +1100,7 @@ Tokenizer-aligned LongBench hardened slice & \path{logs/full_study/mustfix_long1
 RAG ablation slice & \path{logs/full_study/ablate_long10_rag_mpnet/} and \path{logs/full_study/ablate_long10_rag_chunk256/}; comparison \path{results/ablation_rag_long10_20260623.csv} \\
 Official SWE harness rerun & \path{qwen2.5:1.5b.budgetbench_official2fix_20260623.json}; per-instance logs in \path{logs/run_evaluation/budgetbench_official2fix_20260623/} \\
 Synthetic memory pilot & \path{logs/full_study/memory_synthetic_qwen15b_30_categories_live/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_203210.csv}; categories \path{results/grouped_memory_category_qwen2_5_1_5b_20260618_203210.csv} \\
-LongMemEval oracle pilot & \path{logs/full_study/longmem_oracle_qwen15b_50_predictions/}; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_213603.csv}; paired \path{results/paired_deltas_qwen2_5_1_5b_20260618_213603.csv}; judge inputs \path{results/longmem_judge_inputs_qwen15b_50_predictions.jsonl} \\
+LongMemEval oracle study & 500 items; \texttt{openai/gpt-4o-mini} candidate through OpenRouter; \texttt{openai/gpt-4o} upstream evaluator; raw logs in \path{logs/full_study/longmem_openrouter_full_20260623/}; summary \path{results/longmem_openrouter_full_20260623_official_summary.csv}; run metadata \path{results/longmem_openrouter_full_20260623_run_metadata.json}; per-cell hypotheses and labels under the same results prefix \\
 Qwen3.6-35B LongMemEval probe & \path{logs/full_study/longmem_oracle_qwen36_35b_probe5/}; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260618_212102.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260618_212102.csv} \\
 Qwen3.6-35B LongMemEval transfer & \path{logs/full_study/longmem_oracle_qwen36_35b_10/}; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260619_140108.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260619_140108.csv}; categories \path{results/grouped_memory_category_qwen3_6_35b-mlx_20260619_140108.csv} \\
 Qwen3.5-2B LongBench 5-item transfer & \path{logs/full_study/feasibility_longbench_qwen35_2b_5/}; aggregate \path{results/full_study_qwen3_5_2b_20260619_142423.csv}; paired \path{results/paired_deltas_qwen3_5_2b_20260619_142423.csv} \\
@@ -1199,10 +1184,10 @@ Scaling path & Replace or corroborate with public memory datasets; stratify by c
 \bottomrule
 \end{longtable}
 
-\subsection{LongMemEval Oracle Pilot}
+\subsection{LongMemEval Oracle Study}
 
 \begin{longtable}{L{0.24\textwidth}L{0.66\textwidth}}
-\caption{LongMemEval oracle pilot task card.}\label{tab:task_longmemeval_card}\\
+\caption{LongMemEval oracle study task card.}\label{tab:task_longmemeval_card}\\
 \toprule
 Field & Description \\
 \midrule
@@ -1215,10 +1200,10 @@ Purpose & Evaluate public long-term chat memory data under BudgetBench active-co
 Input format & Timestamped LongMemEval oracle sessions flattened into chat messages, followed by the dated question. \\
 Categories & LongMemEval question type, including abstention, knowledge update, multi-session, single-session, and temporal reasoning variants. \\
 Prediction format & Short free-form text answer. \\
-Grader & Deterministic normalized containment; approximate and not official LongMemEval judge scoring. \\
+Grader & Upstream LongMemEval \path{evaluate_qa.py} with \texttt{openai/gpt-4o}; normalized containment is retained only as a local diagnostic. \\
 Strength & Public memory-agent data with natural long histories and category metadata. \\
-Limitation & Fifty-item pilot over the oracle file; not LongMemEval\_S full-history evaluation and not official judge accuracy. \\
-Scaling path & Run LongMemEval\_S/full-history variants, add official judge logs, and increase sample size by category. \\
+Limitation & Five hundred oracle-file questions; not a LongMemEval\_S full-history run.  Full-context accuracy is conditional on budget eligibility, and candidate inference is API-hosted rather than local. \\
+Scaling path & Run LongMemEval\_S/full-history variants with stronger fully specified local models and repeat judge-version sensitivity checks. \\
 \bottomrule
 \end{longtable}
 
@@ -1350,28 +1335,25 @@ second focused rerun filtered out one structurally invalid patch before
 submission.  The remaining two submitted predictions still failed during
 official patch application, so this should be read as completed official
 evaluation infrastructure plus a negative patch quality result, not as SWE task
-success.  LongMemEval official judging is deferred in this revision.
+success.  The LongMemEval path has now also been exercised end-to-end: 5,122
+prediction-bearing rows from the 500-question oracle-file matrix were exported
+and labeled by the upstream evaluator with \texttt{openai/gpt-4o}.  The
+per-cell hypothesis and evaluator-result files are committed under
+\path{results/longmem_openrouter_full_20260623_}.
 
 \subsection{External Judge Bridge Smoke Tests}
 \label{app:judge_bridge}
 
-The judge bridge is implemented in
-\path{scripts/run_longmem_external_judge.py}.  A remote OpenRouter smoke test
-against \texttt{openai/gpt-4o-mini} currently returns 401 because no usable API
-key is available in this workspace, and the local \texttt{gemma3:1b} smoke test
-was rejected as unreliable because it accepted obviously wrong answers.  The
-local \texttt{qwen2.5:1.5b} smoke test is parseable and useful for serializer
-sanity checks, but it is not independent enough to count as official judge
-evidence.  A \texttt{gemma4:31b-mlx} judge sample over 12 LongMemEval rows
-produced parseable JSON for 7 rows and yielded 14.3\% judge accuracy on the
-truncation@2K cell.  A 20-row key-row sample produced 13 parseable rows with
-53.8\% judge accuracy on the same truncation@2K cell.  A broader 24-row
-prediction-only balanced sample spanning truncation, RAG, lean retrieval, and
-full context at 2K, 4K, and 8K yielded 12 parseable judge rows.  In that tiny
-slice, \texttt{full\_context@2048} and \texttt{full\_context@4096} were judged
-correct, while the other judged buckets were not.  This shows the bridge can
-serialize and submit multiple buckets, but it still falls short of a full
-official judge run.
+The JSON-rationale bridge in \path{scripts/run_longmem_external_judge.py} was
+used for early serializer and endpoint smoke tests.  Those local judge samples
+remain non-claim-bearing because several small local judges produced malformed
+or unreliable decisions.  The final study instead uses the canonical path:
+\path{scripts/export_longmem_official_hypotheses.py} writes upstream-format
+hypotheses, and \path{scripts/run_longmemeval_official_eval.py} invokes the
+upstream evaluator through OpenRouter.  A two-row smoke preceded the paid run;
+the full evaluation then produced 5,122 labels with no missing or unparsable
+rows.  The wrapper records the evaluator model in every result row and resolves
+all input paths before changing into the upstream evaluator directory.
 
 \subsection{Submission Policy}
 
@@ -1796,38 +1778,50 @@ python scripts/analyze_results.py \
   --group-by memory_category
 \end{verbatim}
 
-The LongMemEval oracle pilot used
+The full LongMemEval oracle study used
 \path{data/longmemeval_oracle.json}, downloaded from the official
 \texttt{xiaowu0162/longmemeval-cleaned} Hugging Face dataset.  The run was:
 \begin{verbatim}
 python scripts/run_pilot.py \
   --full-study \
-  --run-id longmem_oracle_qwen15b_50_predictions \
-  --model qwen2.5:1.5b \
+  --run-id longmem_openrouter_full_20260623 \
+  --model openai/gpt-4o-mini \
+  --llm-url https://openrouter.ai/api/v1/chat/completions \
+  --api-key-env OPENROUTER_API_KEY \
   --tasks longmem \
   --strategies truncation rag lean_retrieval full_context \
   --budgets 2048 4096 8192 \
-  --limit-tasks 50
+  --limit-tasks 500 \
+  --max-output-tokens 64
 \end{verbatim}
 
-The LongMemEval oracle analysis command was:
+Each strategy--budget cell was exported separately so official labels retain
+an unambiguous cell identity.  For example:
 \begin{verbatim}
-python scripts/analyze_results.py \
-  --log-dirs logs/full_study/longmem_oracle_qwen15b_50_predictions \
-  --model qwen2.5:1.5b \
-  --bootstrap-samples 2000 \
-  --paired-baseline-strategy full_context \
-  --paired-baseline-budget 8192 \
-  --group-by memory_category
-\end{verbatim}
-
-The LongMemEval external-judge input export was:
-\begin{verbatim}
-python scripts/export_longmem_judge_inputs.py \
-  --log-dir logs/full_study/longmem_oracle_qwen15b_50_predictions \
+python scripts/export_longmem_official_hypotheses.py \
+  --log-dir logs/full_study/longmem_openrouter_full_20260623 \
   --data-path data/longmemeval_oracle.json \
-  --output results/longmem_judge_inputs_qwen15b_50_predictions.jsonl
+  --strategies truncation \
+  --budgets 2048 \
+  --output results/longmem_openrouter_full_20260623_\
+truncation_2048_official.jsonl
 \end{verbatim}
+
+The upstream GPT-4o evaluation command for that cell was:
+\begin{verbatim}
+python scripts/run_longmemeval_official_eval.py \
+  --repo-dir .deps/longmemeval-official \
+  --judge-model gpt-4o \
+  --metric-model-override openai/gpt-4o \
+  --openai-base-url https://openrouter.ai/api/v1 \
+  --api-key-env OPENROUTER_API_KEY \
+  --hypotheses results/longmem_openrouter_full_20260623_\
+truncation_2048_official.jsonl \
+  --data-file data/longmemeval_oracle.json
+\end{verbatim}
+The export and evaluation commands were repeated for all 12 cells.  The audit
+matched hypothesis and evaluator-output question IDs row-for-row and confirmed
+5,122 labels from 5,122 admitted predictions.
 
 The Qwen3.6-35B LongMemEval transfer run was:
 \begin{verbatim}
