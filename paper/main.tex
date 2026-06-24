@@ -655,21 +655,21 @@ parseable; the audit found no unexpected errors or approximate-tokenizer rows.
 \toprule
 Strategy & Budget & Accuracy & 95\% CI & Violation & Duration (s) \\
 \midrule
-Truncation & 8K & 0.33 & [0.21, 0.46] & 0.00 & $157.8 \pm 17.5$ \\
+Truncation & 8K & 0.33 & [0.21, 0.45] & 0.00 & $157.8 \pm 17.5$ \\
 Truncation & 32K & 0.53 & [0.39, 0.67] & 0.00 & $209.7 \pm 0.3$ \\
-RAG & 8K & 0.46 & [0.32, 0.60] & 0.00 & $163.4 \pm 14.9$ \\
-RAG & 32K & 0.52 & [0.38, 0.66] & 0.00 & $220.9 \pm 21.1$ \\
-Lean retrieval & 8K & 0.44 & [0.30, 0.58] & 0.00 & $181.5 \pm 3.5$ \\
-Lean retrieval & 32K & 0.51 & [0.37, 0.65] & 0.00 & $225.9 \pm 0.3$ \\
+RAG & 8K & 0.46 & [0.33, 0.60] & 0.00 & $163.4 \pm 14.9$ \\
+RAG & 32K & 0.52 & [0.39, 0.65] & 0.00 & $220.9 \pm 21.1$ \\
+Lean retrieval & 8K & 0.44 & [0.31, 0.58] & 0.00 & $181.5 \pm 3.5$ \\
+Lean retrieval & 32K & 0.51 & [0.37, 0.64] & 0.00 & $225.9 \pm 0.3$ \\
 Full context & 8K & 0.00 & [0.00, 0.00] & 1.00 & $47.3 \pm 0.5$ \\
 Full context & 32K & 0.53 & [0.39, 0.67] & 0.00 & $225.5 \pm 1.1$ \\
 \bottomrule
 \end{tabular}
 \caption{Repeat-aggregated stronger-model LongBench replication.  Accuracy is
 the mean over two shuffled repeats; confidence intervals bootstrap the 50
-item-level repeat means.  Duration is mean end-to-end cell time plus or minus
-the sample standard deviation across two repeats.  The 8K full-context row
-contains budget-gate time and no hosted model calls.}
+item-level outcomes after repeat aggregation.  Duration is mean end-to-end
+cell time plus or minus the sample standard deviation across two repeats.  The
+8K full-context row contains budget-gate time and no hosted model calls.}
 \label{tab:hosted_stronger_longbench}
 \end{table}
 
@@ -726,8 +726,8 @@ We also ran a \texttt{checkpoint\_context} baseline that keeps a compact
 extractive checkpoint, a recent tail, and query-relevant evidence.  On the
 same 30-item memory slice, it lands between truncation and lean retrieval:
 0.53 at 512, 0.67 at 1,024, and 0.80 at 2,048.  It is comparable to
-truncation at the tightest tier (5.3 s vs. 5.7 s at 512) but slower than RAG
-and lean retrieval at 2,048 tokens.  It still gives a more realistic
+truncation at the tightest tier (5.3 s vs. 5.7 s at 512) and remains similar
+to RAG and lean retrieval at 2,048 tokens.  It still gives a more realistic
 practitioner workflow than either raw truncation or pure retrieval.
 Table~\ref{tab:synthetic_memory_pilot} reports the aggregate rows,
 Table~\ref{tab:synthetic_memory_deltas} reports paired deltas against full
@@ -744,11 +744,11 @@ Strategy & Budget & Accuracy & Violation & Used tokens & Duration (s) \\
 Truncation & 512 & 0.43 & 0.00 & 500 & 5.7 \\
 Truncation & 1,024 & 0.43 & 0.00 & 1,016 & 8.4 \\
 Truncation & 2,048 & 0.80 & 0.00 & 1,812 & 13.4 \\
-RAG & 512 & 0.73 & 0.00 & 500 & 18.9 \\
-RAG & 1,024 & 0.80 & 0.00 & 1,014 & 22.2 \\
+RAG & 512 & 0.73 & 0.00 & 500 & 18.8 \\
+RAG & 1,024 & 0.80 & 0.00 & 1,014 & 22.1 \\
 RAG & 2,048 & 0.80 & 0.00 & 1,812 & 3.2 \\
 Lean retrieval & 512 & 0.80 & 0.00 & 500 & 15.6 \\
-Lean retrieval & 1,024 & 0.83 & 0.00 & 1,018 & 19.2 \\
+Lean retrieval & 1,024 & 0.83 & 0.00 & 1,018 & 19.1 \\
 Lean retrieval & 2,048 & 0.80 & 0.00 & 1,812 & 3.1 \\
 Checkpoint context & 512 & 0.53 & 0.00 & 479 & 5.3 \\
 Checkpoint context & 1,024 & 0.67 & 0.00 & 968 & 7.7 \\
@@ -1535,10 +1535,10 @@ paired bootstrap intervals are preferable when comparing strategies.  For
 continuous proxy scores such as the current SWE patch-similarity metric,
 non-parametric bootstrap over items is appropriate.  A full study should report
 the interval around each strategy's quality curve and the interval around each
-pairwise difference curve.  The main 89-item matrix does not report such
-intervals because a single 89-item-per-task run is still an artifact-validation
-study rather than a powered benchmark comparison; presenting tight intervals
-from this run would create false precision.
+pairwise difference curve.  The main 89-item matrix reports exploratory
+intervals in the appendix, but a single 89-item-per-task run is still an
+artifact-validation study rather than a powered benchmark comparison;
+presenting tight intervals from this run would create false precision.
 Similarly, a confidence interval that contains zero establishes neither
 equality nor equivalence.  It only shows that the current sample does not
 detect a difference at the reported uncertainty level.

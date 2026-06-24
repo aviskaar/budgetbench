@@ -411,8 +411,9 @@ def summarize_repeats(df: pd.DataFrame) -> pd.DataFrame:
     Aggregate repeated cell runs into one row per model/task/strategy/budget.
 
     Accuracy and duration are summarized across repeat executions, while
-    confidence intervals and budget-use metrics are averaged over the repeated
-    rows already computed from item-level logs.
+    budget-use metrics are averaged over the repeated rows.  Confidence
+    intervals should be recomputed after aggregation from the collapsed
+    repeat-level row.
     """
     if df.empty:
         return df.copy()
@@ -455,6 +456,29 @@ def summarize_repeats(df: pd.DataFrame) -> pd.DataFrame:
     return grouped
 
 
+def prepare_results_frame(
+    df: pd.DataFrame,
+    confidence: float = 0.95,
+    n_bootstrap: int = 2000,
+    aggregate_repeats: bool = False,
+) -> pd.DataFrame:
+    """Prepare the analysis frame in the same order as the CLI pipeline."""
+    df = compute_violation_rates(df)
+    df = compute_quality_intervals(
+        df,
+        confidence=confidence,
+        n_bootstrap=n_bootstrap,
+    )
+    if aggregate_repeats:
+        df = summarize_repeats(df)
+        df = compute_quality_intervals(
+            df,
+            confidence=confidence,
+            n_bootstrap=n_bootstrap,
+        )
+    return df
+
+
 def main():
     parser = argparse.ArgumentParser(description="Aggregate BudgetBench summary.jsonl files into CSV")
     parser.add_argument("--log-dirs", nargs="+", required=True, help="Log directories containing summary.jsonl")
@@ -482,14 +506,12 @@ def main():
         print("No data found. Exiting.")
         return
 
-    df = compute_violation_rates(df)
-    df = compute_quality_intervals(
+    df = prepare_results_frame(
         df,
         confidence=args.confidence,
         n_bootstrap=args.bootstrap_samples,
+        aggregate_repeats=args.aggregate_repeats,
     )
-    if args.aggregate_repeats:
-        df = summarize_repeats(df)
 
     out_cols = [
         "model",

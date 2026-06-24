@@ -2,6 +2,8 @@ import json
 import os
 import sys
 
+import pytest
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from scripts.analyze_results import (
@@ -10,6 +12,7 @@ from scripts.analyze_results import (
     compute_quality_intervals,
     compute_violation_rates,
     load_summary_files,
+    prepare_results_frame,
     summarize_repeats,
 )
 
@@ -136,3 +139,73 @@ def test_aggregate_repeats_preserves_pairwise_analysis(tmp_path):
     assert truncation_row["baseline_accuracy"] == 0.5
     assert truncation_row["candidate_accuracy"] == 0.5
     assert truncation_row["mean_delta"] == 0.0
+
+
+def test_prepare_results_frame_recomputes_repeat_confidence_intervals(tmp_path):
+    log_dir = tmp_path / "logs"
+    log_dir.mkdir()
+    summary_rows = [
+        {
+            "timestamp": "20260623_000000",
+            "model": "qwen/qwen3-30b-a3b-instruct-2507",
+            "task": "long",
+            "strategy": "rag",
+            "budget": 8192,
+            "accuracy": 0.5,
+            "total": 2,
+            "success": 1,
+            "duration_sec": 10.0,
+            "repeat_index": 0,
+            "combo_log_file": str(log_dir / "long_rag_8192_r1.jsonl"),
+        },
+        {
+            "timestamp": "20260623_000001",
+            "model": "qwen/qwen3-30b-a3b-instruct-2507",
+            "task": "long",
+            "strategy": "rag",
+            "budget": 8192,
+            "accuracy": 0.75,
+            "total": 2,
+            "success": 1,
+            "duration_sec": 12.0,
+            "repeat_index": 1,
+            "combo_log_file": str(log_dir / "long_rag_8192_r2.jsonl"),
+        },
+    ]
+    _write_jsonl(log_dir / "summary.jsonl", summary_rows)
+    _write_jsonl(
+        log_dir / "long_rag_8192_r1.jsonl",
+        [
+            {"item_id": "a", "quality": 0.0},
+            {"item_id": "b", "quality": 1.0},
+        ],
+    )
+    _write_jsonl(
+        log_dir / "long_rag_8192_r2.jsonl",
+        [
+            {"item_id": "a", "quality": 1.0},
+            {"item_id": "b", "quality": 0.0},
+        ],
+    )
+
+    df = load_summary_files([str(log_dir)])
+    bad = summarize_repeats(
+        compute_quality_intervals(
+            compute_violation_rates(df),
+            n_bootstrap=50,
+            seed=7,
+        )
+    )
+    good = prepare_results_frame(
+        df,
+        aggregate_repeats=True,
+        n_bootstrap=50,
+        confidence=0.95,
+    )
+
+    bad_row = bad.iloc[0]
+    good_row = good.iloc[0]
+    assert bad_row["quality_ci_low"] == pytest.approx(0.0)
+    assert bad_row["quality_ci_high"] == pytest.approx(1.0)
+    assert good_row["quality_ci_low"] == pytest.approx(0.5)
+    assert good_row["quality_ci_high"] == pytest.approx(0.5)
