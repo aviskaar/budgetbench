@@ -48,46 +48,38 @@
 \begin{abstract}
 Local large language model deployments are increasingly feasible, but active
 context remains constrained by memory capacity, prefill latency, cache growth,
-and application-level service objectives.  In this paper, we address the
-problem of comparing memory strategies for local agents when each model call
-has a fixed active-context budget.  We present \BudgetBench{}, an evaluation
-protocol and reference implementation for comparing truncation, summarization,
-retrieval-augmented generation (RAG), and other memory strategies across fixed
-budget tiers.  The protocol holds the model, task, sampler, and decoding
-parameters fixed; sweeps budgets over 2K, 4K, 8K, 16K, and 32K tokens; and
-records quality, budget utilization, latency, and budget-violation rates.  We
-report a local pilot conducted on June 16, 2026 with Ollama and \RunModel{}
-over 89 SWE-bench Verified scaffold items and 89 LongBench v2 items.  We also
-report a June 18, 2026 full-context feasibility slice: 50 LongBench v2 items
-whose natural prompts fit within 32K tokens, evaluated with truncation, RAG,
-and a \texttt{full\_context} pass-through baseline at 2K, 8K, and 32K.  On
-that slice, we detect no paired accuracy difference between RAG at 8K and the
-32K full-context baseline at $N=50$; this is not an equivalence result, and the
-single-run latency values should be read as preliminary diagnostics.  Full
-context is infeasible at 2K and 8K by budget enforcement.  The
-expanded artifact also includes a 20-item LongBench v2 transfer check, a
-30-item deterministic synthetic memory-agent pilot, and a 500-item public
-LongMemEval oracle-file study generated with \texttt{openai/gpt-4o-mini} and
-scored by the upstream evaluator with \texttt{openai/gpt-4o}.  Across complete
-500-question cells, official-judge accuracy ranges from 0.380 for truncation
-at 2K to 0.686 for RAG and lean retrieval at 4K; full-context results are
-reported separately on the smaller subsets that fit each active budget.  The
-artifact also includes a six-item synthetic image question answering probe for
-\texttt{qwen3-vl:2b}.
-Finally, a stronger-model LongBench replication uses the hosted open-weight
-\texttt{qwen/qwen3-30b-a3b-instruct-2507} endpoint, its exact tokenizer, 50
-items, shuffled cell order, and two repeats.  RAG at 8K averages 0.46 accuracy
-versus 0.53 for full context at 32K (paired delta $-0.07$, 95\% bootstrap
-confidence interval $[-0.17,0.02]$) while reducing mean end-to-end cell time
-by 27.5\%; truncation at 8K is significantly worse at 0.33.  This hosted run
-tests model-scale transfer, not local-serving transfer.  These results are
-pilot evidence, not final strategy rankings.  The contribution is a
-standardized active-budget protocol and pilot harness for local agents with
-swappable strategies, versioned task graders, operational metrics,
-implementation details, limitations, a reproducibility checklist, and planned
-extensions required for a larger community benchmark.  All code, tables,
-figures, and released artifact data are tracked in the public repository at
-\RepoURL{}.
+and application-level service objectives.  We present \BudgetBench{}, an
+active-budget evaluation protocol and reference harness for comparing memory
+strategies when each model call has a fixed input-token budget.  The protocol
+holds the model, task, sampler, and decoding parameters fixed; sweeps budgets
+over 2K, 4K, 8K, 16K, and 32K tokens; and records quality, budget utilization,
+latency, and budget-violation rates.  The main contribution is the reusable
+measurement surface: a swappable \texttt{MemoryStrategy} contract, explicit
+budget enforcement, deterministic or versioned graders, prompt-audit metadata,
+and reproducibility artifacts.
+
+We validate the harness with several pilot studies rather than final strategy
+rankings.  A June 16, 2026 local Ollama pilot with \RunModel{} covers 89
+SWE-bench Verified scaffold items and 89 LongBench v2 items; because that run
+used a benchmark tokenizer approximation later shown to undercount some
+served-model prompts, its LongBench budget-violation rows are reported as
+tokenizer-approximation diagnostics rather than claim-bearing compliance
+results.  A 50-item LongBench v2 full-context-feasible slice compares
+truncation, RAG, lean retrieval, and a \texttt{full\_context} pass-through
+baseline; RAG at 8K has no detectable paired accuracy difference from the 32K
+full-context baseline at $N=50$, but this is not an equivalence result.  A
+10-item tokenizer-aligned hardened slice removes the tokenizer ambiguity only
+for a small smoke test.  The empirical direction between budgeted strategies
+and full context remains unresolved across slices: the 50-item local slice is
+near-null, the 10-item hardened slice favors budgeted strategies by one item,
+and a hosted 50-item Qwen3 30B-A3B replication favors full context in point
+estimate.  The well-powered 500-item LongMemEval oracle-file study and the
+50-item stronger-model LongBench replication use hosted candidate models, so
+they validate protocol behavior and model-scale transfer, not local-serving
+performance.  All timings are operational diagnostics; persistent-memory
+indexing, energy cost, and local 30B-class serving remain future work.  All
+code, tables, figures, and released artifact data are tracked in the public
+repository at \RepoURL{}.
 \end{abstract}
 
 \section{Introduction}
@@ -520,7 +512,8 @@ quality, violation, and runtime curves under fixed active-context budgets.  The
 pilot artifacts are tracked in the public repository at \RepoURL{}.  The
 aggregate CSV and figures are generated by the scripts in \path{scripts/}.
 Table values are rounded to two decimals in the main text.  Table~\ref{tab:main_89item_results}
-reports the primary LongBench v2 quality and violation matrix, while
+reports the 89-item LongBench v2 exploratory quality and tokenizer-approximation
+violation matrix, while
 Table~\ref{tab:swe_proxy_diagnostic} reports the SWE scaffold diagnostic.
 Figures~\ref{fig:tradeoff_89item},~\ref{fig:duration_89item}, and~\ref{fig:used_budget_89item}
 show the corresponding quality, violation,
@@ -610,7 +603,10 @@ Lean retrieval at 8K & 50 & -0.02 & [-0.12, +0.08] \\
 \label{tab:paired_full_context_deltas}
 \end{table}
 
-This slice gives the first direct full-context comparison in the artifact.
+This slice gives the first direct full-context comparison in the artifact, but
+the selection rule should be kept in view: items were filtered to fit 32K full
+context, so full-context infeasibility at smaller tiers is partly a property of
+the slice construction rather than an independent discovery.
 The result should be interpreted conservatively: no positive paired bootstrap
 confidence interval excludes zero, and the interval is too wide to establish
 equivalence.  The notable signal is operational rather than inferential.  At
@@ -669,8 +665,11 @@ Full context & 32K & 0.53 & [0.39, 0.67] & 0.00 & $225.5 \pm 1.1$ \\
 \caption{Repeat-aggregated stronger-model LongBench replication.  Accuracy is
 the mean over two shuffled repeats; confidence intervals bootstrap the 50
 item-level outcomes after repeat aggregation.  Duration is mean end-to-end
-cell time plus or minus the sample standard deviation across two repeats.  The
-8K full-context row contains budget-gate time and no hosted model calls.}
+cell time plus or minus the sample standard deviation across two repeats.
+Truncation at 32K reconstructs the same natural prompts as full context at 32K
+yet differs by about 16 seconds, illustrating provider-variance dominance in
+these wall-clock measurements.  The 8K full-context row contains budget-gate
+time only and no hosted model calls.}
 \label{tab:hosted_stronger_longbench}
 \end{table}
 
@@ -699,14 +698,16 @@ not resolve a difference at the stated confidence level.}
 The stronger model preserves the central compliance tradeoff but sharpens the
 quality result.  Truncation at 8K is 0.20 below 32K full context and its paired
 interval excludes zero.  RAG at 8K narrows the point difference to 0.07 and
-reduces mean end-to-end cell time from 225.5 to 163.4 seconds (27.5\%), but its
+has a lower observed mean end-to-end cell time in this hosted diagnostic, but its
 $[-0.17,+0.02]$ interval is too wide for either a no-loss or an equivalence
 claim.  At 32K, truncation reconstructs the same natural prompts as full
 context and matches it item-for-item after repeat aggregation; the two
 retrieval variants are within two percentage points.  Hosted inference for the
 full matrix cost \$0.9095.  Provider scheduling and network time are included
-in duration, so this table is evidence for repeated operational latency under
-this hosted setup, not a local-hardware speed benchmark.
+in duration, and the 32K truncation/full-context duration gap despite
+item-identical prompts shows that wall-clock values are dominated by provider
+variance.  The table is therefore a single-setup operational diagnostic, not a
+local-hardware speed benchmark or a strategy-latency claim.
 
 \subsection{Synthetic Memory-Agent Pilot}
 
@@ -925,32 +926,32 @@ table.
 We also ran a 20-item full-context-feasible transfer check with
 \texttt{gemma4:e2b}, using the same LongBench v2 filtering rule and the 8K and
 32K active budgets.  The corresponding artifacts are tracked in \RepoURL{}.
-This check did not
+This non-provenanced diagnostic check did not
 reproduce the \RunModel{} quality signal: truncation and RAG scored 0.00 at
 8K, while truncation, RAG, and full context each scored 0.05 at 32K.  Full
 context at 8K again had 100\% violation rate.  The result is useful as a
 transfer warning rather than a strategy ranking.  It shows that the benchmark
 can expose model-dependent prompt/serving suitability, and that the 50-item
 Qwen result should not be generalized across tasks or model scales without
-checking for the kind of zero LongBench signal we see on \texttt{qwen3.5:2b}
-and the strong LongMemEval transfer we see on \texttt{qwen3.6:35b-mlx}.
+checking for zero-signal runs.
 
 We then ran \texttt{qwen3.5:2b} on a 5-item LongBench slice at 8K and 32K.
 That run completed quickly enough to be practical, but every reported cell was
 0.00 across truncation, RAG, lean retrieval, and full context.  This is a
 useful negative transfer result: the protocol can complete on a smaller local
-model without crashing, but the QA signal can collapse to zero even
-when the containment-scored memory transfer on \texttt{qwen3.6:35b-mlx} is strong.
+model without crashing, but the QA signal can collapse to zero.
 
-Table~\ref{tab:longmem_transfer_probes} summarizes the remaining transfer
-probes in this section.  We additionally ran \texttt{qwen3.6:35b-mlx} on a 10-item LongMemEval oracle
+Table~\ref{tab:longmem_transfer_probes} summarizes the remaining
+non-reproducible local-alias transfer probes in this section.  We additionally
+ran \texttt{qwen3.6:35b-mlx} on a 10-item LongMemEval oracle
 slice.  Under the deterministic containment scorer, the budgeted truncation, RAG, and lean-retrieval rows all scored 1.00
 at 2K, 4K, and 8K, while full context scored 0.00 at 2K, 0.20 at 4K, and 0.70
 at 8K with violation rates of 1.00, 0.80, and 0.30.  The paired deltas
 versus \texttt{full\_context@8192} are +0.30 for every budgeted row.  This is
-the clearest containment-scored transfer signal in this artifact, but it
-should not be promoted to benchmark evidence until the scorer is validated
-against the official judge.
+an infrastructure diagnostic for a local alias rather than benchmark evidence:
+the tag lacks complete source-registry, quantization-hash, and
+conversion-command provenance, and the containment scorer is not the official
+judge.
 
 By contrast, a matched 10-item \texttt{gemma4:12b-mlx} LongMemEval probe
 returned 0.00 across truncation, RAG, lean retrieval, and full context at
@@ -979,7 +980,7 @@ Model & Strategy group & Items & Accuracy at 2K / 4K / 8K \\
 \RunModel{} & Checkpoint context & 10 & 0.10 / 0.30 / 0.10 \\
 \bottomrule
 \end{tabular}
-\caption{Supplementary LongMemEval oracle transfer probes.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  For the \texttt{qwen3.6:35b-mlx} full-context row, the violation rates at 2K, 4K, and 8K are 1.00, 0.80, and 0.30.}
+\caption{Supplementary non-reproducible local-alias LongMemEval oracle transfer diagnostics.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  For the \texttt{qwen3.6:35b-mlx} full-context row, the violation rates at 2K, 4K, and 8K are 1.00, 0.80, and 0.30.  These rows are not benchmark claims without complete model provenance and official-judge validation.}
 \label{tab:longmem_transfer_probes}
 \end{table}
 
@@ -1029,10 +1030,12 @@ to reveal.
 The current runs are intentionally small.  They exercise the measurement
 surface, not final strategy rankings.  The 50-item
 feasible-slice result is enough to justify scaling because it includes a
-paired full-context comparison and shows a compliance tradeoff at
-similar quality.  The hosted Qwen3 30B-A3B replication now shows that the same
-RAG/full-context pattern survives a stronger-model check with exact tokenization
-and repeated shuffled cells, but it does not establish local-serving transfer.
+paired full-context comparison and shows a compliance tradeoff, but it does
+not settle the direction of the budgeted-versus-full-context comparison.  The
+hosted Qwen3 30B-A3B replication shows that the same protocol can run with
+exact tokenization and repeated shuffled cells on a stronger model, but its
+point estimate favors full context and it does not establish local-serving
+transfer.
 A benchmark-scale study should still use stronger fully specified local models,
 extend the new 500-question LongMemEval oracle study to LongMemEval\_S or other
 full-history settings, add official SWE-bench resolution or a deterministic trace-debugging
@@ -1059,10 +1062,10 @@ tokenizer approximation, not compliance with the served model tokenizer.  This
 is not a full strategy-matrix recount because the historical pilot logs do not store
 strategy-processed prompts for retrieval or summary contents.  The current
 runner has since been upgraded to log tokenizer identifiers, prompt hashes,
-post-strategy prompt artifacts, and explicit token counts, but the claim-bearing
-tables in this paper still come from the earlier pilot runs and therefore
-retain the tokenizer-validity limitation above.  The hosted stronger-model
-table is an exception: it uses the exact Qwen3 tokenizer for selection,
+post-strategy prompt artifacts, and explicit token counts.  The 89-item
+LongBench tables in this paper therefore remain exploratory
+tokenizer-approximation diagnostics rather than claim-bearing compliance
+tables.  The hosted stronger-model table is an exception: it uses the exact Qwen3 tokenizer for selection,
 strategy processing, enforcement, and logged prompt audits.  A newer 10-item LongBench
     rerun in the repository artifact bundle demonstrates the
 corrected harness path with explicit Qwen tokenization and repeated
@@ -1114,7 +1117,7 @@ intervals and avoid comparing those selected rows with complete 500-question
 cells.
 
 \paragraph{Multimodal validity.}
-The primary claim-bearing pilot run does not contain image, video, chart, or
+The main text-task pilot does not contain image, video, chart, or
 document-page inputs.  The added image QA probe verifies the native
 image-plus-text path on generated colored shapes, but it is too small and too
 simple to support claims about real multimodal memory.  Therefore, this paper
@@ -1123,7 +1126,7 @@ claiming benchmark-scale multimodal performance.
 
 \section{Planned Extensions}
 
-The next version of \BudgetBench{} should expand in five directions.  First,
+The next version of \BudgetBench{} should expand in six directions.  First,
 it should replace proxy SWE grading with official containerized evaluation.
 Second, it should include $\tau$-bench or tau2-bench once the local data
 dependency is installed, because tool-use chains stress memory in ways that
@@ -1133,7 +1136,9 @@ hybrid retrieval-summary policies.  Fourth, it should report the analyzer's
 confidence intervals in every main quality table and use the now-supported
 repeated-cell execution path so strategy crossovers can be
 distinguished from sampling noise beyond the current two-repeat hosted study.
-Fifth, it should add multimodal tasks with
+Fifth, it should add a persistent-memory regime that reports index build time,
+index maintenance cost, and amortized index cost per evaluated item.  Sixth,
+it should add multimodal tasks with
 native visual inputs and multimodal memory policies.  Examples include
 document-page QA where the active
 budget controls optical character recognition (OCR) text plus image references, chart QA where retrieval
@@ -1144,40 +1149,36 @@ screenshots or UI state are part of the memory trace.
 
 \BudgetBench{} operationalizes an under-standardized evaluation
 question: how do memory strategies trade quality, budget compliance, and
-latency when active context is fixed?  The expanded 89-item-per-task pilot run and the
-50-item full-context-feasible LongBench slice show that this question
+latency when active context is fixed?  The expanded 89-item-per-task pilot run
+and the 50-item full-context-feasible LongBench slice show that this question
 can be evaluated locally with a small model, deterministic graders, fixed
 budget tiers, and swappable strategy baselines.  The strongest claim is
 methodological rather than rank-oriented: fixed-budget evaluation reveals
-failure modes and operating points that standard long-context evaluation can
-hide.  In the current evidence, full context is infeasible at tight tiers, and
-a budgeted RAG prompt at 8K has no detectable paired accuracy difference from
-the 32K full-context baseline at this sample size.  This is not an equivalence
-claim, and the accompanying latency measurements remain preliminary single-run
-diagnostics.  The synthetic pilot and 500-question LongMemEval oracle study
-show that the same protocol can expose memory-specific update, preference,
-temporal, and abstention behavior.  In the official-judge oracle results, RAG
-and lean retrieval reach 0.686 at 4K, compared with 0.570 for truncation,
-while their overlapping intervals do not support a ranking between the two
-retrieval variants.  Despite these encouraging results, there is further
-space for improvement.  A 50-item hosted Qwen3 30B-A3B replication with exact
-tokenization and two shuffled repeats finds RAG at 8K at 0.46 versus 0.53 for
-32K full context (paired delta $-0.07$, 95\% confidence interval
-$[-0.17,+0.02]$) with 27.5\% lower mean end-to-end cell time; truncation at 8K
-is significantly worse.  This closes the immediate stronger-model quality
-check while leaving stronger local serving and LongMemEval full-history
-settings as the next transfer tests.
+failure modes, infeasible cells, tokenizer-accounting gaps, and operating
+points that standard long-context evaluation can hide.  The empirical
+budgeted-versus-full-context direction is unresolved in the present artifact:
+the 50-item local slice is near-null, the 10-item tokenizer-aligned hardened
+slice is too small to rank strategies, and the hosted stronger-model slice
+favors full context in point estimate.  The synthetic pilot and 500-question
+LongMemEval oracle study show that the same protocol can expose
+memory-specific update, preference, temporal, and abstention behavior, but the
+well-powered runs are hosted and the local runs remain pilot-scale.  The
+reusable contribution is the active-budget protocol and harness, together with
+the reproducibility and failure-reporting discipline needed to scale it into a
+community benchmark.
 
 \clearpage
 \appendix
 
 \section{Reproducibility Checklist}
 
-Table~\ref{tab:repro_checklist} summarizes the pilot run metadata and artifact
-locations needed to reproduce the reported results.
+Table~\ref{tab:repro_checklist} separates claim-bearing reproducible artifacts
+from non-reproducible diagnostic artifacts.  Local aliases without complete
+source-registry, quantization-hash, and conversion-command provenance are kept
+for auditability but are not benchmark claims.
 
 \begin{longtable}{L{0.22\textwidth}L{0.68\textwidth}}
-\caption{Pilot reproducibility checklist.  QA denotes question answering, RAG denotes retrieval-augmented generation, CSV denotes comma-separated values, and PNG denotes portable network graphics.}\label{tab:repro_checklist}\\
+\caption{Reproducibility checklist split by claim status.  QA denotes question answering, RAG denotes retrieval-augmented generation, CSV denotes comma-separated values, and PNG denotes portable network graphics.}\label{tab:repro_checklist}\\
 \toprule
 Item & Value \\
 \midrule
@@ -1186,6 +1187,7 @@ Item & Value \\
 Item & Value \\
 \midrule
 \endhead
+\multicolumn{2}{l}{\textbf{Reproducible / claim-bearing or claim-supporting artifacts}} \\
 Run date & June 16, 2026 \\
 Model & \RunModel{} served through Ollama \\
 Endpoint & \OllamaEndpoint{} \\
@@ -1206,11 +1208,12 @@ RAG ablation slice & Repository artifact bundle; comparison \path{results/ablati
 Official SWE harness rerun & \path{qwen2.5:1.5b.budgetbench_official2fix_20260623.json}; tracked in the repository artifact bundle \\
 Synthetic memory pilot & Repository artifact bundle; aggregate \path{results/full_study_qwen2_5_1_5b_20260618_203210.csv}; categories \path{results/grouped_memory_category_qwen2_5_1_5b_20260618_203210.csv} \\
 LongMemEval oracle study & 500 items; \texttt{openai/gpt-4o-mini} candidate through OpenRouter; \texttt{openai/gpt-4o} upstream evaluator; summary \path{results/longmem_openrouter_full_20260623_official_summary.csv}; run metadata \path{results/longmem_openrouter_full_20260623_run_metadata.json}; per-cell hypotheses and labels under the same results prefix; repository artifact bundle \\
-Qwen3.6-35B LongMemEval probe & Repository artifact bundle; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260618_212102.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260618_212102.csv} \\
-Qwen3.6-35B LongMemEval transfer & Repository artifact bundle; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260619_140108.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260619_140108.csv}; categories \path{results/grouped_memory_category_qwen3_6_35b-mlx_20260619_140108.csv} \\
-Qwen3.5-2B LongBench 5-item transfer & Repository artifact bundle; aggregate \path{results/full_study_qwen3_5_2b_20260619_142423.csv}; paired \path{results/paired_deltas_qwen3_5_2b_20260619_142423.csv} \\
-Gemma transfer check & Repository artifact bundle; aggregate \path{results/full_study_gemma4_e2b_20260618_161005.csv} \\
-Additional filtered model sweep & \path{results/model_compare_small_long3.csv}; nonzero and zero-accuracy rows are both reported in the supplementary model tables \\
+\multicolumn{2}{l}{\textbf{Non-reproducible diagnostics / provenance incomplete}} \\
+Qwen3.6-35B LongMemEval probe & Local alias diagnostic only; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260618_212102.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260618_212102.csv} \\
+Qwen3.6-35B LongMemEval transfer & Local alias diagnostic only; aggregate \path{results/full_study_qwen3_6_35b-mlx_20260619_140108.csv}; paired \path{results/paired_deltas_qwen3_6_35b-mlx_20260619_140108.csv}; categories \path{results/grouped_memory_category_qwen3_6_35b-mlx_20260619_140108.csv} \\
+Qwen3.5-2B LongBench 5-item transfer & Local alias diagnostic only; aggregate \path{results/full_study_qwen3_5_2b_20260619_142423.csv}; paired \path{results/paired_deltas_qwen3_5_2b_20260619_142423.csv} \\
+Gemma transfer check & Local alias diagnostic only; aggregate \path{results/full_study_gemma4_e2b_20260618_161005.csv} \\
+Additional filtered model sweep & Diagnostic only; \path{results/model_compare_small_long3.csv}; nonzero and zero-accuracy rows are both reported in the supplementary model tables \\
 Supplementary local tag caveat & \texttt{gemma4:e2b}, \texttt{qwen3.5:0.8b}, \texttt{qwen3.5:2b}, \texttt{qwen3-vl:2b}, \texttt{qwen3.6:35b-mlx}, \texttt{gemma4:12b-mlx}, \texttt{gemma4:31b-mlx}, and \texttt{gemma3:1b} are local aliases without complete provenance records; their rows are not benchmark claims \\
 Native multimodal probe artifacts & \path{results/multimodal_smoke_qwen3_vl_2b.csv}; generated PNGs in \path{results/multimodal_smoke/} \\
 \bottomrule

@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Nonzero rows from the additional small-model LongBench v2 transfer check.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The check used three LongBench v2 items, the 2K--8K budget tiers, temperature 0.0, and Ollama's OpenAI-compatible endpoint.  Zero-accuracy and endpoint-mismatch rows from the same sweep are reported separately in Table~\ref{tab:model_transfer_excluded}.}
+\caption{Nonzero rows from the additional small-model LongBench v2 transfer diagnostic.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  The check used three LongBench v2 items, the 2K--8K budget tiers, temperature 0.0, and Ollama's OpenAI-compatible endpoint.  These local alias rows lack complete model provenance and are not benchmark claims.  Zero-accuracy and endpoint-mismatch rows from the same sweep are reported separately in Table~\ref{tab:model_transfer_excluded}.}
 \label{tab:model_transfer_gemma4}
 \begin{tabular}{llcccc}
 \toprule
@@ -14,7 +14,7 @@ Model & Strategy & 2K & 4K & 8K & Mean duration (s) \\
 
 \begin{table}[t]
 \centering
-\caption{Zero-accuracy and endpoint-mismatch rows from the additional small-model LongBench v2 transfer check.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  All entries use three LongBench v2 items and report exact-match accuracy at 2K, 4K, and 8K.}
+\caption{Zero-accuracy and endpoint-mismatch rows from the additional small-model LongBench v2 transfer diagnostic.  Retrieval-augmented generation (RAG) denotes the episodic retrieval baseline.  All entries use three LongBench v2 items and report exact-match accuracy at 2K, 4K, and 8K.  These local alias rows lack complete model provenance and are not benchmark claims.}
 \label{tab:model_transfer_excluded}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llcl}
@@ -34,7 +34,7 @@ Model & Strategy & Accuracy at 2K / 4K / 8K & Reporting note \\
 
 \begin{table}[t]
 \centering
-\caption{Native multimodal probe result for a generated six-item image question answering (QA) set.  Each item contains a simple rendered colored shape and a multiple-choice text question.  This is a modality-path check, not a benchmark-scale vision evaluation.}
+\caption{Native multimodal probe result for a generated six-item image question answering (QA) set.  Each item contains a simple rendered colored shape and a multiple-choice text question.  This local alias row is a modality-path diagnostic, not a benchmark-scale vision evaluation or reproducible model claim.}
 \label{tab:multimodal_probe}
 \begin{tabular}{llccc}
 \toprule
