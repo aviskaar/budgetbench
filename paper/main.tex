@@ -1025,6 +1025,41 @@ equivalence result or a general strategy ranking.  It is primarily a
 budget-size and feasibility tradeoff of the kind a budgeted protocol is meant
 to reveal.
 
+\subsection{Industry ROI and Adoption Path}
+
+\BudgetBench{} is best understood as solving a measurement and reproducibility
+problem for performance-sensitive deployments, not as a paper that already
+selects a universal memory strategy.  Industry teams building local, edge,
+air-gapped, latency-sensitive, or cost-constrained agents often need to choose
+among truncation, summarization, retrieval, and hybrid memory policies under a
+hard per-call context budget.  Without a shared protocol, those comparisons are
+usually ad hoc: one team measures quality, another measures latency, a third
+silently drops over-budget prompts, and none of the resulting numbers are
+directly comparable.  The immediate return on investment is therefore
+infrastructure-tier value: teams can reuse a budget enforcer, violation-rate
+metric, strategy interface, prompt audit trail, and bootstrap analysis path
+instead of rebuilding them for every internal agent.
+
+This distinction affects how the artifact should be used.  The current pilot
+does not justify a deployment rule such as ``use RAG instead of truncation.''
+The strategy-versus-full-context direction is underpowered or contradictory
+across slices.  What the artifact does provide is the machine for answering
+that question inside a specific deployment envelope.  A team can pin its model,
+hardware, target budget, task subset, and service objective, then ask whether a
+candidate strategy improves quality without increasing violation rate or
+latency beyond the product tolerance.
+
+For adoption, we recommend four concrete steps.  First, define one or two
+target operating tiers, such as 4K for an interactive local assistant or 8K for
+an air-gapped analyst workflow, before running a full sweep.  Second, treat
+budget-violation rate as a release gate rather than a secondary diagnostic:
+an over-budget strategy is operationally different from a compliant but wrong
+answer.  Third, run at least 100 task items per claim-bearing comparison, with
+paired item-level estimates and repeated cells for latency-sensitive decisions.
+Fourth, require every candidate memory policy to declare its deployment regime:
+local-only, auxiliary-model-assisted, hosted, persistent-stateful, or
+reset-per-item.  Those declarations are part of the cost model, not metadata.
+
 \subsection{Pilot Scope}
 
 The current runs are intentionally small.  They exercise the measurement
@@ -1719,27 +1754,37 @@ Release & Public logs, fixed subsets, evaluation runner, submission documentatio
 
 \section{Practitioner Guidance}
 
-Developers applying \BudgetBench{} to their own agents should start with a
-small connectivity check but should avoid over-interpreting it.  A one-item or
-three-item run is useful for verifying that the model endpoint, task adapter,
-and strategy dependencies work.  It is not useful for ranking strategies.  Once
-the run is healthy, developers should choose a target deployment tier, such as
-4K or 8K, and compare strategies there before paying for the full five-tier
-sweep.  If the target tier exhibits high violation rates, strategy design
-should focus on budget accounting before quality optimization.
+Developers applying \BudgetBench{} to their own agents should treat the first
+run as an integration check, not a strategy decision.  A one-item or three-item
+run is useful for verifying that the model endpoint, task adapter, tokenizer,
+and strategy dependencies work.  It is not useful for ranking strategies.
 
-Users should also inspect raw prompts.  Budget utilization numbers can reveal
-that a strategy is conservative, but they cannot explain whether the retained
-content is useful.  For retrieval strategies, users should inspect retrieved
-chunks.  For summaries, users should inspect whether the summary preserved
-decisive entities, constraints, and temporal ordering.  For truncation, users
-should inspect what falls out of context.  The benchmark provides quantitative
-signals; qualitative inspection remains essential for debugging.
+Industry teams should then move through a staged adoption path:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Pin the deployment envelope.}  Specify the model, tokenizer,
+  hardware or provider, target latency objective, and target active-context
+  tier before comparing strategies.
+  \item \textbf{Gate on compliance first.}  Treat budget-violation rate as a
+  release criterion.  A strategy that violates the tier is not a slower or less
+  accurate version of a compliant strategy; it has failed the operating
+  contract.
+  \item \textbf{Scale only after plumbing is healthy.}  Use small runs for
+  smoke tests, then move to claim-bearing samples of at least 100 task items
+  per comparison with paired item-level estimates.
+  \item \textbf{Measure the full cost shape.}  Report quality, violation rate,
+  latency, mean used tokens, peak tokens, auxiliary model calls, and persistent
+  index cost.  These quantities determine whether a strategy is deployable.
+  \item \textbf{Inspect retained evidence.}  For retrieval strategies, inspect
+  retrieved chunks.  For summaries, inspect whether decisive entities,
+  constraints, and temporal ordering survive compression.  For truncation,
+  inspect what falls out of context.
+\end{enumerate}
 
-Finally, larger budgets should not be assumed to be preferable.  If a smaller
-budget performs better, the result may indicate that the strategy is filtering
+Larger budgets should not be assumed to be preferable.  If a smaller budget
+performs better, the result may indicate that the strategy is filtering
 distractors effectively.  The appropriate response is to analyze item-level
-flips, not to discard the result because it violates a monotonicity expectation.
+flips, not to discard the result because it violates a monotonicity
+expectation.
 
 \section{Command Transcript Summary}
 
