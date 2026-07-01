@@ -1,5 +1,9 @@
 # BudgetBench
 
+[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX)
+
+<!-- TODO: replace XXXX.XXXXX above and in the Citation section once arXiv announces the ID -->
+
 BudgetBench is a pilot evaluation protocol and reference harness for local LLM agents to compare memory strategies across fixed active-context-budget tiers (2k/4k/8k/16k/32k). 
 
 In the regime of local consumer hardware, context length is a scarce resource. BudgetBench provides standardized tradeoff curves of agent task quality versus token budget for pluggable memory strategies on local LLMs, allowing researchers and developers to understand how different memory-management approaches perform when context is constrained.
@@ -234,3 +238,21 @@ This repository currently supports a protocol/tooling paper more strongly than a
 
 - official or validated LongMemEval judging, if LongMemEval remains claim-bearing
 - larger powered slices and stronger evaluated baselines
+
+## 📄 Citation
+
+If you use BudgetBench, please cite the preprint:
+
+```bibtex
+@misc{rao2026budgetbench,
+  title        = {BudgetBench: A Budget-Tiered Protocol and Pilot Harness for Memory Strategy Evaluation in Local Large Language Model Agents},
+  author       = {Rao, Aditya Karnam Gururaj and Jaggi, Arjun},
+  year         = {2026},
+  eprint       = {XXXX.XXXXX},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  url          = {https://arxiv.org/abs/XXXX.XXXXX}
+}
+```
+
+> The arXiv identifier (`XXXX.XXXXX`) will be filled in once the preprint is announced.

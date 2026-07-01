@@ -3,8 +3,6 @@
 
 \documentclass[11pt]{article}
 
-\IfFileExists{neurips_2026.sty}{\usepackage[eandd]{neurips_2026}}{}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[margin=1in]{geometry}
@@ -37,7 +35,7 @@
   Aditya Karnam Gururaj Rao\\
   \texttt{adityakarnam.grao@gmail.com}\\[0.6em]
   Arjun Jaggi\\
-  \texttt{arjunjaggi.com}\\
+  \texttt{arjunjaggi@gmail.com}\\
 }
 \date{}
 
@@ -46,40 +44,35 @@
 \maketitle
 
 \begin{abstract}
-Local large language model deployments are increasingly feasible, but active
-context remains constrained by memory capacity, prefill latency, cache growth,
-and application-level service objectives.  We present \BudgetBench{}, an
-active-budget evaluation protocol and reference harness for comparing memory
-strategies when each model call has a fixed input-token budget.  The protocol
-holds the model, task, sampler, and decoding parameters fixed; sweeps budgets
-over 2K, 4K, 8K, 16K, and 32K tokens; and records quality, budget utilization,
-latency, and budget-violation rates.  The main contribution is the reusable
+For local large language model agents, active context is a scarce operational
+resource: memory capacity, prefill latency, cache growth, and service
+objectives all constrain how many input tokens each call can afford.  We
+present \BudgetBench{}, an active-budget evaluation protocol and reference
+harness that treats the per-call input-token budget as the independent variable
+when comparing memory strategies.  Holding the model, task, sampler, and
+decoding parameters fixed, it sweeps budgets over 2K, 4K, 8K, 16K, and 32K
+tokens and records quality, budget utilization, latency, and, as a first-class
+outcome, budget-violation rates.  The core contribution is this reusable
 measurement surface: a swappable \texttt{MemoryStrategy} contract, explicit
 budget enforcement, deterministic or versioned graders, prompt-audit metadata,
-and reproducibility artifacts.
+and reproducibility artifacts, all released at \RepoURL{}.
 
-We validate the harness with several pilot studies rather than final strategy
-rankings.  A June 16, 2026 local Ollama pilot with \RunModel{} covers 89
-SWE-bench Verified scaffold items and 89 LongBench v2 items; because that run
-used a benchmark tokenizer approximation later shown to undercount some
-served-model prompts, its LongBench budget-violation rows are reported as
+We substantiate the protocol with pilot studies rather than final strategy
+rankings.  Across a local \RunModel{} pilot (89 items each on SWE-bench
+Verified and LongBench v2), a hosted 50-item Qwen3 30B-A3B LongBench
+replication with exact tokenization, and a 500-item LongMemEval oracle study
+scored by the official GPT-4o evaluator, the harness reliably exposes
+budget-compliance failures, non-monotonic quality curves, and operating points
+that single-budget evaluation hides.  The budgeted-versus-full-context
+direction, however, remains unresolved: the local slice is near-null, the
+hosted replication favors full context in point estimate, and no paired
+interval establishes equivalence.  We report these results transparently,
+including the finding that the early local pilot's tokenizer approximation
+undercounts some served-model prompts, so its violation rows are
 tokenizer-approximation diagnostics rather than claim-bearing compliance
-results.  A 50-item LongBench v2 full-context-feasible slice compares
-truncation, RAG, lean retrieval, and a \texttt{full\_context} pass-through
-baseline; RAG at 8K has no detectable paired accuracy difference from the 32K
-full-context baseline at $N=50$, but this is not an equivalence result.  A
-10-item tokenizer-aligned hardened slice removes the tokenizer ambiguity only
-for a small smoke test.  The empirical direction between budgeted strategies
-and full context remains unresolved across slices: the 50-item local slice is
-near-null, the 10-item hardened slice favors budgeted strategies by one item,
-and a hosted 50-item Qwen3 30B-A3B replication favors full context in point
-estimate.  The well-powered 500-item LongMemEval oracle-file study and the
-50-item stronger-model LongBench replication use hosted candidate models, so
-they validate protocol behavior and model-scale transfer, not local-serving
-performance.  All timings are operational diagnostics; persistent-memory
-indexing, energy cost, and local 30B-class serving remain future work.  All
-code, tables, figures, and released artifact data are tracked in the public
-repository at \RepoURL{}.
+results; all timings are operational diagnostics.  The reusable contribution is
+the protocol, harness, and failure-reporting discipline needed to scale
+fixed-budget memory-strategy evaluation into a community benchmark.
 \end{abstract}
 
 \section{Introduction}
@@ -930,7 +923,7 @@ This non-provenanced diagnostic check did not
 reproduce the \RunModel{} quality signal: truncation and RAG scored 0.00 at
 8K, while truncation, RAG, and full context each scored 0.05 at 32K.  Full
 context at 8K again had 100\% violation rate.  The result is useful as a
-transfer warning rather than a strategy ranking.  It shows that the benchmark
+transfer warning rather than a strategy ranking.  It shows that the harness
 can expose model-dependent prompt/serving suitability, and that the 50-item
 Qwen result should not be generalized across tasks or model scales without
 checking for zero-signal runs.
@@ -957,8 +950,8 @@ By contrast, a matched 10-item \texttt{gemma4:12b-mlx} LongMemEval probe
 returned 0.00 across truncation, RAG, lean retrieval, and full context at
 2K, 4K, and 8K.  That flat result is useful because it shows the same protocol
 does not magically produce a LongMemEval signal on a smaller intermediate
-model; model scale and serving regime remain first-order variables in the
-benchmark.
+model; model scale and serving regime remain first-order variables in this
+evaluation.
 
 A \texttt{checkpoint\_context} run with \RunModel{} on the same 10-item
 LongMemEval slice lands at 0.10 at 2K, 0.30 at 4K, and 0.10 at 8K.  That row is
@@ -1439,7 +1432,7 @@ near the ceiling.
 Duration is wall-clock time for the cell.  It includes strategy overhead,
 embedding or summarization calls, final model calls, and dataset-item loop
 overhead.  Duration is machine-dependent, but it remains operationally useful
-because the benchmark is explicitly about local deployment regimes.
+because \BudgetBench{} is explicitly about local deployment regimes.
 
 \section{Full Operational Tables}
 
@@ -1688,7 +1681,7 @@ We also ran a 5-item SWE checkpoint probe in the repository artifact bundle.
 It behaved like the other
 budgeted strategies at 8K and 32K, and it matched the 0.16 baseline at 2K.
 That is not yet enough to claim a strong coding result, but it shows the
-benchmark can carry a deterministic coding task with the same budget machinery
+harness can carry a deterministic coding task with the same budget machinery
 and the same strategy interface.
 
 \section{Scaling to a Full Benchmark Study}
