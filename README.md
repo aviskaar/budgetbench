@@ -1,8 +1,6 @@
 # BudgetBench
 
-[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX)
-
-<!-- TODO: replace XXXX.XXXXX above and in the Citation section once arXiv announces the ID -->
+[![arXiv](https://img.shields.io/badge/arXiv-2609.13149-b31b1b.svg)](https://arxiv.org/abs/2609.13149)
 
 BudgetBench is a pilot evaluation protocol and reference harness for local LLM agents to compare memory strategies across fixed active-context-budget tiers (2k/4k/8k/16k/32k). 
 
@@ -248,11 +246,10 @@ If you use BudgetBench, please cite the preprint:
   title        = {BudgetBench: A Budget-Tiered Protocol and Pilot Harness for Memory Strategy Evaluation in Local Large Language Model Agents},
   author       = {Rao, Aditya Karnam Gururaj and Jaggi, Arjun},
   year         = {2026},
-  eprint       = {XXXX.XXXXX},
+  eprint       = {2609.13149},
   archivePrefix = {arXiv},
   primaryClass = {cs.AI},
-  url          = {https://arxiv.org/abs/XXXX.XXXXX}
+  url          = {https://arxiv.org/abs/2609.13149}
 }
 ```
 
-> The arXiv identifier (`XXXX.XXXXX`) will be filled in once the preprint is announced.
